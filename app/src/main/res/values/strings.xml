@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">manageHouse</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="username_validator">Tên tài khoản không hợp lệ.</string>
+    <string name="password_validator">Mật khẩu không hợp lệ.</string>
+    <string name="password_length_validator">Mật khẩu phải từ 6 ký tự trở lên.</string>
+    <string name="name_validator">Họ tên không hợp lệ.</string>
+    <string name="name_null_validator">Họ tên không được để trống.</string>
+    <string name="form_null_value">Không được bỏ trống ô này.</string>
+    <string name="confirm_delete">Bạn có chắc chắn muốn xóa?</string>
+    <string name="confirm_delete_button_ok">Đồng ý</string>
+    <string name="confirm_delete_button_no">Hủy</string>
+</resources>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single"
+        android:id="@+id/groupMenuItem1">
+        <item
+            android:icon="@drawable/ic_dashboard"
+            android:id="@+id/navTongQuan"
+            android:title="Tổng quan"
+            />
+
+        <item
+            android:icon="@drawable/ic_hotel"
+            android:id="@+id/navKhuTro"
+            android:title="Khu trọ"
+
+            />
+        <item
+            android:icon="@drawable/ic_home_32dp"
+            android:id="@+id/navPhongTro"
+            android:title="Phòng trọ"
+
+            />
+        <item
+            android:icon="@drawable/ic_person_outline_32dp"
+            android:id="@+id/navNguoiTro"
+            android:title="Người trọ"
+
+            />
+        <item
+            android:icon="@drawable/ic_bill"
+            android:id="@+id/navHoaDon"
+            android:title="Hóa đơn"
+            />
+        <item
+            android:icon="@drawable/ic_lightning"
+            android:id="@+id/navKhoanThu"
+            android:title="Khoản thu"
+            />
+
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/groupMenuItem2">
+
+        <item
+            android:id="@+id/navLienHe"
+            android:icon="@drawable/ic_messenger"
+            android:title="Liên hệ"
+            />
+        <item
+            android:id="@+id/navChiaSe"
+            android:icon="@drawable/ic_baseline_share_32"
+            android:title="Chia sẻ"
+            />
+
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/groupMenuItem3">
+
+        <item
+            android:id="@+id/navCaiDat"
+            android:icon="@drawable/ic_settings"
+            android:title="Cài đặt"
+            />
+        <item
+            android:id="@+id/navDangXuat"
+            android:icon="@drawable/ic_logout"
+            android:title="Đăng xuất"
+            />
+
+    </group>
+
+</menu>

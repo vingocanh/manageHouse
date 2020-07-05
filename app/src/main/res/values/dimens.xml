@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="elementTextValueSize">16sp</dimen>
+    <dimen name="elementTextTitleSize">16sp</dimen>
+    <dimen name="headerTextSize">16sp</dimen>
+    <dimen name="sizePrimary">14sp</dimen>
+    <dimen name="sizeForm">14sp</dimen>
+</resources>

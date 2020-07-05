@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:orientation="horizontal"
+    android:layout_marginBottom="10dp">
+    <CheckBox
+        android:id="@+id/cbItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:button="@drawable/custom_checkbox"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/txtItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="item"
+            android:textSize="@dimen/sizeForm"
+            android:textColor="@color/colorFormMasterElementTextValue"/>
+        <LinearLayout
+            android:id="@+id/llNhap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/edtPrice"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="Nhập giá"
+                android:textColorHint="#898989"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <TextView
+                android:id="@+id/txtDonViTinh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chọn đơn vị tính"
+                android:textColor="@color/colorFormMasterElementTextValue"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
