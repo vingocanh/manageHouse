@@ -16,8 +16,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.managehouse.Activity.HomeActivity;
 import com.example.managehouse.Adapter.ItemChosenAdapter;
 import com.example.managehouse.Callback.ChosenItemCallback;
+import com.example.managehouse.Fragment.KhuTro.FormFragment;
 import com.example.managehouse.Model.Item;
 import com.example.managehouse.R;
 
@@ -112,6 +114,7 @@ public class DialogChosenItem implements View.OnClickListener, ChosenItemCallbac
             rvChosenItem.setLayoutParams(params);
         }
         ImageView ivSearch = view.findViewById(R.id.ivSearch);
+        ImageView ivAdd = view.findViewById(R.id.ivAdd);
         if(itemList.size() < 10) {
             ivSearch.setVisibility(View.GONE);
         }
@@ -120,8 +123,22 @@ public class DialogChosenItem implements View.OnClickListener, ChosenItemCallbac
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                llBtnSearch.setVisibility(View.GONE);
-                llSearch.setVisibility(View.VISIBLE);
+                if(llSearch.getVisibility() == View.VISIBLE) {
+                    llSearch.setVisibility(View.GONE);
+                    llBtnSearch.setVisibility(View.VISIBLE);
+                }
+                else {
+                    llSearch.setVisibility(View.VISIBLE);
+                    llBtnSearch.setVisibility(View.GONE);
+                }
+            }
+        });
+        ivAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeActivity homeActivity = (HomeActivity) activity;
+                homeActivity.replaceFragment(new FormFragment(), true);
+                hideDialog();
             }
         });
         edtSearch = view.findViewById(R.id.edtTimKiem);

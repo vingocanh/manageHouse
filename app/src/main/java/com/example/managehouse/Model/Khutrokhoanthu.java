@@ -6,18 +6,7 @@ public class Khutrokhoanthu {
     private int id, khutro_id, khoanthu_id, gia, status, donvitinh_id;
     private String created_at, updated_at;
     private Khoanthu khoanthu;
-
-    public Khutrokhoanthu(int id, int khutro_id, int khoanthu_id, int gia, int status, int donvitinh_id, String created_at, String updated_at, Khoanthu khoanthu) {
-        this.id = id;
-        this.khutro_id = khutro_id;
-        this.khoanthu_id = khoanthu_id;
-        this.gia = gia;
-        this.status = status;
-        this.donvitinh_id = donvitinh_id;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.khoanthu = khoanthu;
-    }
+    private Donvitinh donvitinh;
 
     public int getId() {
         return id;
@@ -89,5 +78,13 @@ public class Khutrokhoanthu {
 
     public void setKhoanthu(Khoanthu khoanthu) {
         this.khoanthu = khoanthu;
+    }
+
+    public Donvitinh getDonvitinh() {
+        return donvitinh;
+    }
+
+    public void setDonvitinh(Donvitinh donvitinh) {
+        this.donvitinh = donvitinh;
     }
 }

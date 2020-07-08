@@ -196,7 +196,6 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                         });
                     }
                 }, 300);
-
             }
         });
     }
@@ -257,7 +256,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                                 else isLoading = true;
                             } else {
                                 isLoading = true;
-                                khutroList.add(new Khutro(-1));
+                                khutroList.add(new Khutro(-2));
                             }
                             itemKhuTroAdapter.notifyDataSetChanged();
                             lavLoading.setVisibility(View.GONE);
@@ -395,7 +394,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                 for (Item item : items) {
                     if (item.getId() == sort) item.setChecked(true);
                 }
-                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Sắp xếp", "single",0);
+                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Sắp xếp", "single", 0);
                 dialogChosenItem.setChosenItemCallback(this);
                 dialogChosenItem.showDialog();
                 break;
@@ -416,7 +415,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                 for (Item item : items) {
                     if (item.getId() == filter) item.setChecked(true);
                 }
-                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Hiển thị khu trọ", "single",0);
+                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Hiển thị khu trọ", "single", 0);
                 dialogChosenItem.setChosenItemCallback(this);
                 dialogChosenItem.showDialog();
                 break;

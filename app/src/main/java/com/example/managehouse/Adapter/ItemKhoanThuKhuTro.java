@@ -33,14 +33,15 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<Khoanthu> khoanthus;
     private List<Donvitinh> donvitinhs = new ArrayList<>();
     private ChosenKhoanThuKhuTroCallback chosenKhoanThuKhuTroCallback;
-    private int[] giaKhoanThu, donViTinhKhoanThu;
+    private int[] giaKhoanThu, donViTinhKhoanThu, idKhoanThu;
+    private String[] tenDonViTinh = null;
     private int posChecked = 0;
     private TextView txtDonViTinh;
 
     public ItemKhoanThuKhuTro(Activity activity, List<Khoanthu> khoanthus) {
         this.activity = activity;
         this.khoanthus = khoanthus;
-        giaKhoanThu = donViTinhKhoanThu = new int[khoanthus.size()];
+        giaKhoanThu = donViTinhKhoanThu =idKhoanThu = new int[khoanthus.size()];
     }
 
     public List<Donvitinh> getDonvitinhs() {
@@ -61,6 +62,22 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public int[] getDonViTinhKhoanThu() {
         return donViTinhKhoanThu;
+    }
+
+    public int[] getIdKhoanThu() {
+        return idKhoanThu;
+    }
+
+    public void setIdKhoanThu(int[] idKhoanThu) {
+        this.idKhoanThu = idKhoanThu;
+    }
+
+    public String[] getTenDonViTinh() {
+        return tenDonViTinh;
+    }
+
+    public void setTenDonViTinh(String[] tenDonViTinh) {
+        this.tenDonViTinh = tenDonViTinh;
     }
 
     public void setDonViTinhKhoanThu(int[] donViTinhKhoanThu) {
@@ -92,15 +109,28 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof MyItemViewHolder) {
             ((MyItemViewHolder) holder).cbItem.setChecked(khoanthus.get(position).isChecked());
             ((MyItemViewHolder) holder).txtItem.setText(khoanthus.get(position).getTen());
+            if(giaKhoanThu[position] != 0) {
+                ((MyItemViewHolder) holder).edtPrice.setText(Common.formatMoney(giaKhoanThu[position]));
+                ((MyItemViewHolder) holder).edtPrice.setTag(giaKhoanThu[position]);
+            }
+            if(tenDonViTinh != null && donViTinhKhoanThu[position] != 0) {
+                ((MyItemViewHolder) holder).txtDonViTinh.setText("Đơn vị: " + tenDonViTinh[position]);
+                ((MyItemViewHolder) holder).txtDonViTinh.setTag(donViTinhKhoanThu[position]);
+            }
+            if(khoanthus.get(position).isChecked()) {
+                ((MyItemViewHolder) holder).llNhap.setVisibility(View.VISIBLE);
+            }
             ((MyItemViewHolder) holder).txtItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(khoanthus.get(position).isChecked()) {
                         khoanthus.get(position).setChecked(false);
+                        idKhoanThu[position] = 0;
                         ((MyItemViewHolder) holder).llNhap.setVisibility(View.GONE);
                     }
                     else {
                         khoanthus.get(position).setChecked(true);
+                        idKhoanThu[position] = khoanthus.get(position).getId();
                         ((MyItemViewHolder) holder).llNhap.setVisibility(View.VISIBLE);
                     }
                     callReceiveKhoanThuKhuTro();
@@ -111,10 +141,12 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View v) {
                     if(khoanthus.get(position).isChecked()) {
                         khoanthus.get(position).setChecked(false);
+                        idKhoanThu[position] = 0;
                         ((MyItemViewHolder) holder).llNhap.setVisibility(View.GONE);
                     }
                     else {
                         khoanthus.get(position).setChecked(true);
+                        idKhoanThu[position] = khoanthus.get(position).getId();
                         ((MyItemViewHolder) holder).llNhap.setVisibility(View.VISIBLE);
                     }
                     callReceiveKhoanThuKhuTro();
@@ -145,7 +177,9 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if(((MyItemViewHolder) holder).txtDonViTinh.getTag() != null) id = Integer.parseInt(((MyItemViewHolder) holder).txtDonViTinh.getTag().toString());
                     for (Donvitinh donvitinh : donvitinhs) {
                         if (donvitinh.getId() == id) items.add(new Item(true, donvitinh.getId(), stt, donvitinh.getName()));
-                        else items.add(new Item(false, donvitinh.getId(), stt, donvitinh.getName()));
+                        else {
+                            items.add(new Item(false, donvitinh.getId(), stt, donvitinh.getName()));
+                        }
                         stt++;
                     }
                     DialogChosenItem dialogChosenItem = new DialogChosenItem(activity, items, "Chọn đơn vị tính", "single",0);
@@ -166,7 +200,12 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if(s.toString().indexOf(".") == -1)  giaKhoanThu[position] = Integer.parseInt(s.toString());
+                    if (!s.toString().equals("")) {
+                        if(s.toString().indexOf(".") == -1)  giaKhoanThu[position] = Integer.parseInt(s.toString());
+                    }
+                    else {
+                        giaKhoanThu[position] = 0;
+                    }
                 }
             });
         } else {

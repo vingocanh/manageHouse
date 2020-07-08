@@ -35,6 +35,7 @@ import com.example.managehouse.Model.Donvitinh;
 import com.example.managehouse.Model.Item;
 import com.example.managehouse.Model.Khoanthu;
 import com.example.managehouse.Model.Khutro;
+import com.example.managehouse.Model.Khutrokhoanthu;
 import com.example.managehouse.Model.Message;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -199,8 +201,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         }, R.string.form_null_value);
     }
 
-    public void addKhuTro(RequestBody id, RequestBody ten, RequestBody diaChi, RequestBody namXayDung, RequestBody trangThai, RequestBody userId, RequestBody type, MultipartBody.Part file) {
-        compositeDisposable.add(api.createKhuTro(id,ten,diaChi,namXayDung,trangThai, userId, type, file).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    public void addKhuTro(RequestBody id, RequestBody ten, RequestBody diaChi, RequestBody namXayDung, RequestBody trangThai, RequestBody userId, RequestBody type, MultipartBody.Part file, RequestBody idKhoanThu, RequestBody giaKhoanThu, RequestBody dvtKhoanThu) {
+        compositeDisposable.add(api.createKhuTro(id,ten,diaChi,namXayDung,trangThai, userId, type, file, idKhoanThu, giaKhoanThu, dvtKhoanThu ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -257,8 +259,42 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     public void accept(List<Khoanthu> khoanthus) throws Exception {
                         khoanthuList.clear();
                         khoanthuList.addAll(khoanthus);
-                        itemKhoanThuKhuTro.setGiaKhoanThu(new int[khoanthus.size()]);
-                        itemKhoanThuKhuTro.setDonViTinhKhoanThu(new int[khoanthus.size()]);
+                        if(khutro != null) {
+//                            List<Integer> idKhoanThu = new ArrayList<>();
+//                            List<Integer> giaKhoanThuList = new ArrayList<>();
+//                            List<Integer> dvtKhoanThuList = new ArrayList<>();
+//                            for(Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
+//                                idKhoanThu.add(khutrokhoanthu.getKhoanthu_id());
+//                                giaKhoanThuList.add(khutrokhoanthu.getKhoanthu_id(), khutrokhoanthu.getGia());
+//                                dvtKhoanThuList.add(khutrokhoanthu.getKhoanthu_id(), khutrokhoanthu.getDonvitinh_id());
+//                            }
+                            int i = 0;
+                            int[] giaKhoanThu = new int[khoanthus.size()];
+                            int[] idKhoanThu = new int[khoanthus.size()];
+                            int[] dvtKhoanThu = new int[khoanthus.size()];
+                            String[] tenDonVi = new String[khoanthus.size()];
+                            for(Khoanthu khoanthu : khoanthuList) {
+                                for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
+                                    if(khutrokhoanthu.getKhoanthu_id() == khoanthu.getId()) {
+                                        khoanthu.setChecked(true);
+                                        giaKhoanThu[i] = khutrokhoanthu.getGia();
+                                        dvtKhoanThu[i] = khutrokhoanthu.getDonvitinh_id();
+                                        idKhoanThu[i] = khoanthu.getId();
+                                        tenDonVi[i] = khutrokhoanthu.getDonvitinh().getName();
+                                    }
+                                }
+                                i++;
+                            }
+                            itemKhoanThuKhuTro.setGiaKhoanThu(giaKhoanThu);
+                            itemKhoanThuKhuTro.setIdKhoanThu(idKhoanThu);
+                            itemKhoanThuKhuTro.setDonViTinhKhoanThu(dvtKhoanThu);
+                            itemKhoanThuKhuTro.setTenDonViTinh(tenDonVi);
+                        }
+                        else {
+                            itemKhoanThuKhuTro.setGiaKhoanThu(new int[khoanthus.size()]);
+                            itemKhoanThuKhuTro.setDonViTinhKhoanThu(new int[khoanthus.size()]);
+                            itemKhoanThuKhuTro.setIdKhoanThu(new int[khoanthus.size()]);
+                        }
                         itemKhoanThuKhuTro.notifyDataSetChanged();
                     }
                 }, new Consumer<Throwable>() {
@@ -295,6 +331,19 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             i++;
         }
         return true;
+    }
+
+    public String convertString(int[] arr) {
+        String value = "";
+        for (int i = 0; i < arr.length; i++) {
+            if(i == arr.length - 1) {
+                value += arr[i];
+            }
+            else {
+                value += arr[i] + "-";
+            }
+        }
+        return value;
     }
 
     @Override
@@ -368,15 +417,18 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         RequestBody namXayDung = RequestBody.create(MediaType.parse("multipart/form-data"), edtNamXayDung.getText().toString());
                         RequestBody trangThai = RequestBody.create(MediaType.parse("multipart/form-data"), txtTrangThai.getTag().toString());
                         RequestBody id = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(Common.currentUser.getId()));
+                        RequestBody idKhoanThu = RequestBody.create(MediaType.parse("multipart/form-data"), convertString(itemKhoanThuKhuTro.getIdKhoanThu()));
+                        RequestBody giaKhoanThu = RequestBody.create(MediaType.parse("multipart/form-data"), convertString(itemKhoanThuKhuTro.getGiaKhoanThu()));
+                        RequestBody donViTinhKhoanThu = RequestBody.create(MediaType.parse("multipart/form-data"), convertString(itemKhoanThuKhuTro.getDonViTinhKhoanThu()));
                         if (khutro == null) {
                             RequestBody khutroId = RequestBody.create(MediaType.parse("multipart/form-data"), "-1");
                             RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-                            addKhuTro(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file);
+                            addKhuTro(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file, idKhoanThu,giaKhoanThu,donViTinhKhoanThu);
                         }
                         else {
                             RequestBody khutroId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(khutro.getId()));
                             RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "0");
-                            addKhuTro(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file);
+                            addKhuTro(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file, idKhoanThu,giaKhoanThu,donViTinhKhoanThu);
                         }
                     }
                     else {
@@ -403,7 +455,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
     @Override
     public void onReceiveKhoanThu() {
-        Log.d("cuong", itemKhoanThuKhuTro.getGiaKhoanThu().length + "");
         itemKhoanThuKhuTro.notifyDataSetChanged();
     }
 }

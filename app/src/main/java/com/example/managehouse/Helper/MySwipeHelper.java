@@ -44,7 +44,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         public boolean onSingleTapUp(MotionEvent e) {
             for (ButtonThaoTac buttonThaoTac : buttonList) {
                 if (buttonThaoTac.onClick(e.getX(), e.getY())) break;
-
             }
             return true;
         }
@@ -217,6 +216,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
 
         public void onDraw(Canvas canvas, RectF rectF, int pos) {
+
             Paint paint = new Paint();
             paint.setColor(color);
             canvas.drawRect(rectF, paint);

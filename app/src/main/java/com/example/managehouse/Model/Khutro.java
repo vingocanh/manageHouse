@@ -7,12 +7,13 @@ public class Khutro implements Serializable {
     private int id, user_id, status, phongtro_count, total;
     private String ten, diachi, created_at, updated_at, img, nam_xd;
     private List<Khutrokhoanthu> khutrokhoanthu;
+    private List<Phongtro> phongtro;
 
     public Khutro(int id) {
         this.id = id;
     }
 
-    public Khutro(int id, int user_id, int status, int phongtro_count, int total, String ten, String diachi, String created_at, String updated_at, String img, String nam_xd, List<Khutrokhoanthu> khutrokhoanthu) {
+    public Khutro(int id, int user_id, int status, int phongtro_count, int total, String ten, String diachi, String created_at, String updated_at, String img, String nam_xd, List<Khutrokhoanthu> khutrokhoanthu, List<Phongtro> phongtro) {
         this.id = id;
         this.user_id = user_id;
         this.status = status;
@@ -25,6 +26,7 @@ public class Khutro implements Serializable {
         this.img = img;
         this.nam_xd = nam_xd;
         this.khutrokhoanthu = khutrokhoanthu;
+        this.phongtro = phongtro;
     }
 
     public int getId() {
@@ -121,5 +123,13 @@ public class Khutro implements Serializable {
 
     public void setKhutrokhoanthu(List<Khutrokhoanthu> khutrokhoanthu) {
         this.khutrokhoanthu = khutrokhoanthu;
+    }
+
+    public List<Phongtro> getPhongtro() {
+        return phongtro;
+    }
+
+    public void setPhongtro(List<Phongtro> phongtro) {
+        this.phongtro = phongtro;
     }
 }

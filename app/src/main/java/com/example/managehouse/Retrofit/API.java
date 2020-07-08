@@ -67,7 +67,10 @@ public interface API {
                                      @Part("status") RequestBody trangThai,
                                      @Part("user_id") RequestBody userId,
                                      @Part("type") RequestBody type,
-                                     @Part MultipartBody.Part avatar);
+                                     @Part MultipartBody.Part avatar,
+                                     @Part("id_khoanthu") RequestBody idKhoanThu,
+                                     @Part("gia_khoanthu") RequestBody giaKhoanThu,
+                                     @Part("dvt_khoanthu") RequestBody dvtKhoanThu);
 
     @DELETE
     Observable<Message> deleteKhuTro(@Url String url);

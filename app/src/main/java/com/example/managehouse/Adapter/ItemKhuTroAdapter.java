@@ -85,6 +85,12 @@ public class ItemKhuTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             else {
                 ((MyItemViewHolder) holder).ivAvatar.setImageResource(R.drawable.ic_hotel);
             }
+            ((MyItemViewHolder) holder).setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int pos, boolean isLongClick) {
+                    Log.d("cuong", "ok");
+                }
+            });
         }
         else {
             if(holder instanceof MyLoadingViewHolder) {
@@ -109,9 +115,7 @@ public class ItemKhuTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-
-
-    public class MyItemViewHolder extends RecyclerView.ViewHolder{
+    public class MyItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView ivAvatar;
         private TextView txtName, txtAddress, txtXayDung, txtTrangThai;
@@ -130,8 +134,13 @@ public class ItemKhuTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtAddress = itemView.findViewById(R.id.txtAddress);
             txtXayDung = itemView.findViewById(R.id.txtXayDung);
             txtTrangThai = itemView.findViewById(R.id.txtTrangThai);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onClick(v,getAdapterPosition(),false);
+        }
     }
 
     public class MyLoadingViewHolder extends RecyclerView.ViewHolder {

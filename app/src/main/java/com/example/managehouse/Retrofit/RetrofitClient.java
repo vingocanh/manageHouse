@@ -45,7 +45,7 @@ public class RetrofitClient {
                 });
             }
 
-            instance = new Retrofit.Builder().baseUrl("http://192.168.8.142/house/public/api/")
+            instance = new Retrofit.Builder().baseUrl("http://192.168.1.36/house/public/api/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(builder.build())

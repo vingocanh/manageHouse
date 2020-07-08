@@ -81,6 +81,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     private int typeChosenItem = -1;
     private int sttKhuTro = 0, sttPhongTro = 0, userId = 10;
     private boolean checkDonViNuoc = false; // false - đơn vị theo tháng | true - đơn vị theo khối
+    private boolean checkLoadForm = true;
 
     public CreateBillFragment() {
         // Required empty public constructor
@@ -103,11 +104,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.fragment_create_bill, container, false);
         mapping(view);
         createHoaDon();
-        dialogLoading = new DialogLoading(getActivity(), "Đang khởi tạo, đợi chút...");
-        dialogLoading.showDialog();
         // init api
         api = Common.getAPI();
-        initForm();
+        dialogLoading = new DialogLoading(getActivity(), "Đang khởi tạo, đợi chút...");
+        dialogLoading.showDialog();
+        if(checkLoadForm) initForm();
         getKhutro();
         return view;
     }
@@ -116,6 +117,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         validator();
+
     }
 
     public void mapping(View view) {
@@ -333,7 +335,20 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                             txtChonKhuTro.setText(khutroList.get(0).getTen());
                             txtChonKhuTro.setTag(khutroList.get(0).getId());
                             checkInputWater(khutroList.get(sttKhuTro));
-                            getPhongtro(String.valueOf(khutroList.get(0).getId()), dialogLoading, null);
+                            phongtroList = khutroList.get(0).getPhongtro();
+                            if(phongtroList.size() > 0) {
+                                txtChonPhongTro.setTag(phongtroList.get(0).getId());
+                                txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                                edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
+                                edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
+                                edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
+                                edtTienPhong.setTag(phongtroList.get(0).getGia());
+                                totalMoney();
+                            }
+                            else {
+                                txtChonPhongTro.setTag(-1);
+                                txtChonPhongTro.setText("Không có phòng trọ");
+                            }
                         }
                         else {
                             txtChonKhuTro.setText("Không có khu trọ");
@@ -342,44 +357,14 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                             txtChonPhongTro.setText("Không có phòng trọ");
                             dialogLoading.hideDialog();
                         }
+                        dialogLoading.hideDialog();
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
-                        throwable.printStackTrace();
-                    }
-                }));
-    }
-
-    public void getPhongtro(String id, final DialogLoading dl, final String type) {
-        compositeDisposable.add(api.getPhongtro(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Phongtro>>() {
-                    @Override
-                    public void accept(List<Phongtro> phongtros) throws Exception {
-                        phongtroList = phongtros;
-                        if(phongtroList.size() > 0) {
-                            txtChonPhongTro.setTag(phongtroList.get(0).getId());
-                            txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
-                            edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
-                            edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
-                            edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
-                            edtTienPhong.setTag(phongtroList.get(0).getGia());
-                            totalMoney();
-                        }
-                        else {
-                            txtChonPhongTro.setTag(-1);
-                            txtChonPhongTro.setText("Không có phòng trọ");
-                        }
-                        dl.hideDialog();
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
-                        dl.hideDialog();
+                        dialogLoading.hideDialog();
                         throwable.printStackTrace();
                     }
                 }));
@@ -601,9 +586,20 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 txtChonKhuTro.setTag(item.get(0).getId());
                 sttKhuTro = item.get(0).getStt();
                 checkInputWater(khutroList.get(sttKhuTro));
-                DialogLoading dialogLoading = new DialogLoading(getActivity(), "Đang tải phòng trọ trong khu...");
-                dialogLoading.showDialog();
-                getPhongtro(String.valueOf(item.get(0).getId()), dialogLoading, "chosen_kt");
+                phongtroList = khutroList.get(item.get(0).getStt()).getPhongtro();
+                if(phongtroList.size() > 0) {
+                    txtChonPhongTro.setTag(phongtroList.get(0).getId());
+                    txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                    edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
+                    edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
+                    edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
+                    edtTienPhong.setTag(phongtroList.get(0).getGia());
+                    totalMoney();
+                }
+                else {
+                    txtChonPhongTro.setTag(-1);
+                    txtChonPhongTro.setText("Không có phòng trọ");
+                }
                 txtCacKhoanThu.setText("Nước, Điện");
                 txtCacKhoanThu.setTag("1,5");
                 totalMoney();
@@ -648,5 +644,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        checkLoadForm = false;
     }
 }
