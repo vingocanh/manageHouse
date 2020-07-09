@@ -12,6 +12,7 @@ public class Common {
 
     public static User currentUser = null;
     public static String token = "";
+    public static boolean checkFormChange = false;
 
     public static API getAPI(){
         return RetrofitClient.getInstance().create(API.class);

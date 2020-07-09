@@ -95,7 +95,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
         mapping(view);
         inputTimKiem();
         scrollListener();
-        itemKhuTroAdapter = new ItemKhuTroAdapter(getContext(), khutroList, layout);
+        itemKhuTroAdapter = new ItemKhuTroAdapter(getActivity(), khutroList, layout);
         rvKhuTro.setAdapter(itemKhuTroAdapter);
         getKhutro("init", 0);
         swipe();
@@ -402,7 +402,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
             case R.id.ivLayout: {
                 layout = !layout;
                 changeLayout();
-                itemKhuTroAdapter = new ItemKhuTroAdapter(getContext(), khutroList, layout);
+                itemKhuTroAdapter = new ItemKhuTroAdapter(getActivity(), khutroList, layout);
                 rvKhuTro.setAdapter(itemKhuTroAdapter);
                 break;
             }

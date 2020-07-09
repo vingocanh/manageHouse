@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +82,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private Khutro khutro;
     private List<Khoanthu> khoanthuList = new ArrayList<>();
     private ItemKhoanThuKhuTro itemKhoanThuKhuTro;
+    private String namXayDung = "", tenKhuTro = "", diaChi = "";
 
     public FormFragment() {
         // Required empty public constructor
@@ -102,8 +105,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_form_khu_tro, container, false);
+        Common.checkFormChange = false;
         api = Common.getAPI();
         mapping(view);
+        textChange();
         getKhoanThu();
         getDonViTinh();
         if(khutro == null) setValueDefault();
@@ -119,9 +124,12 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         else {
             ivAvatar.setImageResource(R.drawable.ic_hotel);
         }
-        editTen.setText(khutro.getTen());
-        edtDiaChi.setText(khutro.getDiachi());
-        edtNamXayDung.setText(khutro.getNam_xd());
+        tenKhuTro = khutro.getTen();
+        editTen.setText(tenKhuTro);
+        diaChi = khutro.getDiachi();
+        edtDiaChi.setText(diaChi);
+        namXayDung = khutro.getNam_xd();
+        edtNamXayDung.setText(namXayDung);
         String trangThai = "Sử dụng";
         if(khutro.getStatus() == 0) trangThai = "Không sử dụng";
         txtTrangThai.setText(trangThai);
@@ -165,9 +173,69 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        edtNamXayDung.setText((calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR));
+        namXayDung = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+        edtNamXayDung.setText(namXayDung);
         txtTrangThai.setText("Sử dụng");
         txtTrangThai.setTag("1");
+    }
+
+    public void textChange() {
+        editTen.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(!s.toString().equals(tenKhuTro)) {
+                        Common.checkFormChange = true;
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtDiaChi.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(!s.toString().equals(diaChi)) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtNamXayDung.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(!s.toString().equals(namXayDung)) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void selectImage() {
@@ -363,6 +431,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uriAvatar);
                 ivAvatar.setImageBitmap(bitmap);
                 btnXoaAnh.setVisibility(View.VISIBLE);
+                Common.checkFormChange =true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -445,6 +514,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void onReceiveItem(List<Item> item) {
         txtTrangThai.setText(item.get(0).getName());
         txtTrangThai.setTag(item.get(0).getId());
+        if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
     }
 
     @Override
@@ -456,5 +526,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     @Override
     public void onReceiveKhoanThu() {
         itemKhoanThuKhuTro.notifyDataSetChanged();
+        Common.checkFormChange = true;
     }
 }

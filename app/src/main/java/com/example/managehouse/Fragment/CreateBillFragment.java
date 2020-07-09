@@ -82,6 +82,8 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     private int sttKhuTro = 0, sttPhongTro = 0, userId = 10;
     private boolean checkDonViNuoc = false; // false - đơn vị theo tháng | true - đơn vị theo khối
     private boolean checkLoadForm = true;
+    private String tenHoaDon = "", thangHoaDon = "";
+    private int tienPhong = 0;
 
     public CreateBillFragment() {
         // Required empty public constructor
@@ -102,7 +104,9 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_bill, container, false);
+        Common.checkFormChange = false;
         mapping(view);
+        textChange();
         createHoaDon();
         // init api
         api = Common.getAPI();
@@ -141,6 +145,25 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         edtSoNuocCu = view.findViewById(R.id.edtSoNuocCu);
         edtSoNuocMoi = view.findViewById(R.id.edtSoNuocMoi);
         edtSoNuoc = view.findViewById(R.id.edtSoNuoc);
+        edtTienPhong.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String value = edtTienPhong.getText().toString();
+                    edtTienPhong.setText(String.valueOf(Common.clearMoney(value)));
+                } else {
+                    edtTienPhong.setText(Common.formatMoney(Integer.parseInt(edtTienPhong.getText().toString())));
+                    edtTienPhong.setTag(Common.clearMoney(edtTienPhong.getText().toString()));
+                }
+            }
+        });
+        edtThang.setCursorVisible(false);
+        edtThang.setFocusableInTouchMode(false);
+        edtThang.setFocusable(false);
+        edtThang.setOnClickListener(this);
+    }
+
+    public void textChange() {
         edtSoDienMoi.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -152,11 +175,30 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 if (!s.toString().equals("")) {
                     int soDienCu = Integer.parseInt(edtSoDienCu.getText().toString());
                     int soDienMoi = Integer.parseInt(s.toString());
+                    if(soDienMoi != 0) Common.checkFormChange = true;
                     int soDien = soDienMoi - soDienCu;
                     if (soDien > 0) {
                         edtSoDien.setText(String.valueOf(soDien));
                         totalMoney();
                     } else edtSoDien.setText("0");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtSoDienCu.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals("")) {
+                    if(Integer.parseInt(s.toString()) != 0) Common.checkFormChange = true;
                 }
             }
 
@@ -176,6 +218,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 if (!s.toString().equals("")) {
                     int soNuocCu = Integer.parseInt(edtSoNuocCu.getText().toString());
                     int soNuocMoi = Integer.parseInt(s.toString());
+                    if(soNuocMoi != 0) Common.checkFormChange = true;
                     int soNuoc = soNuocMoi - soNuocCu;
                     if (soNuoc > 0) {
                         edtSoNuoc.setText(String.valueOf(soNuoc));
@@ -189,22 +232,132 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
 
             }
         });
-        edtTienPhong.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        edtSoNuocCu.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    String value = edtTienPhong.getText().toString();
-                    edtTienPhong.setText(String.valueOf(Common.clearMoney(value)));
-                } else {
-                    edtTienPhong.setText(Common.formatMoney(Integer.parseInt(edtTienPhong.getText().toString())));
-                    edtTienPhong.setTag(Common.clearMoney(edtTienPhong.getText().toString()));
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals("")) {
+                    if(Integer.parseInt(s.toString()) != 0) Common.checkFormChange = true;
                 }
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
-        edtThang.setCursorVisible(false);
-        edtThang.setFocusableInTouchMode(false);
-        edtThang.setFocusable(false);
-        edtThang.setOnClickListener(this);
+        edtTen.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals("")) {
+                    if(!s.toString().equals(tenHoaDon)) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtThang.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals("")) {
+                    if(!s.toString().equals(thangHoaDon)) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtTienPhong.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals("")) {
+                    if(tienPhong != Integer.parseInt(edtTienPhong.getTag().toString())) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtSoDien.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(!s.toString().equals("0")) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtSoNuoc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(!s.toString().equals("0")) Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtGhiChu.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    Common.checkFormChange = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void initForm() {
@@ -217,10 +370,12 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         String currentDate = simpleDateFormat.format(date);
-        edtTen.setText("HĐ-" + currentDate);
+        tenHoaDon = "HĐ-" + currentDate;
+        edtTen.setText(tenHoaDon);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        edtThang.setText((calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR));
+        thangHoaDon = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+        edtThang.setText(thangHoaDon);
         txtCacKhoanThu.setText("Nước, Điện");
         txtCacKhoanThu.setTag("1,5");
     }
@@ -343,6 +498,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                                 edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
                                 edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
                                 edtTienPhong.setTag(phongtroList.get(0).getGia());
+                                tienPhong = phongtroList.get(0).getGia();
                                 totalMoney();
                             }
                             else {
@@ -580,8 +736,10 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onReceiveItem(List<Item> item) {
+        Common.checkFormChange = true;
         switch (typeChosenItem) {
             case 0: {
+
                 txtChonKhuTro.setText(item.get(0).getName());
                 txtChonKhuTro.setTag(item.get(0).getId());
                 sttKhuTro = item.get(0).getStt();
@@ -594,6 +752,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
                     edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
                     edtTienPhong.setTag(phongtroList.get(0).getGia());
+                    tienPhong = phongtroList.get(0).getGia();
                     totalMoney();
                 }
                 else {
@@ -612,6 +771,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 Phongtro phongtro = phongtroList.get(sttPhongTro);
                 edtTienPhong.setText(Common.formatMoney(phongtro.getGia()));
                 edtTienPhong.setTag(phongtro.getGia());
+                tienPhong = phongtro.getGia();
                 edtSoDienCu.setText(String.valueOf(phongtro.getChotsodien()));
                 edtSoNuocCu.setText(String.valueOf(phongtro.getChotsonuoc()));
                 totalMoney();

@@ -1,8 +1,9 @@
 package com.example.managehouse.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +13,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.managehouse.Activity.HomeActivity;
+import com.example.managehouse.Fragment.KhuTro.DetailFragment;
 import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ItemKhuTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
+    private Activity activity;
     private List<Khutro> khutros;
     private boolean layout;
     public static int itemWidth = 0;
 
-    public ItemKhuTroAdapter(Context context, List<Khutro> khutros, boolean layout) {
-        this.context = context;
+    public ItemKhuTroAdapter(Activity activity, List<Khutro> khutros, boolean layout) {
+        this.activity = activity;
         this.khutros = khutros;
         this.layout = layout;
     }
@@ -38,25 +42,25 @@ public class ItemKhuTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(viewType == 1) {
             View view = null;
             if(layout) {
-                view = LayoutInflater.from(context).inflate(R.layout.item_khutro, parent,false);
+                view = LayoutInflater.from(activity).inflate(R.layout.item_khutro, parent,false);
             }
             else {
-                view = LayoutInflater.from(context).inflate(R.layout.item_khutro_grid, parent,false);
+                view = LayoutInflater.from(activity).inflate(R.layout.item_khutro_grid, parent,false);
             }
             return new MyItemViewHolder(view);
         }
         else {
             if(viewType == 0) {
-                View view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent,false);
+                View view = LayoutInflater.from(activity).inflate(R.layout.item_loading, parent,false);
                 return new MyLoadingViewHolder(view);
             }
             else {
                 if(viewType == -1) {
-                    View view = LayoutInflater.from(context).inflate(R.layout.item_not_found, parent,false);
+                    View view = LayoutInflater.from(activity).inflate(R.layout.item_not_found, parent,false);
                     return new MyNotFoundViewHolder(view);
                 }
                 else {
-                    View view = LayoutInflater.from(context).inflate(R.layout.item_empty_data, parent,false);
+                    View view = LayoutInflater.from(activity).inflate(R.layout.item_empty_data, parent,false);
                     return new MyEmptyDataViewHolder(view);
                 }
             }
@@ -88,7 +92,11 @@ public class ItemKhuTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ((MyItemViewHolder) holder).setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int pos, boolean isLongClick) {
-                    Log.d("cuong", "ok");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("khutro", (Serializable) khutros.get(pos));
+                    DetailFragment detailFragment = new DetailFragment();
+                    detailFragment.setArguments(bundle);
+                    ((HomeActivity) activity).replaceFragment(detailFragment, true);
                 }
             });
         }

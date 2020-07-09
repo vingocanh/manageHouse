@@ -1,5 +1,7 @@
 package com.example.managehouse.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,7 +22,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.managehouse.Common.Common;
+import com.example.managehouse.Fragment.CreateBillFragment;
 import com.example.managehouse.Fragment.DashboardFragment;
+import com.example.managehouse.Fragment.KhuTro.FormFragment;
 import com.example.managehouse.Fragment.KhuTroFragment;
 import com.example.managehouse.Model.User;
 import com.example.managehouse.R;
@@ -37,6 +41,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public ImageView ivMenu, ivAction;
     private DrawerLayout drawerLayout;
     private NavigationView nvMenu;
+    private Fragment fragment = null;
 
     /* premission */
     private List<String> permissions = new ArrayList<>();
@@ -102,6 +107,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void replaceFragment(Fragment fragment, boolean backStack) {
+        this.fragment = fragment;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.replace(R.id.flHome, fragment);
@@ -145,5 +151,30 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(fragment.getView().getTag() != null) {
+            if(Common.checkFormChange) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Dữ liệu bạn thay đổi sẽ bị mất, chắc chắn thoát?")
+                        .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                HomeActivity.super.onBackPressed();
+                            }
+                        })
+                        .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
+            }
+            else HomeActivity.super.onBackPressed();
+            return;
+        }
+        super.onBackPressed();
     }
 }
