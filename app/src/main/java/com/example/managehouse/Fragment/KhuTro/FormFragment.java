@@ -269,7 +269,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         }, R.string.form_null_value);
     }
 
-    public void addKhuTro(RequestBody id, RequestBody ten, RequestBody diaChi, RequestBody namXayDung, RequestBody trangThai, RequestBody userId, RequestBody type, MultipartBody.Part file, RequestBody idKhoanThu, RequestBody giaKhoanThu, RequestBody dvtKhoanThu) {
+    public void addData(RequestBody id, RequestBody ten, RequestBody diaChi, RequestBody namXayDung, RequestBody trangThai, RequestBody userId, RequestBody type, MultipartBody.Part file, RequestBody idKhoanThu, RequestBody giaKhoanThu, RequestBody dvtKhoanThu) {
         compositeDisposable.add(api.createKhuTro(id,ten,diaChi,namXayDung,trangThai, userId, type, file, idKhoanThu, giaKhoanThu, dvtKhoanThu ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
@@ -281,6 +281,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                                 Toasty.error(getContext(), message.getBody()[0], 300, true).show();
                             } else {
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
+                                Common.checkFormChange = false;
                             }
                         }
                     }
@@ -328,14 +329,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         khoanthuList.clear();
                         khoanthuList.addAll(khoanthus);
                         if(khutro != null) {
-//                            List<Integer> idKhoanThu = new ArrayList<>();
-//                            List<Integer> giaKhoanThuList = new ArrayList<>();
-//                            List<Integer> dvtKhoanThuList = new ArrayList<>();
-//                            for(Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
-//                                idKhoanThu.add(khutrokhoanthu.getKhoanthu_id());
-//                                giaKhoanThuList.add(khutrokhoanthu.getKhoanthu_id(), khutrokhoanthu.getGia());
-//                                dvtKhoanThuList.add(khutrokhoanthu.getKhoanthu_id(), khutrokhoanthu.getDonvitinh_id());
-//                            }
                             int i = 0;
                             int[] giaKhoanThu = new int[khoanthus.size()];
                             int[] idKhoanThu = new int[khoanthus.size()];
@@ -463,7 +456,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     items.add(new Item(false, 1, 0, "Sử dụng"));
                     items.add(new Item(true, 0, 1, "Không sử dụng"));
                 }
-                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(),items,"Chọn tình trạng","single",0);
+                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(),items,"Chọn tình trạng","single",0, false);
                 dialogChosenItem.setChosenItemCallback(this);
                 dialogChosenItem.showDialog();
                 break;
@@ -492,12 +485,12 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         if (khutro == null) {
                             RequestBody khutroId = RequestBody.create(MediaType.parse("multipart/form-data"), "-1");
                             RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-                            addKhuTro(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file, idKhoanThu,giaKhoanThu,donViTinhKhoanThu);
+                            addData(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file, idKhoanThu,giaKhoanThu,donViTinhKhoanThu);
                         }
                         else {
                             RequestBody khutroId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(khutro.getId()));
                             RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "0");
-                            addKhuTro(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file, idKhoanThu,giaKhoanThu,donViTinhKhoanThu);
+                            addData(khutroId,ten,diaChi,namXayDung,trangThai,id,type,file, idKhoanThu,giaKhoanThu,donViTinhKhoanThu);
                         }
                     }
                     else {
@@ -521,6 +514,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+        Common.checkFormChange = false;
     }
 
     @Override

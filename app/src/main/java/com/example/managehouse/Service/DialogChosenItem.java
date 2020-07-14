@@ -42,13 +42,15 @@ public class DialogChosenItem implements View.OnClickListener, ChosenItemCallbac
     private ChosenItemCallback chosenItemCallback;
     private List<Item> itemChecked = new ArrayList<>();
     private String type;
+    private boolean action = false;
 
-    public DialogChosenItem(Activity activity, List<Item> itemList, String title, String type, int scrollPos) {
+    public DialogChosenItem(Activity activity, List<Item> itemList, String title, String type, int scrollPos, boolean action) {
         this.activity = activity;
         this.itemList = itemList;
         this.title = title;
         this.type = type;
         this.scrollPos = scrollPos;
+        this.action = action;
         for (Item item : itemList) {
             if(item.isChecked()) itemChecked.add(item);
         }
@@ -105,6 +107,11 @@ public class DialogChosenItem implements View.OnClickListener, ChosenItemCallbac
         else {
             cbAllItem.setVisibility(View.VISIBLE);
         }
+        LinearLayout llAction = view.findViewById(R.id.llAction);
+        if(action) {
+            llAction.setVisibility(View.VISIBLE);
+        }
+        else llAction.setVisibility(View.GONE);
 
         // set height recleview
         rvChosenItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);

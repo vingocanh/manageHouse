@@ -1,22 +1,30 @@
 package com.example.managehouse.Model;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class Phongtro {
-    private int id, khutro_id, status, gia, chotsodien, chotsonuoc;
-    private String ten, created_at, update_at;
+public class Phongtro implements Serializable {
+    private int id, khutro_id, status, gia, chotsodien, chotsonuoc, total, user_id;
+    private String ten, created_at, update_at, img, ghichu;
     private Khutro khutro;
 
-    public Phongtro(int id, int khutro_id, int status, int gia, int chotsodien, int chotsonuoc, String ten, String created_at, String update_at, Khutro khutro) {
+    public Phongtro(int id) {
+        this.id = id;
+    }
+
+    public Phongtro(int id, int khutro_id, int status, int gia, int chotsodien, int chotsonuoc, int total, int user_id, String ten, String created_at, String update_at, String img, String ghichu, Khutro khutro) {
         this.id = id;
         this.khutro_id = khutro_id;
         this.status = status;
         this.gia = gia;
         this.chotsodien = chotsodien;
         this.chotsonuoc = chotsonuoc;
+        this.total = total;
+        this.user_id = user_id;
         this.ten = ten;
         this.created_at = created_at;
         this.update_at = update_at;
+        this.img = img;
+        this.ghichu = ghichu;
         this.khutro = khutro;
     }
 
@@ -68,6 +76,22 @@ public class Phongtro {
         this.chotsonuoc = chotsonuoc;
     }
 
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
     public String getTen() {
         return ten;
     }
@@ -90,6 +114,22 @@ public class Phongtro {
 
     public void setUpdate_at(String update_at) {
         this.update_at = update_at;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getGhichu() {
+        return ghichu;
+    }
+
+    public void setGhichu(String ghichu) {
+        this.ghichu = ghichu;
     }
 
     public Khutro getKhutro() {

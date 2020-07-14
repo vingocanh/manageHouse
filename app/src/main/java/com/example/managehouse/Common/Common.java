@@ -26,6 +26,7 @@ public class Common {
 
     public static int clearMoney(String value) {
         int price = 0;
+        if(value.indexOf("VNĐ") == -1) return price;
         String cMoney = value.substring(0, value.indexOf("VNĐ") - 1);
         while (cMoney.indexOf(".") > -1) {
             cMoney = cMoney.replace(".", "");

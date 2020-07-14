@@ -22,10 +22,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.managehouse.Common.Common;
-import com.example.managehouse.Fragment.CreateBillFragment;
 import com.example.managehouse.Fragment.DashboardFragment;
-import com.example.managehouse.Fragment.KhuTro.FormFragment;
 import com.example.managehouse.Fragment.KhuTroFragment;
+import com.example.managehouse.Fragment.PhongTroFragment;
 import com.example.managehouse.Model.User;
 import com.example.managehouse.R;
 import com.google.android.material.navigation.NavigationView;
@@ -47,41 +46,41 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private List<String> permissions = new ArrayList<>();
 
     private FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         mapping();
         createPermission();
-        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
-        String expiresAt = sharedPreferences.getString("expires_at",null);
-        if(expiresAt != null) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String expiresAt = sharedPreferences.getString("expires_at", null);
+        if (expiresAt != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             try {
                 Date expiresUser = formatter.parse(expiresAt);
                 Date currentDate = formatter.parse(formatter.format(new Date()));
-                if(currentDate.compareTo(expiresUser) < 0) {
+                if (currentDate.compareTo(expiresUser) < 0) {
                     fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.add(R.id.flHome, new DashboardFragment());
                     fragmentTransaction.commit();
                     Common.currentUser = new User(
-                            Integer.parseInt(sharedPreferences.getString("id","0")),
-                            sharedPreferences.getString("name",""),
-                            sharedPreferences.getString("username",""),
-                            sharedPreferences.getString("roles",""),
-                            sharedPreferences.getString("address",""),
+                            Integer.parseInt(sharedPreferences.getString("id", "0")),
+                            sharedPreferences.getString("name", ""),
+                            sharedPreferences.getString("username", ""),
+                            sharedPreferences.getString("roles", ""),
+                            sharedPreferences.getString("address", ""),
                             null,
                             null,
-                            sharedPreferences.getString("created_at",""),
-                            sharedPreferences.getString("updated_at",""),
-                            sharedPreferences.getString("access_token",""),
-                            sharedPreferences.getString("token_type",""),
-                            sharedPreferences.getString("expires_at","")
+                            sharedPreferences.getString("created_at", ""),
+                            sharedPreferences.getString("updated_at", ""),
+                            sharedPreferences.getString("access_token", ""),
+                            sharedPreferences.getString("token_type", ""),
+                            sharedPreferences.getString("expires_at", "")
                     );
                     Common.token = sharedPreferences.getString("token_type", "") + " " + sharedPreferences.getString("access_token", "");
-                }
-                else {
+                } else {
                     sharedPreferences.edit().clear().commit();
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
@@ -111,9 +110,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.replace(R.id.flHome, fragment);
-        if(backStack) fragmentTransaction.addToBackStack(null);
+        if (backStack) {
+            fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+        }
         fragmentTransaction.commit();
+
     }
+
     public void createPermission() {
         permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         String[] arrPer = new String[permissions.size()];
@@ -134,7 +137,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ivMenu : {
+            case R.id.ivMenu: {
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
             }
@@ -143,9 +146,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.flHome);
+        String fragmentClass = "";
+        if(fragment != null) fragmentClass = fragment.getClass().getSimpleName();
         switch (menuItem.getItemId()) {
-            case R.id.navKhuTro : {
-                replaceFragment(new KhuTroFragment(), true);
+            case R.id.navKhuTro: {
+                if(!fragmentClass.equals("KhuTroFragment")) {
+                    replaceFragment(new KhuTroFragment(), true);
+                }
+                break;
+            }
+            case R.id.navPhongTro : {
+                if(!fragmentClass.equals("PhongTroFragment")) {
+                    replaceFragment(new PhongTroFragment(), true);
+                }
                 break;
             }
         }
@@ -155,26 +169,30 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if(fragment.getView().getTag() != null) {
-            if(Common.checkFormChange) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Dữ liệu bạn thay đổi sẽ bị mất, chắc chắn thoát?")
-                        .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                HomeActivity.super.onBackPressed();
-                            }
-                        })
-                        .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+        if (fragment != null) {
+            if (fragment.getView() != null) {
+                if (fragment.getView().getTag() != null) {
+                    if (Common.checkFormChange) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage("Dữ liệu bạn thay đổi sẽ bị mất, chắc chắn thoát?")
+                                .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        HomeActivity.super.onBackPressed();
+                                    }
+                                })
+                                .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        }).create().show();
+                                    }
+                                }).create().show();
+                    } else HomeActivity.super.onBackPressed();
+                    return;
+                }
             }
-            else HomeActivity.super.onBackPressed();
-            return;
         }
+
         super.onBackPressed();
     }
 }

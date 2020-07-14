@@ -11,7 +11,7 @@
         android:id="@+id/ivAvatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_hotel"
+        android:src="@drawable/ic_home_32dp"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:textSize="@dimen/sizePrimary"
                 android:text="xxxxxxxxx"/>
             <TextView
-                android:id="@+id/txtAddress"
+                android:id="@+id/txtKhuTro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#4a4a4a"
@@ -43,7 +43,7 @@
             android:gravity="end|center"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/txtXayDung"
+                android:id="@+id/txtPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"

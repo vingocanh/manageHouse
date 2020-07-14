@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff"
     android:tag="form"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -142,6 +143,221 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
+            <LinearLayout
+                android:id="@+id/llThongKe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content" >
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="130dp"
+                        app:cardBackgroundColor="#3498db"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:padding="5dp"
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:background="@drawable/line_dash_bg"
+                                android:layout_height="30dp">
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#fff"
+                                        android:textSize="14sp"
+                                        android:text="Tổng thu"/>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:orientation="horizontal"
+                                    android:layout_weight="1">
+                                    <ImageView
+                                        android:layout_gravity="center"
+                                        android:layout_marginRight="5dp"
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:src="@drawable/ic_date_range_24dp" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textColor="#fff"
+                                        android:text="2020"
+                                        android:textSize="14sp"/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:background="@drawable/banner_item_dash_bg"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_attach_money_32dp" />
+                                <TextView
+                                    android:id="@+id/txtTotalPrice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAlignment="center"
+                                    android:text="0"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+                <LinearLayout
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content" >
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="130dp"
+                        android:gravity="center"
+                        app:cardBackgroundColor="#9b59b6"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:padding="5dp"
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:background="@drawable/line_dash_bg"
+                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#fff"
+                                        android:textSize="14sp"
+                                        android:text="Số phòng trọ"/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:background="@drawable/banner_item_dash_bg"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_home_32dp" />
+                                <TextView
+                                    android:id="@+id/txtNumberRoom"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAlignment="center"
+                                    android:text="0"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="130dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        app:cardBackgroundColor="#e67e22">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:padding="5dp"
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:background="@drawable/line_dash_bg"
+                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#fff"
+                                        android:textSize="14sp"
+                                        android:text="Số người trọ"/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:background="@drawable/banner_item_dash_bg"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_person_outline_32dp" />
+                                <TextView
+                                    android:id="@+id/txtNumberPeople"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAlignment="center"
+                                    android:text="0"
+                                    android:textColor="#fff"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_gravity="center"
+                android:id="@+id/lavLoading"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_fileName="round-loading.json" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

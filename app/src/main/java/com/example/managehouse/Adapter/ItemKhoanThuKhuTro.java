@@ -182,7 +182,7 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                         stt++;
                     }
-                    DialogChosenItem dialogChosenItem = new DialogChosenItem(activity, items, "Chọn đơn vị tính", "single",0);
+                    DialogChosenItem dialogChosenItem = new DialogChosenItem(activity, items, "Chọn đơn vị tính", "single",0, true);
                     dialogChosenItem.setChosenItemCallback(ItemKhoanThuKhuTro.this);
                     dialogChosenItem.showDialog();
                 }

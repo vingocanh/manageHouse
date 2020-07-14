@@ -3,13 +3,10 @@ package com.example.managehouse.Fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,28 +15,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.managehouse.Activity.HomeActivity;
-import com.example.managehouse.Adapter.ItemKhuTroAdapter;
+import com.example.managehouse.Adapter.ItemPhongTroAdapter;
 import com.example.managehouse.Callback.ChosenItemCallback;
 import com.example.managehouse.Common.Common;
-import com.example.managehouse.Fragment.KhuTro.FormFragment;
+import com.example.managehouse.Fragment.PhongTro.FormFragment;
 import com.example.managehouse.Helper.ButtonThaoTacClickListener;
 import com.example.managehouse.Helper.MySwipeHelper;
 import com.example.managehouse.Model.Item;
-import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.Model.Message;
+import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
 import com.example.managehouse.Service.DialogChosenItem;
-import com.example.managehouse.Service.DialogLoading;
 import com.example.managehouse.Service.SpacesItemDecoration;
 
 import java.io.Serializable;
@@ -54,30 +48,30 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class KhuTroFragment extends Fragment implements View.OnClickListener, ChosenItemCallback {
+public class PhongTroFragment extends Fragment implements View.OnClickListener, ChosenItemCallback {
 
     private RecyclerView rvData;
     private EditText edtTimKiem;
     private LottieAnimationView lavLoading;
     private ImageView ivSort, ivLayout, ivFilter;
 
-    private ItemKhuTroAdapter itemKhuTroAdapter;
+    private ItemPhongTroAdapter itemPhongTroAdapter;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private API api;
     private HomeActivity homeActivity;
-    private List<Khutro> khutroList = new ArrayList<>();
+    private List<Phongtro> phongtroList = new ArrayList<>();
     private boolean isLoading = false, layout = true, checkSpace = true; // load more khutro
     private int limit = 10, sort = 1, filter = -1, checkCallBack = 0;
     private String search = null;
     private Timer timerSearch = null;
     private MySwipeHelper mySwipeHelper = null;
 
-    public KhuTroFragment() {
+    public PhongTroFragment() {
         // Required empty public constructor
     }
 
-    public static KhuTroFragment newInstance(String param1, String param2) {
-        KhuTroFragment fragment = new KhuTroFragment();
+    public static PhongTroFragment newInstance(String param1, String param2) {
+        PhongTroFragment fragment = new PhongTroFragment();
         return fragment;
     }
 
@@ -90,13 +84,13 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_khu_tro, container, false);
+        View view = inflater.inflate(R.layout.fragment_phong_tro, container, false);
         api = Common.getAPI();
         mapping(view);
         inputTimKiem();
         scrollListener();
-        itemKhuTroAdapter = new ItemKhuTroAdapter(getActivity(), khutroList, layout);
-        rvData.setAdapter(itemKhuTroAdapter);
+        itemPhongTroAdapter = new ItemPhongTroAdapter(getActivity(), phongtroList, layout);
+        rvData.setAdapter(itemPhongTroAdapter);
         getData("init", 0);
         swipe();
         return view;
@@ -136,7 +130,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                                         .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                delete(khutroList.get(pos).getId(), pos);
+                                                delete(phongtroList.get(pos).getId(), pos);
                                             }
                                         })
                                         .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
@@ -157,7 +151,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                             @Override
                             public void onClick(int pos) {
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("khutro", (Serializable) khutroList.get(pos));
+                                bundle.putSerializable("phongtro", (Serializable) phongtroList.get(pos));
                                 FormFragment formFragment = new FormFragment();
                                 formFragment.setArguments(bundle);
                                 homeActivity.replaceFragment(formFragment, true);
@@ -206,30 +200,30 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
 
     public void getData(final String type, int offset) {
         if (type.equals("init")) lavLoading.setVisibility(View.VISIBLE);
-        compositeDisposable.add(api.getKhutro(limit, offset, sort, filter).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Khutro>>() {
+        compositeDisposable.add(api.getPhongtro(limit, offset, sort, filter).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Phongtro>>() {
                     @Override
-                    public void accept(List<Khutro> khutros) throws Exception {
+                    public void accept(List<Phongtro> phongtros) throws Exception {
                         if (type.equals("init")) {
-                            khutroList.clear();
-                            if (khutros.size() > 0) {
-                                khutroList.addAll(khutros);
-                                if (khutroList.get(0).getTotal() - khutroList.size() > 0)
+                            phongtroList.clear();
+                            if (phongtros.size() > 0) {
+                                phongtroList.addAll(phongtros);
+                                if (phongtroList.get(0).getTotal() - phongtroList.size() > 0)
                                     isLoading = false;
                                 else isLoading = true;
                             } else {
                                 isLoading = true;
-                                khutroList.add(new Khutro(-2));
+                                phongtroList.add(new Phongtro(-2));
                             }
-                            itemKhuTroAdapter.notifyDataSetChanged();
+                            itemPhongTroAdapter.notifyDataSetChanged();
                             lavLoading.setVisibility(View.GONE);
 
                         } else {
                             if (type.equals("more")) {
-                                khutroList.remove(khutroList.size() - 1);
-                                itemKhuTroAdapter.notifyItemRemoved(khutroList.size());
-                                khutroList.addAll(khutros);
-                                if (khutroList.size() == khutroList.get(0).getTotal())
+                                phongtroList.remove(phongtroList.size() - 1);
+                                itemPhongTroAdapter.notifyItemRemoved(phongtroList.size());
+                                phongtroList.addAll(phongtros);
+                                if (phongtroList.size() == phongtroList.get(0).getTotal())
                                     isLoading = true;
                                 else isLoading = false;
                             }
@@ -247,30 +241,30 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
 
     public void timKiemData(final String search, final String type, int offset) {
         if (type.equals("init")) lavLoading.setVisibility(View.VISIBLE);
-        compositeDisposable.add(api.timKiemKhuTro(search, limit, offset, sort, filter).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Khutro>>() {
+        compositeDisposable.add(api.timKiemPhongTro(search, limit, offset, sort, filter).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Phongtro>>() {
                     @Override
-                    public void accept(List<Khutro> khutros) throws Exception {
+                    public void accept(List<Phongtro> phongtros) throws Exception {
                         if (type.equals("init")) {
-                            khutroList.clear();
-                            if (khutros.size() > 0) {
-                                khutroList.addAll(khutros);
-                                if (khutroList.get(0).getTotal() - khutroList.size() > 0)
+                            phongtroList.clear();
+                            if (phongtros.size() > 0) {
+                                phongtroList.addAll(phongtros);
+                                if (phongtroList.get(0).getTotal() - phongtroList.size() > 0)
                                     isLoading = false;
                                 else isLoading = true;
                             } else {
                                 isLoading = true;
-                                khutroList.add(new Khutro(-2));
+                                phongtroList.add(new Phongtro(-2));
                             }
-                            itemKhuTroAdapter.notifyDataSetChanged();
+                            itemPhongTroAdapter.notifyDataSetChanged();
                             lavLoading.setVisibility(View.GONE);
 
                         } else {
                             if (type.equals("more")) {
-                                khutroList.remove(khutroList.size() - 1);
-                                itemKhuTroAdapter.notifyItemRemoved(khutroList.size());
-                                khutroList.addAll(khutros);
-                                if (khutroList.size() == khutroList.get(0).getTotal())
+                                phongtroList.remove(phongtroList.size() - 1);
+                                itemPhongTroAdapter.notifyItemRemoved(phongtroList.size());
+                                phongtroList.addAll(phongtros);
+                                if (phongtroList.size() == phongtroList.get(0).getTotal())
                                     isLoading = true;
                                 else isLoading = false;
                             }
@@ -299,7 +293,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rvData.getLayoutManager();
                 if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == khutroList.size() - 1) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == phongtroList.size() - 1) {
                         isLoading = true;
                         String type = "all";
                         if (search != null) type = "search";
@@ -311,9 +305,9 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     }
 
     private void loadMore(String type) {
-        khutroList.add(null);
-        itemKhuTroAdapter.notifyItemInserted(khutroList.size() - 1);
-        int offset = khutroList.size() - 1;
+        phongtroList.add(null);
+        itemPhongTroAdapter.notifyItemInserted(phongtroList.size() - 1);
+        int offset = phongtroList.size() - 1;
         if (type.equals("all")) {
             getData("more", offset);
         } else if (type.equals("search")) {
@@ -323,9 +317,9 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     }
 
     public void delete(int id, final int pos) {
-        String url = "khutro/" + id;
+        String url = "phongtro/" + id;
         lavLoading.setVisibility(View.VISIBLE);
-        compositeDisposable.add(api.deleteKhuTro(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.deletePhongTro(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -333,11 +327,11 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                             Toasty.error(getContext(), message.getBody()[0], 300, true).show();
                         } else {
                             Toasty.success(getContext(), message.getBody()[0], 300, true).show();
-                            khutroList.remove(pos);
-                            if (khutroList.size() > 0)
-                                khutroList.get(0).setTotal(khutroList.get(0).getTotal() - 1);
-                            else khutroList.add(new Khutro(-2));
-                            itemKhuTroAdapter.notifyDataSetChanged();
+                            phongtroList.remove(pos);
+                            if (phongtroList.size() > 0)
+                                phongtroList.get(0).setTotal(phongtroList.get(0).getTotal() - 1);
+                            else phongtroList.add(new Phongtro(-2));
+                            itemPhongTroAdapter.notifyDataSetChanged();
                         }
                         lavLoading.setVisibility(View.GONE);
                     }
@@ -396,7 +390,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                 items.add(new Item(false, 1, 0, "Mới nhất"));
                 items.add(new Item(false, 0, 1, "Cũ nhất"));
                 items.add(new Item(false, 2, 2, "Theo tên"));
-                items.add(new Item(false, 3, 3, "Theo năm xây dựng"));
+                items.add(new Item(false, 3, 3, "Theo giá"));
                 for (Item item : items) {
                     if (item.getId() == sort) item.setChecked(true);
                 }
@@ -408,8 +402,8 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
             case R.id.ivLayout: {
                 layout = !layout;
                 changeLayout();
-                itemKhuTroAdapter = new ItemKhuTroAdapter(getActivity(), khutroList, layout);
-                rvData.setAdapter(itemKhuTroAdapter);
+                itemPhongTroAdapter = new ItemPhongTroAdapter(getActivity(), phongtroList, layout);
+                rvData.setAdapter(itemPhongTroAdapter);
                 break;
             }
             case R.id.ivFilter: {
@@ -421,7 +415,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                 for (Item item : items) {
                     if (item.getId() == filter) item.setChecked(true);
                 }
-                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Hiển thị khu trọ", "single", 0, false);
+                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Hiển thị phòng trọ", "single", 0, false);
                 dialogChosenItem.setChosenItemCallback(this);
                 dialogChosenItem.showDialog();
                 break;
@@ -433,7 +427,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     public void onReceiveItem(List<Item> item) {
         if (checkCallBack == 1) sort = item.get(0).getId();
         else if (checkCallBack == 0) filter = item.get(0).getId();
-        int offset = khutroList.size() - 1;
+        int offset = phongtroList.size() - 1;
         if (search != null) {
             timKiemData(search, "init", 0);
         } else {

@@ -42,8 +42,9 @@ public interface API {
                               @Field("remember_me") int remember
     );
 
+    // khu trọ
     @GET
-    Observable<List<Khutro>> getKhutroBill(@Url String url);
+    Observable<List<Khutro>> getKhutroChosen(@Url String url);
 
     @GET("khutro?")
     Observable<List<Khutro>> getKhutro(@Query("limit") int limit,
@@ -78,8 +79,36 @@ public interface API {
     @GET("khoanthu/create")
     Observable<List<Khoanthu>> getKhoanThuKhuTro();
 
+    @GET
+    Observable<Message> thongKeKhuTro(@Url String url);
+
+    // phòng trọ
     @GET("phongtro?")
-    Observable<List<Phongtro>> getPhongtro(@Query("id") String id);
+    Observable<List<Phongtro>> getPhongtro(@Query("limit") int limit,
+                                       @Query("offset") int offset,
+                                       @Query("sort") int sort,
+                                       @Query("filter") int filter);
+
+    @GET("phongtro/create?")
+    Observable<List<Phongtro>> timKiemPhongTro(@Query("search") String search,
+                                           @Query("limit") int limit,
+                                           @Query("offset") int offset,
+                                           @Query("sort") int sort,
+                                           @Query("filter") int filter);
+
+    @POST("phongtro")
+    @Multipart
+    Observable<Message> createPhongTro(@Part("phongtro_id") RequestBody id,
+                                     @Part("ten") RequestBody ten,
+                                     @Part("khutro_id") RequestBody khutro_id,
+                                     @Part("user_id") RequestBody user_id,
+                                     @Part("gia") RequestBody gia,
+                                     @Part("status") RequestBody trangThai,
+                                     @Part("type") RequestBody type,
+                                     @Part MultipartBody.Part avatar);
+
+    @DELETE
+    Observable<Message> deletePhongTro(@Url String url);
 
     @POST("hoadon")
     @FormUrlEncoded

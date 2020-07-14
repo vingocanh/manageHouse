@@ -295,6 +295,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
+                    Log.d("cuong", s.toString() + "");
                     if(tienPhong != Integer.parseInt(edtTienPhong.getTag().toString())) Common.checkFormChange = true;
                 }
             }
@@ -376,8 +377,6 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         calendar.setTime(date);
         thangHoaDon = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
         edtThang.setText(thangHoaDon);
-        txtCacKhoanThu.setText("Nước, Điện");
-        txtCacKhoanThu.setTag("1,5");
     }
 
     public void validator() {
@@ -481,7 +480,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
 
     public void getKhutro() {
         String url = "khutro/1";
-        compositeDisposable.add(api.getKhutroBill(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.getKhutroChosen(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Khutro>>() {
                     @Override
                     public void accept(List<Khutro> khutros) throws Exception {
@@ -490,14 +489,29 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                             txtChonKhuTro.setText(khutroList.get(0).getTen());
                             txtChonKhuTro.setTag(khutroList.get(0).getId());
                             checkInputWater(khutroList.get(sttKhuTro));
+                            int i = 0;
+                            String khoanThu = "", idKhoanThu = "";
+                            for (Khutrokhoanthu khutrokhoanthu : khutros.get(0).getKhutrokhoanthu()) {
+                                if(i == khutros.get(0).getKhutrokhoanthu().size() - 1) {
+                                    khoanThu += khutrokhoanthu.getKhoanthu().getTen();
+                                    idKhoanThu += khutrokhoanthu.getKhoanthu_id();
+                                }
+                                else {
+                                    khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
+                                    idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ", ";
+                                }
+                                i++;
+                            }
+                            txtCacKhoanThu.setText(khoanThu);
+                            txtCacKhoanThu.setTag(idKhoanThu);
                             phongtroList = khutroList.get(0).getPhongtro();
                             if(phongtroList.size() > 0) {
                                 txtChonPhongTro.setTag(phongtroList.get(0).getId());
                                 txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
                                 edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
                                 edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
-                                edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
                                 edtTienPhong.setTag(phongtroList.get(0).getGia());
+                                edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
                                 tienPhong = phongtroList.get(0).getGia();
                                 totalMoney();
                             }
@@ -634,7 +648,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                         else items.add(new Item(false, khutro.getId(), stt, khutro.getTen()));
                         stt++;
                     }
-                    dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttKhuTro);
+                    dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttKhuTro, true);
                     dialogChosen.setChosenItemCallback(this);
                     dialogChosen.showDialog();
                 }
@@ -669,7 +683,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                         else items.add(new Item(false, phongtro.getId(), stt, phongtro.getTen()));
                         stt++;
                     }
-                    dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn phòng trọ", "single", sttKhuTro);
+                    dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn phòng trọ", "single", sttPhongTro, true);
                     dialogChosen.setChosenItemCallback(this);
                     dialogChosen.showDialog();
                 }
@@ -719,7 +733,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     stt++;
                 }
 
-                dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn các khoản thu", "multi",0);
+                dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn các khoản thu", "multi",0, false);
                 dialogChosen.setChosenItemCallback(this);
                 dialogChosen.showDialog();
                 if(checkedItem == khutro.getKhutrokhoanthu().size()) {
@@ -739,11 +753,26 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         Common.checkFormChange = true;
         switch (typeChosenItem) {
             case 0: {
-
                 txtChonKhuTro.setText(item.get(0).getName());
                 txtChonKhuTro.setTag(item.get(0).getId());
                 sttKhuTro = item.get(0).getStt();
                 checkInputWater(khutroList.get(sttKhuTro));
+                int i = 0;
+                String khoanThu = "", idKhoanThu = "";
+                for (Khutrokhoanthu khutrokhoanthu : khutroList.get(sttKhuTro).getKhutrokhoanthu()) {
+                    if(i == khutroList.get(sttKhuTro).getKhutrokhoanthu().size() - 1) {
+                        khoanThu += khutrokhoanthu.getKhoanthu().getTen();
+                        idKhoanThu += khutrokhoanthu.getKhoanthu_id();
+                    }
+                    else {
+                        khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
+                        idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ",";
+                    }
+                    i++;
+                }
+                txtCacKhoanThu.setText(khoanThu);
+                txtCacKhoanThu.setTag(idKhoanThu);
+                initForm();
                 phongtroList = khutroList.get(item.get(0).getStt()).getPhongtro();
                 if(phongtroList.size() > 0) {
                     txtChonPhongTro.setTag(phongtroList.get(0).getId());
@@ -759,12 +788,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     txtChonPhongTro.setTag(-1);
                     txtChonPhongTro.setText("Không có phòng trọ");
                 }
-                txtCacKhoanThu.setText("Nước, Điện");
-                txtCacKhoanThu.setTag("1,5");
                 totalMoney();
                 break;
             }
             case 1: {
+                initForm();
                 txtChonPhongTro.setText(item.get(0).getName());
                 txtChonPhongTro.setTag(item.get(0).getId());
                 sttPhongTro = item.get(0).getStt();
@@ -804,6 +832,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+        Common.checkFormChange = false;
     }
 
     @Override
