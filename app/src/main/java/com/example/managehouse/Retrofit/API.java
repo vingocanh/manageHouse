@@ -4,6 +4,7 @@ import com.example.managehouse.Model.Donvitinh;
 import com.example.managehouse.Model.Khoanthu;
 import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.Model.Message;
+import com.example.managehouse.Model.Nguoitro;
 import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.Model.User;
 
@@ -80,36 +81,72 @@ public interface API {
     Observable<List<Khoanthu>> getKhoanThuKhuTro();
 
     @GET
-    Observable<Message> thongKeKhuTro(@Url String url);
+    Observable<Message> thongKeChiTiet(@Url String url);
 
     // phòng trọ
     @GET("phongtro?")
     Observable<List<Phongtro>> getPhongtro(@Query("limit") int limit,
-                                       @Query("offset") int offset,
-                                       @Query("sort") int sort,
-                                       @Query("filter") int filter);
-
-    @GET("phongtro/create?")
-    Observable<List<Phongtro>> timKiemPhongTro(@Query("search") String search,
-                                           @Query("limit") int limit,
                                            @Query("offset") int offset,
                                            @Query("sort") int sort,
                                            @Query("filter") int filter);
 
+    @GET("phongtro/create?")
+    Observable<List<Phongtro>> timKiemPhongTro(@Query("search") String search,
+                                               @Query("limit") int limit,
+                                               @Query("offset") int offset,
+                                               @Query("sort") int sort,
+                                               @Query("filter") int filter);
+
     @POST("phongtro")
     @Multipart
     Observable<Message> createPhongTro(@Part("phongtro_id") RequestBody id,
-                                     @Part("ten") RequestBody ten,
-                                     @Part("khutro_id") RequestBody khutro_id,
-                                     @Part("user_id") RequestBody user_id,
-                                     @Part("gia") RequestBody gia,
-                                     @Part("status") RequestBody trangThai,
-                                     @Part("type") RequestBody type,
-                                     @Part MultipartBody.Part avatar);
+                                       @Part("ten") RequestBody ten,
+                                       @Part("khutro_id") RequestBody khutro_id,
+                                       @Part("user_id") RequestBody user_id,
+                                       @Part("gia") RequestBody gia,
+                                       @Part("chotsodien") RequestBody chotsodien,
+                                       @Part("chotsonuoc") RequestBody chotsonuoc,
+                                       @Part("status") RequestBody trangThai,
+                                       @Part("type") RequestBody type,
+                                       @Part MultipartBody.Part avatar);
 
     @DELETE
     Observable<Message> deletePhongTro(@Url String url);
 
+    // người trọ
+    @GET("nguoitro?")
+    Observable<List<Nguoitro>> getNguoitro(@Query("limit") int limit,
+                                           @Query("offset") int offset,
+                                           @Query("sort") int sort,
+                                           @Query("filter") int filter);
+
+    @GET("nguoitro/create?")
+    Observable<List<Nguoitro>> timKiemNguoiTro(@Query("search") String search,
+                                               @Query("limit") int limit,
+                                               @Query("offset") int offset,
+                                               @Query("sort") int sort,
+                                               @Query("filter") int filter);
+
+    @POST("nguoitro")
+    @Multipart
+    Observable<Message> createNguoiTro(@Part("nguoitro_id") RequestBody nguoitro_id,
+                                       @Part("ten") RequestBody ten,
+                                       @Part MultipartBody.Part avatar,
+                                       @Part("ngaysinh") RequestBody ngaysinh,
+                                       @Part("socmnd") RequestBody socmnd,
+                                       @Part("quequan") RequestBody quequan,
+                                       @Part("trinhdo") RequestBody trinhdo,
+                                       @Part("noilamviec") RequestBody noilamviec,
+                                       @Part("phongtro_id") RequestBody phongtro_id,
+                                       @Part("ghichu") RequestBody ghichu,
+                                       @Part("status") RequestBody status,
+                                       @Part("type") RequestBody type
+                                       );
+
+    @DELETE
+    Observable<Message> deleteNguoiTro(@Url String url);
+
+    // hóa đơn
     @POST("hoadon")
     @FormUrlEncoded
     Observable<Message> createHoadon(@Field("ten") String ten,

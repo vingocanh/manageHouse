@@ -11,12 +11,13 @@
         android:id="@+id/ivAvatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_home_32dp"
+        android:src="@drawable/ic_person_outline_32dp"
         />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
+        android:gravity="center"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"
@@ -25,7 +26,7 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/txtName"
+                android:id="@+id/txtTen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
@@ -33,24 +34,34 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
+
             <TextView
-                android:id="@+id/txtKhuTro"
+                android:id="@+id/txtPhongTro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#4a4a4a"
-                android:textSize="13sp"
-                android:maxLines="1"
                 android:ellipsize="end"
-                android:text="xxxxxxxxx"/>
+                android:maxLines="1"
+                android:text="xxxxxxxxx"
+                android:textColor="#4a4a4a"
+                android:textSize="13sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="end|center"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/txtPrice"
+                android:id="@+id/txtNgaySinh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="xxxxxxxxx"/>
+            <TextView
+                android:id="@+id/txtQueQuan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"

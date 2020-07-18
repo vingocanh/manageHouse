@@ -12,25 +12,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.managehouse.Activity.HomeActivity;
-import com.example.managehouse.Common.Common;
-import com.example.managehouse.Fragment.PhongTro.DetailFragment;
-import com.example.managehouse.Model.Phongtro;
+import com.example.managehouse.Model.Nguoitro;
 import com.example.managehouse.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ItemPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ItemNguoiTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Activity activity;
-    private List<Phongtro> phongtros;
+    private List<Nguoitro> nguoitros;
     private boolean layout;
 
-    public ItemPhongTroAdapter(Activity activity, List<Phongtro> phongtros, boolean layout) {
+    public ItemNguoiTroAdapter(Activity activity, List<Nguoitro> nguoitros, boolean layout) {
         this.activity = activity;
-        this.phongtros = phongtros;
+        this.nguoitros = nguoitros;
         this.layout = layout;
     }
 
@@ -40,26 +37,26 @@ public class ItemPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(viewType == 1) {
             View view = null;
             if(layout) {
-                view = LayoutInflater.from(activity).inflate(R.layout.item_phongtro, parent,false);
+                view = LayoutInflater.from(activity).inflate(R.layout.item_nguoitro, parent,false);
             }
             else {
-                view = LayoutInflater.from(activity).inflate(R.layout.item_phongtro_grid, parent,false);
+                view = LayoutInflater.from(activity).inflate(R.layout.item_nguoitro_grid, parent,false);
             }
-            return new ItemPhongTroAdapter.MyItemViewHolder(view);
+            return new ItemNguoiTroAdapter.MyItemViewHolder(view);
         }
         else {
             if(viewType == 0) {
                 View view = LayoutInflater.from(activity).inflate(R.layout.item_loading, parent,false);
-                return new ItemPhongTroAdapter.MyLoadingViewHolder(view);
+                return new ItemNguoiTroAdapter.MyLoadingViewHolder(view);
             }
             else {
                 if(viewType == -1) {
                     View view = LayoutInflater.from(activity).inflate(R.layout.item_not_found, parent,false);
-                    return new ItemPhongTroAdapter.MyNotFoundViewHolder(view);
+                    return new ItemNguoiTroAdapter.MyNotFoundViewHolder(view);
                 }
                 else {
                     View view = LayoutInflater.from(activity).inflate(R.layout.item_empty_data, parent,false);
-                    return new ItemPhongTroAdapter.MyEmptyDataViewHolder(view);
+                    return new ItemNguoiTroAdapter.MyEmptyDataViewHolder(view);
                 }
             }
 
@@ -69,32 +66,33 @@ public class ItemPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyItemViewHolder) {
-            Phongtro phongtro = phongtros.get(position);
-            ((MyItemViewHolder) holder).txtName.setText(phongtro.getTen());
-            ((MyItemViewHolder) holder).txtKhuTro.setText(phongtro.getKhutro().getTen());
-            ((MyItemViewHolder) holder).txtPrice.setText(Common.formatMoney(phongtro.getGia()));
-            String trangThai = "Đang sử dụng";
+            Nguoitro nguoitro = nguoitros.get(position);
+            ((MyItemViewHolder) holder).txtTen.setText(nguoitro.getHoten());
+            ((MyItemViewHolder) holder).txtPhongTro.setText(nguoitro.getPhongtro().getTen());
+            ((MyItemViewHolder) holder).txtNgaySinh.setText(nguoitro.getNgaysinh());
+            ((MyItemViewHolder) holder).txtQueQuan.setText(nguoitro.getQuequan());
+            String trangThai = "Đang trọ";
             String color = "#27ae60";
-            if(phongtro.getStatus() == 0) {
-                trangThai = "Không sử dụng";
+            if(nguoitro.getStatus() == 0) {
+                trangThai = "Đã thôi trọ";
                 color = "#e74c3c";
             }
             ((MyItemViewHolder) holder).txtTrangThai.setText(trangThai);
             ((MyItemViewHolder) holder).txtTrangThai.setTextColor(Color.parseColor(color));
-            if(phongtro.getImg() != null) {
-                Picasso.get().load(phongtro.getImg()).placeholder(R.drawable.ic_home_32dp).error(R.drawable.ic_home_32dp).into(((MyItemViewHolder) holder).ivAvatar);
+            if(nguoitro.getAvatar() != null) {
+                Picasso.get().load(nguoitro.getAvatar()).placeholder(R.drawable.ic_person_outline_32dp).error(R.drawable.ic_person_outline_32dp).into(((MyItemViewHolder) holder).ivAvatar);
             }
             else {
-                ((MyItemViewHolder) holder).ivAvatar.setImageResource(R.drawable.ic_home_32dp);
+                ((MyItemViewHolder) holder).ivAvatar.setImageResource(R.drawable.ic_person_outline_32dp);
             }
             ((MyItemViewHolder) holder).setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int pos, boolean isLongClick) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("phongtro", (Serializable) phongtros.get(pos));
-                    DetailFragment detailFragment = new DetailFragment();
-                    detailFragment.setArguments(bundle);
-                    ((HomeActivity) activity).replaceFragment(detailFragment, true);
+                    bundle.putSerializable("nguoitro", (Serializable) nguoitros.get(pos));
+//                    DetailFragment detailFragment = new DetailFragment();
+//                    detailFragment.setArguments(bundle);
+//                    ((HomeActivity) activity).replaceFragment(detailFragment, true);
                 }
             });
         }
@@ -107,23 +105,23 @@ public class ItemPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if(phongtros.get(position) == null) return 0;
+        if(nguoitros.get(position) == null) return 0;
         else {
-            if(phongtros.get(position).getId() == -1) return -1;
-            else if(phongtros.get(position).getId() == -2) return -2;
+            if(nguoitros.get(position).getId() == -1) return -1;
+            else if(nguoitros.get(position).getId() == -2) return -2;
         }
         return 1;
     }
 
     @Override
     public int getItemCount() {
-        return phongtros.size();
+        return nguoitros.size();
     }
 
     public class MyItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView ivAvatar;
-        private TextView txtName, txtKhuTro, txtPrice, txtTrangThai;
+        private TextView txtTen, txtPhongTro, txtNgaySinh, txtQueQuan, txtTrangThai;
 
         private ItemClickListener itemClickListener;
 
@@ -135,9 +133,10 @@ public class ItemPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public MyItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ivAvatar = itemView.findViewById(R.id.ivAvatar);
-            txtName = itemView.findViewById(R.id.txtName);
-            txtPrice = itemView.findViewById(R.id.txtPrice);
-            txtKhuTro = itemView.findViewById(R.id.txtKhuTro);
+            txtTen = itemView.findViewById(R.id.txtTen);
+            txtPhongTro = itemView.findViewById(R.id.txtPhongTro);
+            txtNgaySinh = itemView.findViewById(R.id.txtNgaySinh);
+            txtQueQuan = itemView.findViewById(R.id.txtQueQuan);
             txtTrangThai = itemView.findViewById(R.id.txtTrangThai);
             itemView.setOnClickListener(this);
         }

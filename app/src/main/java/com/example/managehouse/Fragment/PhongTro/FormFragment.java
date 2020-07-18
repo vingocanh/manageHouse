@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -65,9 +66,10 @@ import okhttp3.RequestBody;
 public class FormFragment extends Fragment implements View.OnClickListener, ChosenItemCallback {
 
     private ImageView ivAvatar;
-    private EditText editTen, edtGia, edtGhiChu;
+    private EditText editTen, edtGia, edtGhiChu, edtSoDien, edtSoNuoc;
     private TextView txtTrangThai, txtChonKhuTro;
     private Button btnChonAnh, btnXoaAnh;
+    private LinearLayout llSoDien, llSoNuoc;
 
     private HomeActivity homeActivity;
     private AwesomeValidation awesomeValidation;
@@ -93,6 +95,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Common.checkFormChange = false;
         if(getArguments() != null) {
             phongtro = (Phongtro) getArguments().getSerializable("phongtro");
         }
@@ -103,7 +106,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_form_phong_tro, container, false);
-        Common.checkFormChange = false;
         api = Common.getAPI();
         mapping(view);
         getKhutro();
@@ -150,6 +152,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             }
         });
+        llSoDien = view.findViewById(R.id.llSoDien);
+        llSoNuoc = view.findViewById(R.id.llSoNuoc);
+        edtSoDien = view.findViewById(R.id.edtSoDien);
+        edtSoNuoc = view.findViewById(R.id.edtSoNuoc);
     }
 
     public void textChange() {
@@ -182,6 +188,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
+                    if(s.toString().indexOf("VNĐ") == -1) edtGia.setTag(s.toString());
                     if(!s.toString().equals(Common.formatMoney(gia))) Common.checkFormChange = true;
                 }
             }
@@ -271,8 +278,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
     }
 
-    public void addData(RequestBody phongTroId, RequestBody ten, RequestBody khuTroId, RequestBody userId, RequestBody gia, RequestBody trangThai, RequestBody type, MultipartBody.Part file) {
-        compositeDisposable.add(api.createPhongTro(phongTroId,ten,khuTroId,userId,gia,trangThai,type,file).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    public void addData(RequestBody phongTroId, RequestBody ten, RequestBody khuTroId, RequestBody userId, RequestBody gia, RequestBody chotsodien, RequestBody chotsonuoc, RequestBody trangThai, RequestBody type, MultipartBody.Part file) {
+        compositeDisposable.add(api.createPhongTro(phongTroId,ten,khuTroId,userId,gia,chotsodien,chotsonuoc,trangThai,type,file).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -310,6 +317,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                             txtChonKhuTro.setText(khutroList.get(0).getTen());
                         }
                         dialogLoading.hideDialog();
+                        showSoDienNuoc();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -320,6 +328,38 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 }));
     }
 
+    public void showSoDienNuoc() {
+        Khutro khutro = null;
+        if(phongtro != null) khutro = phongtro.getKhutro();
+        else khutro = khutroList.get(sttKhuTro);
+        for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
+            if(khutrokhoanthu.getKhoanthu().getTen().equals("Điện")) {
+                llSoDien.setVisibility(View.VISIBLE);
+            }
+            if(khutrokhoanthu.getKhoanthu().getTen().equals("Nước")) {
+                if(khutrokhoanthu.getDonvitinh().getName().equals("Khối")) llSoNuoc.setVisibility(View.VISIBLE);
+            }
+        }
+        if(llSoDien.getVisibility() == View.VISIBLE) {
+            awesomeValidation.addValidation(getActivity(), R.id.edtSoDien, new SimpleCustomValidation() {
+                @Override
+                public boolean compare(String s) {
+                    if (s.length() > 0) return true;
+                    return false;
+                }
+            }, R.string.form_null_value);
+        }
+        if(llSoNuoc.getVisibility() == View.VISIBLE) {
+            awesomeValidation.addValidation(getActivity(), R.id.edtSoNuoc
+                    , new SimpleCustomValidation() {
+                        @Override
+                        public boolean compare(String s) {
+                            if (s.length() > 0) return true;
+                            return false;
+                        }
+                    }, R.string.form_null_value);
+        }
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -421,18 +461,20 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     }
                     RequestBody ten = RequestBody.create(MediaType.parse("multipart/form-data"), editTen.getText().toString());
                     RequestBody gia = RequestBody.create(MediaType.parse("multipart/form-data"), edtGia.getTag().toString());
+                    RequestBody chotSoDien = RequestBody.create(MediaType.parse("multipart/form-data"), edtSoDien.getText().toString());
+                    RequestBody chotSoNuoc = RequestBody.create(MediaType.parse("multipart/form-data"), edtSoNuoc.getText().toString());
                     RequestBody khuTroId = RequestBody.create(MediaType.parse("multipart/form-data"), txtChonKhuTro.getTag().toString());
                     RequestBody trangThai = RequestBody.create(MediaType.parse("multipart/form-data"), txtTrangThai.getTag().toString());
                     RequestBody user_id = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(Common.currentUser.getId()));
                     if (phongtro == null) {
                         RequestBody phongTroId = RequestBody.create(MediaType.parse("multipart/form-data"), "-1");
                         RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-                        addData(phongTroId,ten,khuTroId,user_id,gia,trangThai,type,file);
+                        addData(phongTroId,ten,khuTroId,user_id,gia,chotSoDien,chotSoNuoc,trangThai,type,file);
                     }
                     else {
                         RequestBody phongTroId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(phongtro.getId()));
                         RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "0");
-                        addData(phongTroId,ten,khuTroId,user_id,gia,trangThai,type,file);
+                        addData(phongTroId,ten,khuTroId,user_id,gia,chotSoDien,chotSoNuoc,trangThai,type,file);
                     }
                 }
                 break;

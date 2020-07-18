@@ -27,6 +27,7 @@
                 android:text="Tên:"
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
+                android:layout_marginRight="10dp"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/txtName"
@@ -35,6 +36,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
         </LinearLayout>
         <LinearLayout
@@ -47,6 +50,7 @@
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
                 android:textStyle="bold"
+                android:layout_marginRight="10dp"
                 android:text="Địa chỉ:"/>
             <TextView
                 android:id="@+id/txtAddress"
@@ -55,6 +59,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
         </LinearLayout>
         <LinearLayout
@@ -67,6 +73,7 @@
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
                 android:textStyle="bold"
+                android:layout_marginRight="10dp"
                 android:text="Năm XD:"/>
             <TextView
                 android:id="@+id/txtXayDung"
@@ -75,6 +82,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
         </LinearLayout>
         <LinearLayout
@@ -95,6 +104,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
+                android:layout_marginRight="10dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
         </LinearLayout>
     </LinearLayout>

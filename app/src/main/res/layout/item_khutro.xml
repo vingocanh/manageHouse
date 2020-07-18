@@ -19,7 +19,9 @@
         android:paddingLeft="10dp"
         android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_marginRight="10dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
@@ -28,6 +30,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/sizePrimary"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
             <TextView
                 android:id="@+id/txtAddress"
@@ -35,10 +39,13 @@
                 android:layout_height="wrap_content"
                 android:textColor="#4a4a4a"
                 android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="end|center"
             android:orientation="vertical">
@@ -48,14 +55,19 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorText"
                 android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="xxxxxxxxx"/>
+
             <TextView
                 android:id="@+id/txtTrangThai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="xxxxxxxxx"
                 android:textColor="@color/colorText"
-                android:textSize="13sp"
-                android:text="xxxxxxxxx"/>
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

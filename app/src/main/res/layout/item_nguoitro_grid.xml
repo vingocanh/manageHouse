@@ -10,7 +10,7 @@
         android:id="@+id/ivAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_home_32dp" />
+        android:src="@drawable/ic_person_outline_32dp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                 android:layout_marginRight="10dp"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/txtName"
+                android:id="@+id/txtTen"
                 android:layout_width="match_parent"
                 android:textAlignment="textEnd"
                 android:layout_height="wrap_content"
@@ -51,9 +51,9 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginRight="10dp"
-                android:text="Khu trọ:"/>
+                android:text="Phòng trọ:"/>
             <TextView
-                android:id="@+id/txtKhuTro"
+                android:id="@+id/txtPhongTro"
                 android:layout_width="match_parent"
                 android:gravity="end"
                 android:layout_height="wrap_content"
@@ -74,9 +74,32 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginRight="10dp"
-                android:text="Giá:"/>
+                android:text="Ngày sinh:"/>
             <TextView
-                android:id="@+id/txtPrice"
+                android:id="@+id/txtNgaySinh"
+                android:layout_width="match_parent"
+                android:textAlignment="textEnd"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="xxxxxxxxx"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:text="Quê quán:"/>
+            <TextView
+                android:id="@+id/txtQueQuan"
                 android:layout_width="match_parent"
                 android:textAlignment="textEnd"
                 android:layout_height="wrap_content"

@@ -351,12 +351,12 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     }
 
     public void changeLayout() {
+        Log.d("cuong", checkSpace + "");
         if (!layout) {
             if (checkSpace) {
                 rvData.addItemDecoration(new SpacesItemDecoration(10));
                 checkSpace = false;
             }
-
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
             rvData.setLayoutManager(gridLayoutManager);
         } else {
@@ -380,6 +380,12 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        checkSpace = true;
     }
 
     @Override
@@ -440,4 +446,5 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
             getData("init", 0);
         }
     }
+
 }

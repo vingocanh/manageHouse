@@ -96,6 +96,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Common.checkFormChange = false;
         if(getArguments() != null) {
             khutro = (Khutro) getArguments().getSerializable("khutro");
         }
@@ -105,7 +106,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_form_khu_tro, container, false);
-        Common.checkFormChange = false;
         api = Common.getAPI();
         mapping(view);
         textChange();
