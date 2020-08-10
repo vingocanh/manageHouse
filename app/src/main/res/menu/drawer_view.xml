@@ -27,7 +27,7 @@
 
             />
         <item
-            android:icon="@drawable/ic_bill"
+            android:icon="@drawable/ic_bill_red"
             android:id="@+id/navHoaDon"
             android:title="Hóa đơn"
             />

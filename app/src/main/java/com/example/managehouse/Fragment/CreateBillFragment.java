@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -39,6 +40,7 @@ import com.example.managehouse.Model.Item;
 import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.Model.Khutrokhoanthu;
 import com.example.managehouse.Model.Message;
+import com.example.managehouse.Model.Nguoitro;
 import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
@@ -67,13 +69,13 @@ import io.reactivex.schedulers.Schedulers;
 public class CreateBillFragment extends Fragment implements View.OnClickListener, ChosenItemCallback {
 
     private EditText edtSoDienCu, edtSoDienMoi, edtTen, edtThang, edtTienPhong, edtSoDien, edtGhiChu, edtSoNuocCu, edtSoNuocMoi, edtSoNuoc;
-    private TextView txtChonKhuTro, txtChonPhongTro, txtCacKhoanThu, txtTongTien;
+    private TextView txtChonKhuTro, txtChonPhongTro, txtCacKhoanThu, txtTongTien, txtChonTrangThai;
     private LinearLayout llNhapSoNuoc, llSoNuoc;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private API api;
-    private List<Khutro> khutroList;
-    private List<Phongtro> phongtroList;
+    private List<Khutro> khutroList = new ArrayList<>();
+    private List<Phongtro> phongtroList = new ArrayList<>();
     private DialogLoading dialogLoading;
     private HomeActivity homeActivity;
     private AwesomeValidation awesomeValidation;
@@ -81,9 +83,10 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     private int typeChosenItem = -1;
     private int sttKhuTro = 0, sttPhongTro = 0, userId = 10;
     private boolean checkDonViNuoc = false; // false - đơn vị theo tháng | true - đơn vị theo khối
-    private boolean checkLoadForm = true;
-    private String tenHoaDon = "", thangHoaDon = "";
-    private int tienPhong = 0;
+    private boolean checkLoadForm = true, checkFormChange = false;
+    private String tenHoaDon = "", thangHoaDon = "", ghiChu = "";
+    private int tienPhong = 0, soDienCu = 0, soNuocCu =0, soDienMoi = 0, soNuocMoi = 0, soDien = 0, soNuoc = 0;
+    private Hoadon hoadon = null;
 
     public CreateBillFragment() {
         // Required empty public constructor
@@ -98,16 +101,18 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Common.checkFormChange = false;
+        if(getArguments() != null) {
+            hoadon = (Hoadon) getArguments().getSerializable("hoadon");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_bill, container, false);
-        Common.checkFormChange = false;
         mapping(view);
         textChange();
-        createHoaDon();
         // init api
         api = Common.getAPI();
         dialogLoading = new DialogLoading(getActivity(), "Đang khởi tạo, đợi chút...");
@@ -152,8 +157,8 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     String value = edtTienPhong.getText().toString();
                     edtTienPhong.setText(String.valueOf(Common.clearMoney(value)));
                 } else {
-                    edtTienPhong.setText(Common.formatMoney(Integer.parseInt(edtTienPhong.getText().toString())));
                     edtTienPhong.setTag(Common.clearMoney(edtTienPhong.getText().toString()));
+                    edtTienPhong.setText(Common.formatMoney(Integer.parseInt(edtTienPhong.getText().toString())));
                 }
             }
         });
@@ -161,6 +166,9 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         edtThang.setFocusableInTouchMode(false);
         edtThang.setFocusable(false);
         edtThang.setOnClickListener(this);
+        homeActivity.ivAction.setOnClickListener(this);
+        txtChonTrangThai = view.findViewById(R.id.txtChonTrangThai);
+        txtChonTrangThai.setOnClickListener(this);
     }
 
     public void textChange() {
@@ -173,14 +181,20 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    int soDienCu = Integer.parseInt(edtSoDienCu.getText().toString());
-                    int soDienMoi = Integer.parseInt(s.toString());
-                    if(soDienMoi != 0) Common.checkFormChange = true;
-                    int soDien = soDienMoi - soDienCu;
+                    int sdc = Integer.parseInt(edtSoDienCu.getText().toString());
+                    int sdm = Integer.parseInt(s.toString());
+                    if(sdm != soDienMoi) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+                    soDien = sdm - sdc;
                     if (soDien > 0) {
                         edtSoDien.setText(String.valueOf(soDien));
                         totalMoney();
-                    } else edtSoDien.setText("0");
+                    } else {
+                        soDien = 0;
+                        edtSoDien.setText("0");
+                    }
                 }
             }
 
@@ -198,7 +212,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    if(Integer.parseInt(s.toString()) != 0) Common.checkFormChange = true;
+                    if(Integer.parseInt(s.toString()) != soDienCu) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -216,14 +234,21 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    int soNuocCu = Integer.parseInt(edtSoNuocCu.getText().toString());
-                    int soNuocMoi = Integer.parseInt(s.toString());
-                    if(soNuocMoi != 0) Common.checkFormChange = true;
-                    int soNuoc = soNuocMoi - soNuocCu;
+                    int snc = Integer.parseInt(edtSoNuocCu.getText().toString());
+                    int snm = Integer.parseInt(s.toString());
+                    if(snm != soNuocMoi) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
+                    soNuoc = snm - snc;
                     if (soNuoc > 0) {
                         edtSoNuoc.setText(String.valueOf(soNuoc));
                         totalMoney();
-                    } else edtSoNuoc.setText("0");
+                    } else {
+                        edtSoNuoc.setText("0");
+                        soNuoc = 0;
+                    }
                 }
             }
 
@@ -241,7 +266,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    if(Integer.parseInt(s.toString()) != 0) Common.checkFormChange = true;
+                    if(Integer.parseInt(s.toString()) != soNuocCu) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -259,7 +288,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    if(!s.toString().equals(tenHoaDon)) Common.checkFormChange = true;
+                    if(!s.toString().equals(tenHoaDon)) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -277,7 +310,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    if(!s.toString().equals(thangHoaDon)) Common.checkFormChange = true;
+                    if(!s.toString().equals(thangHoaDon)) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -295,8 +332,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    Log.d("cuong", s.toString() + "");
-                    if(tienPhong != Integer.parseInt(edtTienPhong.getTag().toString())) Common.checkFormChange = true;
+                    if(tienPhong != Integer.parseInt(edtTienPhong.getTag().toString())) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -314,7 +354,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
-                    if(!s.toString().equals("0")) Common.checkFormChange = true;
+                    if(!s.toString().equals(String.valueOf(soDien))) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -332,7 +376,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
-                    if(!s.toString().equals("0")) Common.checkFormChange = true;
+                    if(!s.toString().equals(String.valueOf(soNuoc))) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+
                 }
             }
 
@@ -350,8 +398,12 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
-                    Common.checkFormChange = true;
+                    if(!s.toString().equals(ghiChu)) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
                 }
+
             }
 
             @Override
@@ -362,21 +414,58 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     }
 
     public void initForm() {
-        edtSoDienCu.setText("0");
-        edtSoDienMoi.setText("0");
-        edtSoNuocCu.setText("0");
-        edtSoNuocMoi.setText("0");
-        edtSoDien.setText("0");
-        edtSoNuoc.setText("0");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        String currentDate = simpleDateFormat.format(date);
-        tenHoaDon = "HĐ-" + currentDate;
+        String color = "#f39c12", text = "Chờ thu tiền";
+        int status = 1;
+        if(hoadon != null) {
+            soDienCu = hoadon.getSodiencu();
+            soNuocCu = hoadon.getSonuoccu();
+            soDienMoi = hoadon.getSodienmoi();
+            soNuocMoi = hoadon.getSonuocmoi();
+            soDien = soDienMoi - soDienCu;
+            soNuoc = soNuocMoi - soNuocCu;
+            tenHoaDon = hoadon.getTen();
+            thangHoaDon = hoadon.getThang() + "/" + hoadon.getNam();
+            txtChonPhongTro.setTag(hoadon.getPhongtro_id());
+            txtChonPhongTro.setText(hoadon.getPhongtro().getTen());
+            tienPhong = hoadon.getPhongtro().getGia();
+            edtTienPhong.setTag(tienPhong);
+            edtTienPhong.setText(Common.formatMoney(tienPhong));
+            txtTongTien.setTag(hoadon.getTongtien());
+            txtTongTien.setText(Common.formatMoney(hoadon.getTongtien()));
+            ghiChu = hoadon.getGhichu();
+            edtGhiChu.setText(ghiChu);
+            status = hoadon.getStatus();
+            if(hoadon.getStatus() == 2) {
+                color = "#27ae60";
+                text = "Đã thu tiền";
+            }
+            else {
+                if(hoadon.getStatus() == 0) {
+                    color = "#e74c3c";
+                    text = "Đã hủy";
+                }
+            }
+        }
+        else {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            String currentDate = simpleDateFormat.format(date);
+            tenHoaDon = "HĐ-" + currentDate;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            thangHoaDon = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+        }
+        edtSoDienCu.setText(String.valueOf(soDienCu));
+        edtSoDienMoi.setText(String.valueOf(soDienMoi));
+        edtSoNuocCu.setText(String.valueOf(soNuocCu));
+        edtSoNuocMoi.setText(String.valueOf(soNuocMoi));
+        edtSoDien.setText(String.valueOf(soDien));
+        edtSoNuoc.setText(String.valueOf(soNuoc));
         edtTen.setText(tenHoaDon);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        thangHoaDon = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
         edtThang.setText(thangHoaDon);
+        txtChonTrangThai.setTag(status);
+        txtChonTrangThai.setText(text);
+        txtChonTrangThai.setTextColor(Color.parseColor(color));
     }
 
     public void validator() {
@@ -425,57 +514,38 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         }, R.string.form_null_value);
     }
 
-    public void createHoaDon() {
-        homeActivity.ivAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (awesomeValidation.validate()) {
-                    dialogLoading = new DialogLoading(getActivity(), "Đang tạo hóa đơn...");
-                    dialogLoading.showDialog();
-                    String ten = edtTen.getText().toString();
-                    String date = edtThang.getText().toString();
-                    int thang = Integer.parseInt(date.substring(0, date.indexOf("/")));
-                    int nam = Integer.parseInt(date.substring(date.indexOf("/") + 1));
-                    int phongtro_id = Integer.parseInt(txtChonPhongTro.getTag().toString());
-                    int soDienCu = Integer.parseInt(edtSoDienCu.getText().toString());
-                    int soDienMoi = Integer.parseInt(edtSoDienMoi.getText().toString());
-                    int soNuocCu = Integer.parseInt(edtSoNuocCu.getText().toString());
-                    int soNuocMoi = Integer.parseInt(edtSoNuocMoi.getText().toString());
-                    String ghiChu = edtGhiChu.getText().toString();
-                    String cacKhoanThu = null;
-                    if (txtCacKhoanThu.getTag() != null)
-                        cacKhoanThu = txtCacKhoanThu.getTag().toString();
-                    int tongTien = Integer.parseInt(txtTongTien.getTag().toString());
-                    compositeDisposable.add(api.createHoadon(ten, thang, nam, phongtro_id, khutroList.get(sttKhuTro).getId(),soDienCu, soDienMoi, soNuocCu,soNuocMoi, cacKhoanThu, tongTien,ghiChu).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Consumer<Message>() {
-                                @Override
-                                public void accept(Message message) throws Exception {
-                                    dialogLoading.hideDialog();
-                                    if (message.getStatus() == 401) {
-                                        new DialogNotification(getActivity(), message.getBody(), "error").showDialog();
-                                    } else {
-                                        if (message.getStatus() == 402) {
-                                            Toasty.error(getContext(), message.getBody()[0], 300, true).show();
-                                        } else {
-                                            Toasty.success(getContext(), message.getBody()[0], 300, true).show();
-                                            Intent intent = new Intent(getContext(), ShowBillActivity.class);
-                                            intent.putExtra("hoadon", message.getData());
-                                            intent.putExtra("checkDonViNuoc", checkDonViNuoc);
-                                            startActivity(intent);
-                                        }
-                                    }
+    public void createHoaDon(int hoadon_id, String ten, int thang, int nam, int phongtro_id, int soDienCu, int soDienMoi, int soNuocCu, int soNuocMoi, String cacKhoanThu, int tongTien, int checkNuoc, String ghiChu, int status, int type) {
+        compositeDisposable.add(api.createHoadon(hoadon_id, ten, thang, nam, phongtro_id, khutroList.get(sttKhuTro).getId(),soDienCu, soDienMoi, soNuocCu,soNuocMoi, cacKhoanThu, tongTien,checkNuoc,ghiChu,status,type).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Message>() {
+                    @Override
+                    public void accept(Message message) throws Exception {
+                        dialogLoading.hideDialog();
+                        if (message.getStatus() == 401) {
+                            new DialogNotification(getActivity(), message.getBody(), "error").showDialog();
+                        } else {
+                            if (message.getStatus() == 402) {
+                                Toasty.error(getContext(), message.getBody()[0], 300, true).show();
+                            } else {
+                                checkLoadForm = false;
+                                Common.checkFormChange = false;
+                                Toasty.success(getContext(), message.getBody()[0], 300, true).show();
+                                if(type == 1) {
+                                    Intent intent = new Intent(getContext(), ShowBillActivity.class);
+                                    intent.putExtra("hoadon", message.getData());
+                                    intent.putExtra("checkDonViNuoc", checkDonViNuoc);
+                                    startActivity(intent);
                                 }
-                            }, new Consumer<Throwable>() {
-                                @Override
-                                public void accept(Throwable throwable) throws Exception {
-                                    Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
-                                    dialogLoading.hideDialog();
-                                    throwable.printStackTrace();
-                                }
-                            }));
-                }
-            }
-        });
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
+                        dialogLoading.hideDialog();
+                        throwable.printStackTrace();
+                    }
+                }));
     }
 
     public void getKhutro() {
@@ -486,39 +556,54 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     public void accept(List<Khutro> khutros) throws Exception {
                         khutroList = khutros;
                         if (khutroList.size() > 0) {
-                            txtChonKhuTro.setText(khutroList.get(0).getTen());
-                            txtChonKhuTro.setTag(khutroList.get(0).getId());
-                            checkInputWater(khutroList.get(sttKhuTro));
+                            Khutro khutro = null;
+                            if(hoadon == null) {
+                                khutro = khutroList.get(0);
+                                phongtroList = khutro.getPhongtro();
+                                if(phongtroList.size() > 0) {
+                                    txtChonPhongTro.setTag(phongtroList.get(0).getId());
+                                    txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                                    soDienCu = phongtroList.get(0).getChotsodien();
+                                    edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
+                                    soNuocCu = phongtroList.get(0).getChotsonuoc();
+                                    edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
+                                    tienPhong = phongtroList.get(0).getGia();
+                                    edtTienPhong.setTag(phongtroList.get(0).getGia());
+                                    edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
+                                    totalMoney();
+                                }
+                                else {
+                                    txtChonPhongTro.setTag(-1);
+                                    txtChonPhongTro.setText("Không có phòng trọ");
+                                }
+                            }
+                            else {
+                                khutro = hoadon.getPhongtro().getKhutro();
+                                for (Khutro kt : khutroList) {
+                                    if(kt.getId() == khutro.getId()) {
+                                        phongtroList = kt.getPhongtro();
+                                        break;
+                                    }
+                                }
+                            }
+                            txtChonKhuTro.setText(khutro.getTen());
+                            txtChonKhuTro.setTag(khutro.getId());
+                            checkInputWater(khutro);
                             int i = 0;
                             String khoanThu = "", idKhoanThu = "";
-                            for (Khutrokhoanthu khutrokhoanthu : khutros.get(0).getKhutrokhoanthu()) {
-                                if(i == khutros.get(0).getKhutrokhoanthu().size() - 1) {
+                            for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
+                                if(i == khutro.getKhutrokhoanthu().size() - 1) {
                                     khoanThu += khutrokhoanthu.getKhoanthu().getTen();
                                     idKhoanThu += khutrokhoanthu.getKhoanthu_id();
                                 }
                                 else {
                                     khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
-                                    idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ", ";
+                                    idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ",";
                                 }
                                 i++;
                             }
                             txtCacKhoanThu.setText(khoanThu);
                             txtCacKhoanThu.setTag(idKhoanThu);
-                            phongtroList = khutroList.get(0).getPhongtro();
-                            if(phongtroList.size() > 0) {
-                                txtChonPhongTro.setTag(phongtroList.get(0).getId());
-                                txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
-                                edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
-                                edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
-                                edtTienPhong.setTag(phongtroList.get(0).getGia());
-                                edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
-                                tienPhong = phongtroList.get(0).getGia();
-                                totalMoney();
-                            }
-                            else {
-                                txtChonPhongTro.setTag(-1);
-                                txtChonPhongTro.setText("Không có phòng trọ");
-                            }
                         }
                         else {
                             txtChonKhuTro.setText("Không có khu trọ");
@@ -541,56 +626,59 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     }
 
     public void totalMoney() {
-        int tienPhong = (edtTienPhong.getTag() == null ? 0 : Integer.parseInt(edtTienPhong.getTag().toString()));
-        int giaDien = 0;
-        int giaNuoc = 0;
-        int tienKhoanThu = 0;
-        int total = 0;
-        Object idList = txtCacKhoanThu.getTag();
-        String[] idChosen = null;
-        if (idList != null) {
-            idChosen = idList.toString().split(",");
-        }
-        Khutro khutro = khutroList.get(sttKhuTro);
-        for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
-            if (khutrokhoanthu.getKhoanthu_id() == 5) {
-                if(idChosen == null) giaDien = khutrokhoanthu.getGia();
-                else {
-                    if(!Arrays.asList(idChosen).contains("5")) {
-                        giaDien = 0;
-                    }
-                    else giaDien = khutrokhoanthu.getGia();
-                }
+        if(khutroList.size() > 0){
+            int tienPhong = (edtTienPhong.getTag() == null ? 0 : Integer.parseInt(edtTienPhong.getTag().toString()));
+            int giaDien = 0;
+            int giaNuoc = 0;
+            int tienKhoanThu = 0;
+            int total = 0;
+            Object idList = txtCacKhoanThu.getTag();
+            String[] idChosen = null;
+            if (idList != null) {
+                idChosen = idList.toString().split(",");
             }
-            else {
-                if(khutrokhoanthu.getKhoanthu_id() == 1) {
-                    if(idChosen == null) giaNuoc = khutrokhoanthu.getGia();
+            Khutro khutro = khutroList.get(sttKhuTro);
+            for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
+                if (khutrokhoanthu.getKhoanthu_id() == 5) {
+                    if(idChosen == null) giaDien = khutrokhoanthu.getGia();
                     else {
-                        if(!Arrays.asList(idChosen).contains("1")) {
-                            giaNuoc = 0;
+                        if(!Arrays.asList(idChosen).contains("5")) {
+                            giaDien = 0;
                         }
-                        else giaNuoc = khutrokhoanthu.getGia();
+                        else giaDien = khutrokhoanthu.getGia();
                     }
-
                 }
                 else {
-                    if(idChosen != null) {
-                        if (Arrays.asList(idChosen).contains(String.valueOf(khutrokhoanthu.getKhoanthu_id()))) {
-                            tienKhoanThu += khutrokhoanthu.getGia();
+                    if(khutrokhoanthu.getKhoanthu_id() == 1) {
+                        if(idChosen == null) giaNuoc = khutrokhoanthu.getGia();
+                        else {
+                            if(!Arrays.asList(idChosen).contains("1")) {
+                                giaNuoc = 0;
+                            }
+                            else giaNuoc = khutrokhoanthu.getGia();
+                        }
+
+                    }
+                    else {
+                        if(idChosen != null) {
+                            if (Arrays.asList(idChosen).contains(String.valueOf(khutrokhoanthu.getKhoanthu_id()))) {
+                                tienKhoanThu += khutrokhoanthu.getGia();
+                            }
                         }
                     }
                 }
             }
+            int soDien = Integer.parseInt(edtSoDien.getText().toString());
+            int soNuoc = Integer.parseInt(edtSoNuoc.getText().toString());
+            total = tienPhong + tienKhoanThu + soDien * giaDien;
+            if(checkDonViNuoc) {
+                total += soNuoc * giaNuoc;
+            }
+            else total += giaNuoc;
+            txtTongTien.setText(Common.formatMoney(total));
+            txtTongTien.setTag(total);
         }
-        int soDien = Integer.parseInt(edtSoDien.getText().toString());
-        int soNuoc = Integer.parseInt(edtSoNuoc.getText().toString());
-        total = tienPhong + tienKhoanThu + soDien * giaDien;
-        if(checkDonViNuoc) {
-            total += soNuoc * giaNuoc;
-        }
-        else total += giaNuoc;
-        txtTongTien.setText(Common.formatMoney(total));
-        txtTongTien.setTag(total);
+
     }
 
     public void chosenMonthYear() {
@@ -637,9 +725,61 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ivAction : {
+                if (awesomeValidation.validate()) {
+                    boolean check = false;
+                    String ten = edtTen.getText().toString();
+                    String date = edtThang.getText().toString();
+                    int thang = Integer.parseInt(date.substring(0, date.indexOf("/")));
+                    int nam = Integer.parseInt(date.substring(date.indexOf("/") + 1));
+                    int phongtro_id = Integer.parseInt(txtChonPhongTro.getTag().toString());
+                    int soDienCu = Integer.parseInt(edtSoDienCu.getText().toString());
+                    int soDienMoi = Integer.parseInt(edtSoDienMoi.getText().toString());
+                    int soNuocCu = Integer.parseInt(edtSoNuocCu.getText().toString());
+                    int soNuocMoi = Integer.parseInt(edtSoNuocMoi.getText().toString());
+                    String ghiChu = edtGhiChu.getText().toString();
+                    int status = Integer.parseInt(txtChonTrangThai.getTag().toString());
+                    int type = 1, hoadon_id = 0;
+                    if(hoadon != null) {
+                        type = 0;
+                        hoadon_id = hoadon.getId();
+                    }
+                    List<String> erros = new ArrayList<>();
+                    if(soDienMoi < soDienCu) {
+                        check = true;
+                        erros.add("Số điện mới không được nhỏ hơn số điện cũ");
+                    }
+                    if(soNuocMoi < soNuocCu) {
+                        check = true;
+                        erros.add("Số nước mới không được nhỏ hơn số nước cũ");
+                    }
+                    if(check) {
+                        String[] body =  new String[erros.size()];
+                        body = erros.toArray(body);
+                        DialogNotification dialogNotification = new DialogNotification(getActivity(),body,"error");
+                        dialogNotification.showDialog();
+                    }
+                    else {
+                        String body = "Đang tạo hóa đơn...";
+                        if(type != 1) {
+                            body = "Đang sửa hóa đơn...";
+                        }
+                        dialogLoading = new DialogLoading(getActivity(), body);
+                        dialogLoading.showDialog();
+                        String cacKhoanThu = null;
+                        if (txtCacKhoanThu.getTag() != null)
+                            cacKhoanThu = txtCacKhoanThu.getTag().toString();
+                        int tongTien = Integer.parseInt(txtTongTien.getTag().toString());
+                        createHoaDon(hoadon_id,ten, thang, nam, phongtro_id, soDienCu, soDienMoi, soNuocCu,soNuocMoi, cacKhoanThu, tongTien,(checkDonViNuoc) ? 1 : 0,ghiChu,status,type);
+                    }
+
+                }
+                break;
+            }
             case R.id.txtChonKhuTro: {
+                typeChosenItem = 0;
                 if(khutroList.size() > 0) {
-                    typeChosenItem = 0;
+
                     int id = Integer.parseInt(txtChonKhuTro.getTag().toString());
                     List<Item> items = new ArrayList<>();
                     int stt = 0;
@@ -672,8 +812,9 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 break;
             }
             case R.id.txtChonPhongTro: {
+                typeChosenItem = 1;
                 if(phongtroList.size() > 0) {
-                    typeChosenItem = 1;
+
                     int id = Integer.parseInt(txtChonPhongTro.getTag().toString());
                     List<Item> items = new ArrayList<>();
                     int stt = 0;
@@ -745,14 +886,32 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 chosenMonthYear();
                 break;
             }
+            case R.id.txtChonTrangThai : {
+                typeChosenItem = 3;
+                List<Item> items = new ArrayList<>();
+                int trangThai = Integer.parseInt(txtChonTrangThai.getTag().toString());
+                items.add(new Item(false, 1, 0, "Chờ thu tiền"));
+                items.add(new Item(false, 2, 1, "Đã thu tiền"));
+                items.add(new Item(false, 0, 1, "Đã hủy"));
+                for (Item item : items) {
+                    if (item.getId() == trangThai) item.setChecked(true);
+                }
+                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(),items,"Chọn tình trạng","single",0, false);
+                dialogChosenItem.setChosenItemCallback(this);
+                dialogChosenItem.showDialog();
+                break;
+            }
         }
     }
 
     @Override
     public void onReceiveItem(List<Item> item) {
-        Common.checkFormChange = true;
         switch (typeChosenItem) {
             case 0: {
+                if(item.get(0).getId() != Integer.parseInt(txtChonKhuTro.getTag().toString())) {
+                    Common.checkFormChange = true;
+                    checkFormChange = true;
+                }
                 txtChonKhuTro.setText(item.get(0).getName());
                 txtChonKhuTro.setTag(item.get(0).getId());
                 sttKhuTro = item.get(0).getStt();
@@ -772,15 +931,17 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 }
                 txtCacKhoanThu.setText(khoanThu);
                 txtCacKhoanThu.setTag(idKhoanThu);
-                initForm();
                 phongtroList = khutroList.get(item.get(0).getStt()).getPhongtro();
                 if(phongtroList.size() > 0) {
                     txtChonPhongTro.setTag(phongtroList.get(0).getId());
                     txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                    soDienCu = phongtroList.get(0).getChotsodien();
                     edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
+                    soNuocCu = phongtroList.get(0).getChotsonuoc();
                     edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
-                    edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
+                    tienPhong = phongtroList.get(0).getGia();
                     edtTienPhong.setTag(phongtroList.get(0).getGia());
+                    edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
                     tienPhong = phongtroList.get(0).getGia();
                     totalMoney();
                 }
@@ -792,20 +953,27 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 break;
             }
             case 1: {
-                initForm();
+                if(item.get(0).getId() != Integer.parseInt(txtChonPhongTro.getTag().toString())) {
+                    Common.checkFormChange = true;
+                    checkFormChange = true;
+                }
                 txtChonPhongTro.setText(item.get(0).getName());
                 txtChonPhongTro.setTag(item.get(0).getId());
                 sttPhongTro = item.get(0).getStt();
                 Phongtro phongtro = phongtroList.get(sttPhongTro);
-                edtTienPhong.setText(Common.formatMoney(phongtro.getGia()));
-                edtTienPhong.setTag(phongtro.getGia());
                 tienPhong = phongtro.getGia();
+                edtTienPhong.setTag(phongtro.getGia());
+                edtTienPhong.setText(Common.formatMoney(phongtro.getGia()));
+                tienPhong = phongtro.getGia();
+                soNuocCu =phongtro.getChotsonuoc();
+                soDienCu = phongtro.getChotsodien();
                 edtSoDienCu.setText(String.valueOf(phongtro.getChotsodien()));
                 edtSoNuocCu.setText(String.valueOf(phongtro.getChotsonuoc()));
                 totalMoney();
                 break;
             }
             case 2: {
+
                 String text = "", id = "";
                 int stt = 0;
                 for (Item i : item) {
@@ -820,9 +988,29 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     }
                     stt++;
                 }
+                if(id.equals(txtCacKhoanThu.getTag().toString())) {
+                    Common.checkFormChange = true;
+                    checkFormChange = true;
+                }
                 txtCacKhoanThu.setText(text);
                 txtCacKhoanThu.setTag(id);
                 totalMoney();
+                break;
+            }
+            case 3: {
+                if(Integer.parseInt(txtChonTrangThai.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
+                String color = "#f39c12";
+                if(item.get(0).getId() == 2) {
+                    color = "#27ae60";
+                }
+                else {
+                    if(item.get(0).getId() == 0) {
+                        color = "#e74c3c";
+                    }
+                }
+                txtChonTrangThai.setText(item.get(0).getName());
+                txtChonTrangThai.setTag(item.get(0).getId());
+                txtChonTrangThai.setTextColor(Color.parseColor(color));
                 break;
             }
         }
@@ -839,5 +1027,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     public void onStop() {
         super.onStop();
         checkLoadForm = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Common.checkFormChange = checkFormChange;
     }
 }

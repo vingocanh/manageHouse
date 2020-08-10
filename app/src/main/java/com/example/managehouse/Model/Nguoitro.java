@@ -4,33 +4,41 @@ import java.io.Serializable;
 
 public class Nguoitro implements Serializable {
 
-    private int id, phongtro_id, status, total, user_id;
-    private String hoten, ten, avatar, ngaysinh, socmnd, quequan, nghenghiep, trinhdo, noilamviec, ghichu, created_at, updated_at;
+    private int id, phongtro_id, khutro_id, status, total, user_id;
+    private String hoten, ho, ten, avatar, ngaysinh, ngaysinh2, socmnd, quequan, nghenghiep, noilamviec, ghichu, created_at, updated_at;
     private Phongtro phongtro;
+    private Trinhdo trinhdo;
+    private Khutro khutro;
+    private Nguoitrogiadinh nguoitrogiadinh;
 
     public Nguoitro(int id) {
         this.id = id;
     }
 
-    public Nguoitro(int id, int phongtro_id, int status, int total, int user_id, String hoten, String ten, String avatar, String ngaysinh, String socmnd, String quequan, String nghenghiep, String trinhdo, String noilamviec, String ghichu, String created_at, String updated_at, Phongtro phongtro) {
+    public Nguoitro(int id, int phongtro_id, int khutro_id, int status, int total, int user_id, String hoten, String ho, String ten, String avatar, String ngaysinh, String ngaysinh2, String socmnd, String quequan, String nghenghiep, String noilamviec, String ghichu, String created_at, String updated_at, Phongtro phongtro, Trinhdo trinhdo, Khutro khutro, Nguoitrogiadinh nguoitrogiadinh) {
         this.id = id;
         this.phongtro_id = phongtro_id;
+        this.khutro_id = khutro_id;
         this.status = status;
         this.total = total;
         this.user_id = user_id;
         this.hoten = hoten;
+        this.ho = ho;
         this.ten = ten;
         this.avatar = avatar;
         this.ngaysinh = ngaysinh;
+        this.ngaysinh2 = ngaysinh2;
         this.socmnd = socmnd;
         this.quequan = quequan;
         this.nghenghiep = nghenghiep;
-        this.trinhdo = trinhdo;
         this.noilamviec = noilamviec;
         this.ghichu = ghichu;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.phongtro = phongtro;
+        this.trinhdo = trinhdo;
+        this.khutro = khutro;
+        this.nguoitrogiadinh = nguoitrogiadinh;
     }
 
     public int getId() {
@@ -47,6 +55,14 @@ public class Nguoitro implements Serializable {
 
     public void setPhongtro_id(int phongtro_id) {
         this.phongtro_id = phongtro_id;
+    }
+
+    public int getKhutro_id() {
+        return khutro_id;
+    }
+
+    public void setKhutro_id(int khutro_id) {
+        this.khutro_id = khutro_id;
     }
 
     public int getStatus() {
@@ -81,6 +97,14 @@ public class Nguoitro implements Serializable {
         this.hoten = hoten;
     }
 
+    public String getHo() {
+        return ho;
+    }
+
+    public void setHo(String ho) {
+        this.ho = ho;
+    }
+
     public String getTen() {
         return ten;
     }
@@ -105,6 +129,14 @@ public class Nguoitro implements Serializable {
         this.ngaysinh = ngaysinh;
     }
 
+    public String getNgaysinh2() {
+        return ngaysinh2;
+    }
+
+    public void setNgaysinh2(String ngaysinh2) {
+        this.ngaysinh2 = ngaysinh2;
+    }
+
     public String getSocmnd() {
         return socmnd;
     }
@@ -127,14 +159,6 @@ public class Nguoitro implements Serializable {
 
     public void setNghenghiep(String nghenghiep) {
         this.nghenghiep = nghenghiep;
-    }
-
-    public String getTrinhdo() {
-        return trinhdo;
-    }
-
-    public void setTrinhdo(String trinhdo) {
-        this.trinhdo = trinhdo;
     }
 
     public String getNoilamviec() {
@@ -175,5 +199,29 @@ public class Nguoitro implements Serializable {
 
     public void setPhongtro(Phongtro phongtro) {
         this.phongtro = phongtro;
+    }
+
+    public Trinhdo getTrinhdo() {
+        return trinhdo;
+    }
+
+    public void setTrinhdo(Trinhdo trinhdo) {
+        this.trinhdo = trinhdo;
+    }
+
+    public Khutro getKhutro() {
+        return khutro;
+    }
+
+    public void setKhutro(Khutro khutro) {
+        this.khutro = khutro;
+    }
+
+    public Nguoitrogiadinh getNguoitrogiadinh() {
+        return nguoitrogiadinh;
+    }
+
+    public void setNguoitrogiadinh(Nguoitrogiadinh nguoitrogiadinh) {
+        this.nguoitrogiadinh = nguoitrogiadinh;
     }
 }

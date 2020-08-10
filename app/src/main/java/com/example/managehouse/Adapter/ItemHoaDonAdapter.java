@@ -1,6 +1,7 @@
 package com.example.managehouse.Adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,24 +13,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.managehouse.Activity.HomeActivity;
-import com.example.managehouse.Fragment.NguoiTro.DetailFragment;
-import com.example.managehouse.Model.Nguoitro;
+import com.example.managehouse.Activity.ShowBillActivity;
+import com.example.managehouse.Common.Common;
+import com.example.managehouse.Model.Hoadon;
 import com.example.managehouse.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ItemNguoiTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ItemHoaDonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Activity activity;
-    private List<Nguoitro> nguoitros;
+    private List<Hoadon> hoadons;
     private boolean layout;
+    private View view = null;
 
-    public ItemNguoiTroAdapter(Activity activity, List<Nguoitro> nguoitros, boolean layout) {
+    public ItemHoaDonAdapter(Activity activity, List<Hoadon> hoadons, boolean layout) {
         this.activity = activity;
-        this.nguoitros = nguoitros;
+        this.hoadons = hoadons;
         this.layout = layout;
     }
 
@@ -37,28 +38,27 @@ public class ItemNguoiTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == 1) {
-            View view = null;
             if(layout) {
-                view = LayoutInflater.from(activity).inflate(R.layout.item_nguoitro, parent,false);
+                view = LayoutInflater.from(activity).inflate(R.layout.item_hoadon, parent,false);
             }
             else {
-                view = LayoutInflater.from(activity).inflate(R.layout.item_nguoitro_grid, parent,false);
+                view = LayoutInflater.from(activity).inflate(R.layout.item_hoadon_grid, parent,false);
             }
-            return new ItemNguoiTroAdapter.MyItemViewHolder(view);
+            return new ItemHoaDonAdapter.MyItemViewHolder(view);
         }
         else {
             if(viewType == 0) {
                 View view = LayoutInflater.from(activity).inflate(R.layout.item_loading, parent,false);
-                return new ItemNguoiTroAdapter.MyLoadingViewHolder(view);
+                return new ItemHoaDonAdapter.MyLoadingViewHolder(view);
             }
             else {
                 if(viewType == -1) {
                     View view = LayoutInflater.from(activity).inflate(R.layout.item_not_found, parent,false);
-                    return new ItemNguoiTroAdapter.MyNotFoundViewHolder(view);
+                    return new ItemHoaDonAdapter.MyNotFoundViewHolder(view);
                 }
                 else {
                     View view = LayoutInflater.from(activity).inflate(R.layout.item_empty_data, parent,false);
-                    return new ItemNguoiTroAdapter.MyEmptyDataViewHolder(view);
+                    return new ItemHoaDonAdapter.MyEmptyDataViewHolder(view);
                 }
             }
 
@@ -68,33 +68,33 @@ public class ItemNguoiTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyItemViewHolder) {
-            Nguoitro nguoitro = nguoitros.get(position);
-            ((MyItemViewHolder) holder).txtTen.setText(nguoitro.getHoten());
-            ((MyItemViewHolder) holder).txtPhongTro.setText(nguoitro.getPhongtro().getTen());
-            ((MyItemViewHolder) holder).txtNgaySinh.setText(nguoitro.getNgaysinh());
-            ((MyItemViewHolder) holder).txtQueQuan.setText(nguoitro.getQuequan());
-            String trangThai = "Đang trọ";
+            Hoadon hoadon = hoadons.get(position);
+            ((MyItemViewHolder) holder).txtTen.setText(hoadon.getTen());
+            ((MyItemViewHolder) holder).txtPhongTro.setText(hoadon.getPhongtro().getTen());
+            ((MyItemViewHolder) holder).txtKhuTro.setText(hoadon.getPhongtro().getKhutro().getTen());
+            ((MyItemViewHolder) holder).txtNgayThang.setText(hoadon.getThang() + "/" + hoadon.getNam());
+            ((MyItemViewHolder) holder).txtTongTien.setText(Common.formatMoney(hoadon.getTongtien()));
+            String trangThai = "Đã thu tiền";
             String color = "#27ae60";
-            if(nguoitro.getStatus() == 0) {
-                trangThai = "Đã thôi trọ";
+            if(hoadon.getStatus() == 0) {
+                trangThai = "Đã hủy";
                 color = "#e74c3c";
+            }
+            else {
+                if(hoadon.getStatus() == 1) {
+                    trangThai = "Chờ thu tiền";
+                    color = "#f39c12";
+                }
             }
             ((MyItemViewHolder) holder).txtTrangThai.setText(trangThai);
             ((MyItemViewHolder) holder).txtTrangThai.setTextColor(Color.parseColor(color));
-            if(nguoitro.getAvatar() != null) {
-                Picasso.get().load(nguoitro.getAvatar()).placeholder(R.drawable.ic_person_outline_32dp).error(R.drawable.ic_person_outline_32dp).into(((MyItemViewHolder) holder).ivAvatar);
-            }
-            else {
-                ((MyItemViewHolder) holder).ivAvatar.setImageResource(R.drawable.ic_person_outline_32dp);
-            }
             ((MyItemViewHolder) holder).setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int pos, boolean isLongClick) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("nguoitro", (Serializable) nguoitros.get(pos));
-                    DetailFragment detailFragment = new DetailFragment();
-                    detailFragment.setArguments(bundle);
-                    ((HomeActivity) activity).replaceFragment(detailFragment, true);
+                    Intent intent = new Intent(activity, ShowBillActivity.class);
+                    intent.putExtra("hoadon", hoadon.getRaw());
+                    intent.putExtra("checkDonViNuoc", hoadon.getCheck_water());
+                    activity.startActivity(intent);
                 }
             });
         }
@@ -107,23 +107,23 @@ public class ItemNguoiTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if(nguoitros.get(position) == null) return 0;
+        if(hoadons.get(position) == null) return 0;
         else {
-            if(nguoitros.get(position).getId() == -1) return -1;
-            else if(nguoitros.get(position).getId() == -2) return -2;
+            if(hoadons.get(position).getId() == -1) return -1;
+            else if(hoadons.get(position).getId() == -2) return -2;
         }
         return 1;
     }
 
     @Override
     public int getItemCount() {
-        return nguoitros.size();
+        return hoadons.size();
     }
 
     public class MyItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView ivAvatar;
-        private TextView txtTen, txtPhongTro, txtNgaySinh, txtQueQuan, txtTrangThai;
+        private TextView txtTen, txtPhongTro, txtNgayThang, txtTongTien, txtTrangThai, txtKhuTro;
 
         private ItemClickListener itemClickListener;
 
@@ -137,9 +137,10 @@ public class ItemNguoiTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ivAvatar = itemView.findViewById(R.id.ivAvatar);
             txtTen = itemView.findViewById(R.id.txtTen);
             txtPhongTro = itemView.findViewById(R.id.txtPhongTro);
-            txtNgaySinh = itemView.findViewById(R.id.txtNgaySinh);
-            txtQueQuan = itemView.findViewById(R.id.txtQueQuan);
+            txtNgayThang = itemView.findViewById(R.id.txtNgayThang);
+            txtTongTien = itemView.findViewById(R.id.txtTongTien);
             txtTrangThai = itemView.findViewById(R.id.txtTrangThai);
+            txtKhuTro = itemView.findViewById(R.id.txtKhuTro);
             itemView.setOnClickListener(this);
         }
 

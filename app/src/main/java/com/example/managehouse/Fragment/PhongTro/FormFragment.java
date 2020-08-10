@@ -492,15 +492,16 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     @Override
     public void onReceiveItem(List<Item> item) {
         if(typeChosenItem == 0) {
+            if(Integer.parseInt(txtChonKhuTro.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
             txtChonKhuTro.setTag(item.get(0).getId());
             txtChonKhuTro.setText(item.get(0).getName());
             sttKhuTro = item.get(0).getStt();
-            if(Integer.parseInt(txtChonKhuTro.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
+
         }
         else {
+            if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
             txtTrangThai.setText(item.get(0).getName());
             txtTrangThai.setTag(item.get(0).getId());
-            if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
         }
     }
 }

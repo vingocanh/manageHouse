@@ -260,7 +260,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
                                 else isLoading = true;
                             } else {
                                 isLoading = true;
-                                khutroList.add(new Khutro(-2));
+                                khutroList.add(new Khutro(-1));
                             }
                             itemKhuTroAdapter.notifyDataSetChanged();
                             lavLoading.setVisibility(View.GONE);
@@ -351,7 +351,6 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     }
 
     public void changeLayout() {
-        Log.d("cuong", checkSpace + "");
         if (!layout) {
             if (checkSpace) {
                 rvData.addItemDecoration(new SpacesItemDecoration(10));

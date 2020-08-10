@@ -1,15 +1,22 @@
 package com.example.managehouse.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Hoadon {
+public class Hoadon implements Serializable {
 
-    private int id, thang, nam, sodiencu, sodienmoi, tongtien, status, phontro_id, sonuoccu,sonuocmoi;
+    private int id, thang, nam, sodiencu, sodienmoi, tongtien, status, phongtro_id, sonuoccu,sonuocmoi, total;
     private Phongtro phongtro;
     private List<Khutrokhoanthu> khoanthu;
     private String ten, ghichu, created_at, updated_at;
+    private String raw; // json hóa đơn để show bill activity
+    private int check_water;
 
-    public Hoadon(int id, int thang, int nam, int sodiencu, int sodienmoi, int tongtien, int status, int phontro_id, int sonuoccu, int sonuocmoi, Phongtro phongtro, List<Khutrokhoanthu> khoanthu, String ten, String ghichu, String created_at, String updated_at) {
+    public Hoadon(int id) {
+        this.id = id;
+    }
+
+    public Hoadon(int id, int thang, int nam, int sodiencu, int sodienmoi, int tongtien, int status, int phongtro_id, int sonuoccu, int sonuocmoi, int total, Phongtro phongtro, List<Khutrokhoanthu> khoanthu, String ten, String ghichu, String created_at, String updated_at, String raw, int check_water) {
         this.id = id;
         this.thang = thang;
         this.nam = nam;
@@ -17,15 +24,18 @@ public class Hoadon {
         this.sodienmoi = sodienmoi;
         this.tongtien = tongtien;
         this.status = status;
-        this.phontro_id = phontro_id;
+        this.phongtro_id = phongtro_id;
         this.sonuoccu = sonuoccu;
         this.sonuocmoi = sonuocmoi;
+        this.total = total;
         this.phongtro = phongtro;
         this.khoanthu = khoanthu;
         this.ten = ten;
         this.ghichu = ghichu;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.raw = raw;
+        this.check_water = check_water;
     }
 
     public int getId() {
@@ -84,12 +94,12 @@ public class Hoadon {
         this.status = status;
     }
 
-    public int getPhontro_id() {
-        return phontro_id;
+    public int getPhongtro_id() {
+        return phongtro_id;
     }
 
-    public void setPhontro_id(int phontro_id) {
-        this.phontro_id = phontro_id;
+    public void setPhongtro_id(int phongtro_id) {
+        this.phongtro_id = phongtro_id;
     }
 
     public int getSonuoccu() {
@@ -106,6 +116,14 @@ public class Hoadon {
 
     public void setSonuocmoi(int sonuocmoi) {
         this.sonuocmoi = sonuocmoi;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public Phongtro getPhongtro() {
@@ -154,5 +172,21 @@ public class Hoadon {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public String getRaw() {
+        return raw;
+    }
+
+    public void setRaw(String raw) {
+        this.raw = raw;
+    }
+
+    public int getCheck_water() {
+        return check_water;
+    }
+
+    public void setCheck_water(int check_water) {
+        this.check_water = check_water;
     }
 }

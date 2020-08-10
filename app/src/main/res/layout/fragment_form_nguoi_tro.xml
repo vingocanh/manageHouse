@@ -21,7 +21,92 @@
                 android:gravity="center_vertical"
                 android:textSize="@dimen/sizeForm"
                 android:textColor="@color/colorFormMasterHeaderText"
-                android:text="Chọn phòng trọ"/>
+                android:text="Thông tin cá nhân (bắt buộc)"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/boder_bottom_ddd"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/border_full"
+                android:padding="10dp"
+                android:src="@drawable/ic_person_outline_32dp" />
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnChonAnh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="#3498db"
+                    android:text="Chọn ảnh"
+                    android:textColor="#ffffff"/>
+                <Button
+                    android:id="@+id/btnXoaAnh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="#e74c3c"
+                    android:text="Xóa ảnh"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#ffffff"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Họ"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtHo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Tên"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtTen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,6 +138,7 @@
             android:layout_height="45dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
@@ -60,8 +146,9 @@
                 android:layout_weight="1"
                 android:text="Chọn phòng trọ"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextValue"
+                android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
+
             <TextView
                 android:id="@+id/txtChonPhongTro"
                 android:layout_width="0dp"
@@ -69,22 +156,7 @@
                 android:layout_weight="2"
                 android:gravity="center_vertical|end"
                 android:textColor="@color/colorFormMasterElementTextValue"
-                android:textSize="@dimen/sizeForm"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@color/colorFormMasterHeaderBackground"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/sizeForm"
-                android:textColor="@color/colorFormMasterHeaderText"
-                android:text="Nhập số điện"/>
+                android:textSize="@dimen/sizeForm" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,128 +169,43 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Số điện cũ"
+                android:text="Ngày sinh"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
             <EditText
-                android:id="@+id/edtSoDienCu"
+                android:id="@+id/edtNgaySinh"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:textAlignment="textEnd"
                 android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Số CMND"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtSocmnd"
+                android:layout_width="0dp"
                 android:inputType="number"
-                android:background="@null"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Số điện mới"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
-            <EditText
-                android:id="@+id/edtSoDienMoi"
-                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:inputType="number"
                 android:textAlignment="textEnd"
                 android:textSize="@dimen/sizeForm"
                 android:background="@null"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/llNhapSoNuoc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:background="@color/colorFormMasterHeaderBackground"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:textSize="@dimen/sizeForm"
-                    android:textColor="@color/colorFormMasterHeaderText"
-                    android:text="Nhập số nước"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:background="@drawable/line_form_element_bg"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Số nước cũ"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorFormMasterElementTextTitle"
-                    android:textSize="@dimen/sizeForm"/>
-                <EditText
-                    android:id="@+id/edtSoNuocCu"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:textAlignment="textEnd"
-                    android:textSize="@dimen/sizeForm"
-                    android:inputType="number"
-                    android:background="@null"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Số nước mới"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorFormMasterElementTextTitle"
-                    android:textSize="@dimen/sizeForm"/>
-                <EditText
-                    android:id="@+id/edtSoNuocMoi"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:inputType="number"
-                    android:textAlignment="textEnd"
-                    android:textSize="@dimen/sizeForm"
-                    android:background="@null"/>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@color/colorFormMasterHeaderBackground"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/sizeForm"
-                android:textColor="@color/colorFormMasterHeaderText"
-                android:text="Nhập hóa đơn"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -231,12 +218,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Tên hóa đơn"
+                android:text="Quê quán"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
             <EditText
-                android:id="@+id/edtTen"
+                android:id="@+id/edtQueQuan"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -255,37 +242,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Tháng"
+                android:text="Nghề nghiệp"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
             <EditText
-                android:id="@+id/edtThang"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:inputType="none"
-                android:textAlignment="textEnd"
-                android:textSize="@dimen/sizeForm"
-                android:background="@null"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/line_form_element_bg"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Tiền phòng"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
-            <EditText
-                android:id="@+id/edtTienPhong"
+                android:id="@+id/edtNgheNghiep"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -304,69 +266,43 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Số điện"
+                android:text="Trình độ"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
-            <EditText
-                android:id="@+id/edtSoDien"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:inputType="number"
-                android:textAlignment="textEnd"
-                android:textSize="@dimen/sizeForm"
-                android:background="@null"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/llSoNuoc"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/line_form_element_bg"
-            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Số nước"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
-            <EditText
-                android:id="@+id/edtSoNuoc"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:inputType="number"
-                android:textAlignment="textEnd"
-                android:textSize="@dimen/sizeForm"
-                android:background="@null"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/line_form_element_bg"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Các khoản thu"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
-            <TextView
-                android:id="@+id/txtCacKhoanThu"
+                android:id="@+id/txtChonTrinhDo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_vertical|end"
                 android:textColor="@color/colorFormMasterElementTextValue"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Nơi làm việc"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNoiLamViec"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -398,7 +334,6 @@
             android:layout_height="45dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:background="@drawable/line_form_element_bg"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
@@ -422,26 +357,273 @@
             android:layout_height="45dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:background="@color/colorFormMasterHeaderBackground"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Thông tin cha (không bắt buộc)"
+                android:textColor="@color/colorFormMasterHeaderText"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Tổng tiền"
+                android:text="Họ tên cha"
                 android:gravity="center_vertical"
-                android:textStyle="bold"
                 android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/txtTongTien"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtTenCha"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:text="0"
-                android:textStyle="bold"
-                android:gravity="center_vertical|end"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Năm sinh"
+                android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNamSinhCha"
+                android:inputType="number"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Nghề nghiệp"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNgheNghiepCha"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Nơi công tác"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNoiCongTacCha"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Chỗ ở hiện nay"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtChoOCha"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/colorFormMasterHeaderBackground"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Thông tin mẹ (không bắt buộc)"
+                android:textColor="@color/colorFormMasterHeaderText"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Họ tên mẹ"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtTenMe"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Năm sinh"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNamSinhMe"
+                android:inputType="number"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Nghề nghiệp"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNgheNghiepMe"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Nơi công tác"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtNoiCongTacMe"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Chỗ ở hiện nay"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtChoOMe"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

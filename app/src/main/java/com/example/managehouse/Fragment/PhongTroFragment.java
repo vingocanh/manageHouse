@@ -254,7 +254,7 @@ public class PhongTroFragment extends Fragment implements View.OnClickListener, 
                                 else isLoading = true;
                             } else {
                                 isLoading = true;
-                                phongtroList.add(new Phongtro(-2));
+                                phongtroList.add(new Phongtro(-1));
                             }
                             itemPhongTroAdapter.notifyDataSetChanged();
                             lavLoading.setVisibility(View.GONE);

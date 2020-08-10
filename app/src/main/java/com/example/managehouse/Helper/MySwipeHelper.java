@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.managehouse.Common.Common;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -216,6 +218,31 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
 
         public void onDraw(Canvas canvas, RectF rectF, int pos) {
+            int color = this.color;
+            String text = this.text;
+            String text2 = "";
+            boolean check = false;
+            if(text.equals("Tình trạng")) {
+                check = true;
+                if(Common.hoadonList.size() > 0){
+                    if(Common.hoadonList.get(pos).getStatus() == 1) {
+                        color = Color.parseColor("#27ae60");
+                        text = "Đã";
+                        text2 = "thu tiền";
+                    }
+                    else {
+                        if(Common.hoadonList.get(pos).getStatus() == 2) {
+                            color = Color.parseColor("#f39c12");
+                            text = "Chờ";
+                            text2 = "thu tiền";
+                        }
+                        else {
+                            color = Color.parseColor("#f39c12");
+                            text = "Bỏ hủy";
+                        }
+                    }
+                }
+            }
 
             Paint paint = new Paint();
             paint.setColor(color);
@@ -233,7 +260,14 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             if (imageId == 0) {
                 x = cWidth / 2f - rect.width() / 2f - rect.left;
                 y = cHeight / 2f + rect.height() / 2f - rect.bottom;
-                canvas.drawText(text, rectF.left + x, rectF.top + y, paint);
+                if(check && !text2.equals("")) {
+                    canvas.drawText(text, rectF.left + x, rectF.top + y - 20, paint);
+                    canvas.drawText(text2, rectF.left + x / 5, rectF.top + y + 40, paint);
+                }
+                else {
+                    canvas.drawText(text, rectF.left + x, rectF.top + y, paint);
+                }
+
             } else {
                 Drawable drawable = ContextCompat.getDrawable(context, imageId);
                 Bitmap bitmap = drawableToBitmap(drawable);

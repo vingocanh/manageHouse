@@ -23,16 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.managehouse.Activity.HomeActivity;
 import com.example.managehouse.Adapter.ItemNguoiTroAdapter;
-import com.example.managehouse.Adapter.ItemPhongTroAdapter;
 import com.example.managehouse.Callback.ChosenItemCallback;
 import com.example.managehouse.Common.Common;
-import com.example.managehouse.Fragment.PhongTro.FormFragment;
+import com.example.managehouse.Fragment.NguoiTro.FormFragment;
 import com.example.managehouse.Helper.ButtonThaoTacClickListener;
 import com.example.managehouse.Helper.MySwipeHelper;
 import com.example.managehouse.Model.Item;
 import com.example.managehouse.Model.Message;
 import com.example.managehouse.Model.Nguoitro;
-import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
 import com.example.managehouse.Service.DialogChosenItem;
@@ -153,10 +151,10 @@ public class NguoiTroFragment extends Fragment implements View.OnClickListener, 
                             @Override
                             public void onClick(int pos) {
                                 Bundle bundle = new Bundle();
-//                                bundle.putSerializable("phongtro", (Serializable) nguoitroList.get(pos));
-//                                FormFragment formFragment = new FormFragment();
-//                                formFragment.setArguments(bundle);
-//                                homeActivity.replaceFragment(formFragment, true);
+                                bundle.putSerializable("nguoitro", (Serializable) nguoitroList.get(pos));
+                                FormFragment formFragment = new FormFragment();
+                                formFragment.setArguments(bundle);
+                                homeActivity.replaceFragment(formFragment, true);
                             }
                         }));
             }
@@ -256,7 +254,7 @@ public class NguoiTroFragment extends Fragment implements View.OnClickListener, 
                                 else isLoading = true;
                             } else {
                                 isLoading = true;
-                                nguoitroList.add(new Nguoitro(-2));
+                                nguoitroList.add(new Nguoitro(-1));
                             }
                             itemNguoiTroAdapter.notifyDataSetChanged();
                             lavLoading.setVisibility(View.GONE);
@@ -319,9 +317,9 @@ public class NguoiTroFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void delete(int id, final int pos) {
-        String url = "phongtro/" + id;
+        String url = "nguoitro/" + id;
         lavLoading.setVisibility(View.VISIBLE);
-        compositeDisposable.add(api.deletePhongTro(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.deleteNguoiTro(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
