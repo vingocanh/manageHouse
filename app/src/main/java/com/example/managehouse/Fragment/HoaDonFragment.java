@@ -28,10 +28,13 @@ import com.example.managehouse.Activity.ShowBillActivity;
 import com.example.managehouse.Adapter.ItemHoaDonAdapter;
 import com.example.managehouse.Callback.ChosenItemCallback;
 import com.example.managehouse.Common.Common;
+import com.example.managehouse.Fragment.KhuTro.FormFragment;
 import com.example.managehouse.Helper.ButtonThaoTacClickListener;
 import com.example.managehouse.Helper.MySwipeHelper;
 import com.example.managehouse.Model.Hoadon;
 import com.example.managehouse.Model.Item;
+import com.example.managehouse.Model.Khutro;
+import com.example.managehouse.Model.Khutrokhoanthu;
 import com.example.managehouse.Model.Message;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
@@ -57,15 +60,16 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
     private RecyclerView rvData;
     private EditText edtTimKiem;
     private LottieAnimationView lavLoading;
-    private ImageView ivSort, ivLayout, ivFilter;
+    private ImageView ivSort, ivLayout, ivFilter, ivFilterKhuTro;
 
     private ItemHoaDonAdapter itemHoaDonAdapter;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private API api;
     private HomeActivity homeActivity;
     private List<Hoadon> hoadonList = new ArrayList<>();
+    private List<Khutro> khutroList = new ArrayList<>();
     private boolean isLoading = false, layout = true, checkSpace = true; // load more hoadon
-    private int limit = 10, sort = 1, filter = -1, checkCallBack = 0;
+    private int limit = 10, sort = 1, filter = -1, checkCallBack = 0, sttKhuTro = 0, filterKhuTro = -1;
     private String search = null;
     private Timer timerSearch = null;
     private MySwipeHelper mySwipeHelper = null;
@@ -96,6 +100,7 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
         itemHoaDonAdapter = new ItemHoaDonAdapter(getActivity(), hoadonList, layout);
         rvData.setAdapter(itemHoaDonAdapter);
         getData("init", 0);
+        getKhutro();
         swipe();
         return view;
     }
@@ -114,6 +119,8 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
         ivLayout.setOnClickListener(this);
         ivFilter = view.findViewById(R.id.ivFilter);
         ivFilter.setOnClickListener(this);
+        ivFilterKhuTro = view.findViewById(R.id.ivFilterKhuTro);
+        ivFilterKhuTro.setOnClickListener(this);
     }
 
     public void changeLayout() {
@@ -172,7 +179,7 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
 
     public void timKiemData(final String search, final String type, int offset) {
         if (type.equals("init")) lavLoading.setVisibility(View.VISIBLE);
-        compositeDisposable.add(api.timKiemHoaDon(search, limit, offset, sort, filter).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.timKiemHoaDon(search, limit, offset, sort, filter,filterKhuTro).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Hoadon>>() {
                     @Override
                     public void accept(List<Hoadon> hoadons) throws Exception {
@@ -277,7 +284,7 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
 
     public void getData(final String type, int offset) {
         if (type.equals("init")) lavLoading.setVisibility(View.VISIBLE);
-        compositeDisposable.add(api.getHoaDon(limit, offset, sort, filter).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.getHoaDon(limit, offset, sort, filter,filterKhuTro).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Hoadon>>() {
                     @Override
                     public void accept(List<Hoadon> hoadons) throws Exception {
@@ -312,6 +319,23 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
                     public void accept(Throwable throwable) throws Exception {
                         Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
                         lavLoading.setVisibility(View.GONE);
+                        throwable.printStackTrace();
+                    }
+                }));
+    }
+
+    public void getKhutro() {
+        String url = "khutro/1";
+        compositeDisposable.add(api.getKhutroChosen(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Khutro>>() {
+                    @Override
+                    public void accept(List<Khutro> khutros) throws Exception {
+                        khutroList = khutros;
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
                         throwable.printStackTrace();
                     }
                 }));
@@ -470,13 +494,54 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
                 dialogChosenItem.showDialog();
                 break;
             }
+            case R.id.ivFilterKhuTro : {
+                checkCallBack = 2;
+                if(khutroList.size() > 0) {
+                    List<Item> items = new ArrayList<>();
+                    int stt = 1;
+                    if(sttKhuTro == 0) items.add(new Item(true, -1, 0, "Tất cả"));
+                    else items.add(new Item(false, -1, 0, "Tất cả"));
+                    for (Khutro khutro : khutroList) {
+                        if (stt == sttKhuTro) items.add(new Item(true, khutro.getId(), stt, khutro.getTen()));
+                        else items.add(new Item(false, khutro.getId(), stt, khutro.getTen()));
+                        stt++;
+                    }
+                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttKhuTro, true);
+                    dialogChosen.setChosenItemCallback(this);
+                    dialogChosen.showDialog();
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Không có khu trọ nào, hãy thêm khu trọ mới.")
+                            .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FormFragment formFragment = new FormFragment();
+                                    homeActivity.replaceFragment(formFragment,true);
+                                }
+                            })
+                            .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).create().show();
+                }
+                break;
+            }
         }
     }
 
     @Override
     public void onReceiveItem(List<Item> item) {
         if (checkCallBack == 1) sort = item.get(0).getId();
-        else if (checkCallBack == 0) filter = item.get(0).getId();
+        else {
+            if (checkCallBack == 0) filter = item.get(0).getId();
+            else {
+                filterKhuTro = item.get(0).getId();
+                sttKhuTro = item.get(0).getStt();
+            }
+        }
         int offset = hoadonList.size() - 1;
         if (search != null) {
             timKiemData(search, "init", 0);

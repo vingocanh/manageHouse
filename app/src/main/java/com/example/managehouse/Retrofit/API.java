@@ -195,14 +195,16 @@ public interface API {
     Observable<List<Hoadon>> getHoaDon(@Query("limit") int limit,
                                        @Query("offset") int offset,
                                        @Query("sort") int sort,
-                                       @Query("filter") int filter);
+                                       @Query("filter") int filter,
+                                       @Query("filter_kt") int filterKhuTro);
 
     @GET("hoadon/create?")
     Observable<List<Hoadon>> timKiemHoaDon(@Query("search") String search,
                                            @Query("limit") int limit,
                                            @Query("offset") int offset,
                                            @Query("sort") int sort,
-                                           @Query("filter") int filter);
+                                           @Query("filter") int filter,
+                                           @Query("filter_kt") int filterKhuTro);
 
     @DELETE
     Observable<Message> deleteHoaDon(@Url String url);
