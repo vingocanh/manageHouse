@@ -83,6 +83,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private List<Khoanthu> khoanthuList = new ArrayList<>();
     private ItemKhoanThuKhuTro itemKhoanThuKhuTro;
     private String namXayDung = "", tenKhuTro = "", diaChi = "";
+    private  boolean checkFormChange = false;
 
     public FormFragment() {
         // Required empty public constructor
@@ -191,6 +192,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 if(!s.toString().equals("")) {
                     if(!s.toString().equals(tenKhuTro)) {
                         Common.checkFormChange = true;
+                        checkFormChange = true;
                     }
                 }
             }
@@ -209,7 +211,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
-                    if(!s.toString().equals(diaChi)) Common.checkFormChange = true;
+                    if(!s.toString().equals(diaChi)) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
                 }
             }
 
@@ -227,7 +232,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
-                    if(!s.toString().equals(namXayDung)) Common.checkFormChange = true;
+                    if(!s.toString().equals(namXayDung)) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
                 }
             }
 
@@ -282,6 +290,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                             } else {
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
                                 Common.checkFormChange = false;
+                                checkFormChange = false;
                             }
                         }
                     }
@@ -322,7 +331,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         itemKhoanThuKhuTro = new ItemKhoanThuKhuTro(getActivity(),khoanthuList);
         itemKhoanThuKhuTro.setChosenKhoanThuKhuTroCallback(this);
         rvKhoanThu.setAdapter(itemKhoanThuKhuTro);
-        compositeDisposable.add(api.getKhoanThuKhuTro().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.getKhoanThuKhuTro(1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Khoanthu>>() {
                     @Override
                     public void accept(List<Khoanthu> khoanthus) throws Exception {
@@ -425,6 +434,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 ivAvatar.setImageBitmap(bitmap);
                 btnXoaAnh.setVisibility(View.VISIBLE);
                 Common.checkFormChange =true;
+                checkFormChange = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -507,7 +517,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void onReceiveItem(List<Item> item) {
         txtTrangThai.setText(item.get(0).getName());
         txtTrangThai.setTag(item.get(0).getId());
-        if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
+        if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) {
+            Common.checkFormChange = true;
+            checkFormChange = true;
+        }
     }
 
     @Override
@@ -515,6 +528,12 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         super.onDestroy();
         compositeDisposable.clear();
         Common.checkFormChange = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Common.checkFormChange = checkFormChange;
     }
 
     @Override

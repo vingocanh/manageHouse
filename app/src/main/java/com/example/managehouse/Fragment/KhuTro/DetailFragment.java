@@ -3,16 +3,15 @@ package com.example.managehouse.Fragment.KhuTro;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.managehouse.Activity.HomeActivity;
@@ -22,17 +21,13 @@ import com.example.managehouse.Model.Message;
 import com.example.managehouse.Model.Thongkekhutro;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
-import com.example.managehouse.Service.DialogNotification;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class DetailFragment extends Fragment {
 

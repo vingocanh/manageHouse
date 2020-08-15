@@ -81,8 +81,8 @@ public interface API {
     @DELETE
     Observable<Message> deleteKhuTro(@Url String url);
 
-    @GET("khoanthu/create")
-    Observable<List<Khoanthu>> getKhoanThuKhuTro();
+    @GET("khoanthu/{id}")
+    Observable<List<Khoanthu>> getKhoanThuKhuTro(@Path("id") int id);
 
     @GET
     Observable<Message> thongKeChiTiet(@Url String url);
@@ -208,6 +208,33 @@ public interface API {
 
     @DELETE
     Observable<Message> deleteHoaDon(@Url String url);
+
+    // khoản thu
+    @GET("khoanthu?")
+    Observable<List<Khoanthu>> getKhoanthu(@Query("limit") int limit,
+                                       @Query("offset") int offset,
+                                       @Query("sort") int sort,
+                                       @Query("filter") int filter);
+
+    @GET("khoanthu/create?")
+    Observable<List<Khoanthu>> timKiemKhoanThu(@Query("search") String search,
+                                           @Query("limit") int limit,
+                                           @Query("offset") int offset,
+                                           @Query("sort") int sort,
+                                           @Query("filter") int filter);
+
+    @POST("khoanthu")
+    @Multipart
+    Observable<Message> createKhoanThu(@Part("khoanthu_id") RequestBody id,
+                                     @Part("ten") RequestBody ten,
+                                     @Part("mota") RequestBody mota,
+                                     @Part("user_id") RequestBody userId,
+                                     @Part("status") RequestBody status,
+                                     @Part("type") RequestBody type,
+                                     @Part MultipartBody.Part avatar);
+
+    @DELETE
+    Observable<Message> deleteKhoanThu(@Url String url);
 
     @GET
     Observable<List<Donvitinh>> getDonViTinhChon(@Url String url);

@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.managehouse.Common.Common;
 import com.example.managehouse.Fragment.DashboardFragment;
 import com.example.managehouse.Fragment.HoaDonFragment;
+import com.example.managehouse.Fragment.KhoanThuFragment;
 import com.example.managehouse.Fragment.KhuTroFragment;
 import com.example.managehouse.Fragment.NguoiTroFragment;
 import com.example.managehouse.Fragment.PhongTroFragment;
@@ -173,6 +174,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.navHoaDon : {
                 if(!fragmentClass.equals("HoaDonFragment")) {
                     replaceFragment(new HoaDonFragment(), true);
+                }
+                break;
+            }
+            case R.id.navKhoanThu : {
+                if(!fragmentClass.equals("KhoanThuFragment")) {
+                    replaceFragment(new KhoanThuFragment(), true);
                 }
                 break;
             }

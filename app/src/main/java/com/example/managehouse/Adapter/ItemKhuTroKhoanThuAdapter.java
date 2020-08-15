@@ -12,22 +12,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.managehouse.Activity.HomeActivity;
-import com.example.managehouse.Fragment.NguoiTro.DetailFragment;
-import com.example.managehouse.Model.Nguoitro;
+import com.example.managehouse.Fragment.KhuTro.DetailFragment;
+import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ItemKhuTroKhoanThuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Activity activity;
-    private List<Nguoitro> nguoitros;
+    private List<Khutro> khutros;
 
-    public ItemNguoiTroPhongTroAdapter(Activity activity, List<Nguoitro> nguoitros) {
+    public ItemKhuTroKhoanThuAdapter(Activity activity, List<Khutro> khutros) {
         this.activity = activity;
-        this.nguoitros = nguoitros;
+        this.khutros = khutros;
     }
 
     @NonNull
@@ -38,29 +38,27 @@ public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerVi
             return new MyNotItemViewHolder(view);
         }
         else {
-            View view = LayoutInflater.from(activity).inflate(R.layout.item_nguoitro_phongtro, parent,false);
+            View view = LayoutInflater.from(activity).inflate(R.layout.item_khutro_khoanthu, parent,false);
             return new MyItemViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Nguoitro nguoitro = nguoitros.get(position);
+        Khutro khutro = khutros.get(position);
         if(holder instanceof MyItemViewHolder) {
-            if(nguoitro.getAvatar() != null) {
-                Picasso.get().load(nguoitro.getAvatar()).placeholder(R.drawable.ic_person_outline_32dp).error(R.drawable.ic_person_outline_32dp).into(((MyItemViewHolder) holder).ivAvatar);
+            if(khutro.getImg() != null) {
+                Picasso.get().load(khutro.getImg()).placeholder(R.drawable.ic_hotel).error(R.drawable.ic_hotel).into(((MyItemViewHolder) holder).ivAvatar);
             }
             else {
-                ((MyItemViewHolder) holder).ivAvatar.setImageResource(R.drawable.ic_person_outline_32dp);
+                ((MyItemViewHolder) holder).ivAvatar.setImageResource(R.drawable.ic_hotel);
             }
-            ((MyItemViewHolder) holder).txtTenNguoi.setText(nguoitro.getTen());
-            ((MyItemViewHolder) holder).txtNgaySinh.setText(nguoitro.getNgaysinh2());
-            ((MyItemViewHolder) holder).txtQueQuan.setText(nguoitro.getQuequan());
+            ((MyItemViewHolder) holder).txtTen.setText(khutro.getTen());
             ((MyItemViewHolder) holder).setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int pos, boolean isLongClick) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("nguoitro", (Serializable) nguoitros.get(pos));
+                    bundle.putSerializable("khutro", (Serializable) khutros.get(pos));
                     DetailFragment detailFragment = new DetailFragment();
                     detailFragment.setArguments(bundle);
                     ((HomeActivity) activity).replaceFragment(detailFragment, true);
@@ -68,25 +66,25 @@ public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerVi
             });
         }
         else {
-            ((MyNotItemViewHolder) holder).txtTenNguoi.setText("Không có người trọ");
+            ((MyNotItemViewHolder) holder).txtTen.setText("Không có khu trọ sử dụng khoản thu này");
         }
     }
 
     @Override
     public int getItemCount() {
-        return nguoitros.size();
+        return khutros.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(nguoitros.get(position) == null) return 0;
+        if(khutros.get(position) == null) return 0;
         return 1;
     }
 
     public class MyItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView ivAvatar;
-        private TextView txtTenNguoi, txtNgaySinh, txtQueQuan;
+        private TextView txtTen;
 
         private ItemClickListener itemClickListener;
 
@@ -98,9 +96,7 @@ public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerVi
         public MyItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ivAvatar = itemView.findViewById(R.id.ivAvatar);
-            txtTenNguoi = itemView.findViewById(R.id.txtTenNguoi);
-            txtNgaySinh = itemView.findViewById(R.id.txtNgaySinh);
-            txtQueQuan = itemView.findViewById(R.id.txtQueQuan);
+            txtTen = itemView.findViewById(R.id.txtTen);
             itemView.setOnClickListener(this);
         }
 
@@ -112,11 +108,11 @@ public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class MyNotItemViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView txtTenNguoi;
+        private TextView txtTen;
 
         public MyNotItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtTenNguoi = itemView.findViewById(R.id.txtTenNguoi);
+            txtTen = itemView.findViewById(R.id.txtTenNguoi);
         }
     }
 }

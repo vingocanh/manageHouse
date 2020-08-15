@@ -81,6 +81,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private int gia = 0;
     private int typeChosenItem = 0, sttKhuTro = 0;
     private List<Khutro> khutroList = new ArrayList<>();
+    private boolean checkFormChange = false;
 
     public FormFragment() {
         // Required empty public constructor
@@ -170,6 +171,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 if(!s.toString().equals("")) {
                     if(!s.toString().equals(tenPhongTro)) {
                         Common.checkFormChange = true;
+                        checkFormChange = true;
                     }
                 }
             }
@@ -189,7 +191,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     if(s.toString().indexOf("VNĐ") == -1) edtGia.setTag(s.toString());
-                    if(!s.toString().equals(Common.formatMoney(gia))) Common.checkFormChange = true;
+                    if(!s.toString().equals(Common.formatMoney(gia))) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
                 }
             }
 
@@ -207,7 +212,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ghiChu)) Common.checkFormChange = true;
+                    if(!s.toString().equals(ghiChu)) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
                 }
             }
 
@@ -291,6 +299,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                             } else {
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
                                 Common.checkFormChange = false;
+                                checkFormChange = false;
                             }
                         }
                     }
@@ -379,6 +388,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 ivAvatar.setImageBitmap(bitmap);
                 btnXoaAnh.setVisibility(View.VISIBLE);
                 Common.checkFormChange =true;
+                checkFormChange = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -490,16 +500,28 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Common.checkFormChange = checkFormChange;
+    }
+
+    @Override
     public void onReceiveItem(List<Item> item) {
         if(typeChosenItem == 0) {
-            if(Integer.parseInt(txtChonKhuTro.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
+            if(Integer.parseInt(txtChonKhuTro.getTag().toString()) != item.get(0).getId()) {
+                Common.checkFormChange = true;
+                checkFormChange = true;
+            }
             txtChonKhuTro.setTag(item.get(0).getId());
             txtChonKhuTro.setText(item.get(0).getName());
             sttKhuTro = item.get(0).getStt();
 
         }
         else {
-            if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) Common.checkFormChange = true;
+            if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) {
+                Common.checkFormChange = true;
+                checkFormChange = true;
+            }
             txtTrangThai.setText(item.get(0).getName());
             txtTrangThai.setTag(item.get(0).getId());
         }

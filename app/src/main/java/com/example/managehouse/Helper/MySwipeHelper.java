@@ -1,5 +1,6 @@
 package com.example.managehouse.Helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -21,7 +22,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.managehouse.Activity.HomeActivity;
 import com.example.managehouse.Common.Common;
+import com.example.managehouse.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +43,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
     private float swipeThreshold = 0.5f;
     private Map<Integer, List<ButtonThaoTac>> buttonBuffer = null;
     private Queue<Integer> removerQueue = null;
+    public boolean itemSwipe = true;
 
     private GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
@@ -78,6 +82,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             }
             return false;
         }
+
     };
 
     private synchronized void recoverSwipedItem() {
@@ -100,21 +105,25 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         removerQueue = new LinkedList<Integer>() {
             @Override
             public boolean add(Integer integer) {
+
                 if (contains(integer)) {
                     return false;
                 } else return super.add(integer);
             }
         };
         attachSwipe();
-
     }
 
     private void attachSwipe() {
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-
+    @Override
+    public boolean isItemViewSwipeEnabled() {
+        return itemSwipe;
+    }
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -155,6 +164,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
         int pos = viewHolder.getAdapterPosition();
         float translationX = dX;
         View itemView = viewHolder.itemView;

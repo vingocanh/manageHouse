@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff"
+    android:tag="form"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/boder_bottom_ddd"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/border_full"
+                android:padding="10dp"
+                android:src="@drawable/ic_energy" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Ảnh minh họa"
+                android:textColor="@color/colorText"
+                android:textAlignment="center"
+                android:textSize="@dimen/sizePrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Tên khoản thu"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <TextView
+                android:id="@+id/txtTen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/colorFormMasterElementTextValue"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Mô tả"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <TextView
+                android:id="@+id/txtMoTa"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/colorFormMasterElementTextValue"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Tình trạng"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+
+            <TextView
+                android:id="@+id/txtTrangThai"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/colorFormMasterElementTextValue"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:gravity="center_vertical"
+                android:text="Các khu trọ đang sử dụng"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvKhuTro"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

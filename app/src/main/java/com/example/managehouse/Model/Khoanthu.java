@@ -1,26 +1,30 @@
 package com.example.managehouse.Model;
 
-public class Khoanthu {
-    private int id, status, user_id;
-    private String ten, created_at, updated_at, mota;
-    private boolean checked;
+import java.io.Serializable;
+import java.util.List;
 
-    public Khoanthu(int id, int status, int user_id, String ten, String created_at, String updated_at, String mota) {
+public class Khoanthu implements Serializable {
+    private int id, status, user_id, total;
+    private String ten, created_at, updated_at, mota, avatar;
+    private boolean checked;
+    private List<Khutro> khutro;
+
+    public Khoanthu(int id) {
+        this.id = id;
+    }
+
+    public Khoanthu(int id, int status, int user_id, int total, String ten, String created_at, String updated_at, String mota, String avatar, boolean checked, List<Khutro> khutro) {
         this.id = id;
         this.status = status;
         this.user_id = user_id;
+        this.total = total;
         this.ten = ten;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.mota = mota;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
+        this.avatar = avatar;
         this.checked = checked;
+        this.khutro = khutro;
     }
 
     public int getId() {
@@ -45,6 +49,14 @@ public class Khoanthu {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public String getTen() {
@@ -77,5 +89,29 @@ public class Khoanthu {
 
     public void setMota(String mota) {
         this.mota = mota;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public List<Khutro> getKhutro() {
+        return khutro;
+    }
+
+    public void setKhutro(List<Khutro> khutro) {
+        this.khutro = khutro;
     }
 }
