@@ -75,4 +75,10 @@ dependencies {
 
     //Material DateTime Picker
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+
+    // number picker
+    implementation 'biz.kasual:materialnumberpicker:1.2.1'
+
+    // any chart
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 }

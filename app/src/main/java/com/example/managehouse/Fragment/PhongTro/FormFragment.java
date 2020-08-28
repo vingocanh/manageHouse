@@ -146,7 +146,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         String value = edtGia.getText().toString();
                         edtGia.setText(String.valueOf(Common.clearMoney(value)));
                     } else {
-                        edtGia.setText(Common.formatMoney(Integer.parseInt(edtGia.getText().toString())));
+                        edtGia.setText(Common.formatNumber(Integer.parseInt(edtGia.getText().toString()),true));
                         edtGia.setTag(Common.clearMoney(edtGia.getText().toString()));
                     }
                 }
@@ -191,7 +191,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     if(s.toString().indexOf("VNĐ") == -1) edtGia.setTag(s.toString());
-                    if(!s.toString().equals(Common.formatMoney(gia))) {
+                    if(!s.toString().equals(Common.formatNumber(gia,true))) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -258,7 +258,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         edtGhiChu.setText(ghiChu);
         gia = phongtro.getGia();
         edtGia.setTag(gia);
-        edtGia.setText(Common.formatMoney(phongtro.getGia()));
+        edtGia.setText(Common.formatNumber(phongtro.getGia(),true));
         String trangThai = "Sử dụng";
         if(phongtro.getStatus() == 0) trangThai = "Không sử dụng";
         txtTrangThai.setText(trangThai);

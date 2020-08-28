@@ -73,7 +73,7 @@ public class ItemHoaDonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ((MyItemViewHolder) holder).txtPhongTro.setText(hoadon.getPhongtro().getTen());
             ((MyItemViewHolder) holder).txtKhuTro.setText(hoadon.getPhongtro().getKhutro().getTen());
             ((MyItemViewHolder) holder).txtNgayThang.setText(hoadon.getThang() + "/" + hoadon.getNam());
-            ((MyItemViewHolder) holder).txtTongTien.setText(Common.formatMoney(hoadon.getTongtien()));
+            ((MyItemViewHolder) holder).txtTongTien.setText(Common.formatNumber(hoadon.getTongtien(),true));
             String trangThai = "Đã thu tiền";
             String color = "#27ae60";
             if(hoadon.getStatus() == 0) {

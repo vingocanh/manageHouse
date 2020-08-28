@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".Fragment.ThongKe.ThongKeDoanhThuFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/llKhuTro"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_home_run" />
+
+            <TextView
+                android:id="@+id/txtKhuTro"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_ddd"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:padding="5dp"
+                android:text="Tất cả khu trọ"
+                android:tag="-1"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_date_range_24_black" />
+            <TextView
+                android:id="@+id/txtDateFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_ddd"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:text="00/0000"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm" />
+            <ImageView
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_arrow_right" />
+            <TextView
+                android:id="@+id/txtDateLast"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_ddd"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:text="00/0000"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorFormMasterElementTextTitle"
+            android:textSize="@dimen/sizeForm" />
+
+        <TextView
+            android:id="@+id/txtTongTien"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:text=""
+            android:textColor="@color/colorFormMasterElementTextTitle"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp">
+
+        <com.anychart.AnyChartView
+            android:id="@+id/any_chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_gravity="center"
+            android:id="@+id/lavLoading"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="round-loading.json" />
+    </FrameLayout>
+</LinearLayout>

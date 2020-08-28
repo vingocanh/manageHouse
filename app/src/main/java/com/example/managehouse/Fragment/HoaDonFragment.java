@@ -107,6 +107,7 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
 
     public void mapping(View view) {
         homeActivity.ivAction.setImageResource(R.drawable.ic_baseline_add_32);
+        homeActivity.ivAction.setVisibility(View.VISIBLE);
         homeActivity.ivAction.setOnClickListener(this);
         rvData = view.findViewById(R.id.rvData);
         rvData.setHasFixedSize(true);
@@ -497,18 +498,18 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
             case R.id.ivFilterKhuTro : {
                 checkCallBack = 2;
                 if(khutroList.size() > 0) {
-                    List<Item> items = new ArrayList<>();
-                    int stt = 1;
-                    if(sttKhuTro == 0) items.add(new Item(true, -1, 0, "Tất cả"));
-                    else items.add(new Item(false, -1, 0, "Tất cả"));
-                    for (Khutro khutro : khutroList) {
-                        if (stt == sttKhuTro) items.add(new Item(true, khutro.getId(), stt, khutro.getTen()));
-                        else items.add(new Item(false, khutro.getId(), stt, khutro.getTen()));
-                        stt++;
-                    }
-                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttKhuTro, true);
-                    dialogChosen.setChosenItemCallback(this);
-                    dialogChosen.showDialog();
+                        List<Item> items = new ArrayList<>();
+                        int stt = 1;
+                        if(sttKhuTro == 0) items.add(new Item(true, -1, 0, "Tất cả"));
+                        else items.add(new Item(false, -1, 0, "Tất cả"));
+                        for (Khutro khutro : khutroList) {
+                            if (stt == sttKhuTro) items.add(new Item(true, khutro.getId(), stt, khutro.getTen()));
+                            else items.add(new Item(false, khutro.getId(), stt, khutro.getTen()));
+                            stt++;
+                        }
+                        DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttKhuTro, true);
+                        dialogChosen.setChosenItemCallback(this);
+                        dialogChosen.showDialog();
                 }
                 else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

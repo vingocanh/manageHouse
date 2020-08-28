@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.example.managehouse.Common.Common;
 import com.example.managehouse.Model.Hoadon;
 import com.example.managehouse.Model.Khutrokhoanthu;
 import com.example.managehouse.R;
@@ -90,7 +91,7 @@ public class ShowBillActivity extends AppCompatActivity {
         txtNgay.setText(hoadon.getCreated_at());
 
         // set tong tien
-        txtTongTien.setText(formatMoney(hoadon.getTongtien()," VNĐ"));
+        txtTongTien.setText(Common.formatNumber(hoadon.getTongtien(),true));
 
         //check và set ghi chú
         if(hoadon.getGhichu() == null || hoadon.getGhichu().equals("")) {
@@ -111,10 +112,10 @@ public class ShowBillActivity extends AppCompatActivity {
         txtSoLuong.setText("-");
         TextView txtDonGia = createTextView();
         txtDonGia.setBackgroundResource(R.drawable.border_top_right_table);
-        txtDonGia.setText(formatMoney(hoadon.getPhongtro().getGia(),""));
+        txtDonGia.setText(Common.formatNumber(hoadon.getPhongtro().getGia(),false));
         TextView txtThanhTien = createTextView();
         txtThanhTien.setBackgroundResource(R.drawable.border_top_right_table);
-        txtThanhTien.setText(formatMoney(hoadon.getPhongtro().getGia(),""));
+        txtThanhTien.setText(Common.formatNumber(hoadon.getPhongtro().getGia(),false));
         tableRow.addView(txtTienPhong);
         tableRow.addView(txtSoLuong);
         tableRow.addView(txtDonGia);
@@ -124,7 +125,7 @@ public class ShowBillActivity extends AppCompatActivity {
         TextView tvSl = createTextView();
         TextView tvDonGia = createTextView();
         TextView tvThanhTien = createTextView();
-
+        Log.d("cuong", hoadon.getKhoanthu().size()+"");
         for (Khutrokhoanthu khutrokhoanthu : hoadon.getKhoanthu()) {
             TableRow row = createRow();
             tvTen = createTextView();
@@ -159,8 +160,8 @@ public class ShowBillActivity extends AppCompatActivity {
                 }
             }
             row.addView(tvSl);
-            tvThanhTien.setText(formatMoney(thanhTien,""));
-            tvDonGia.setText(formatMoney(khutrokhoanthu.getGia(),""));
+            tvThanhTien.setText(Common.formatNumber(thanhTien,false));
+            tvDonGia.setText(Common.formatNumber(khutrokhoanthu.getGia(),false));
             row.addView(tvDonGia);
             row.addView(tvThanhTien);
             tlBill.addView(row);
@@ -227,12 +228,6 @@ public class ShowBillActivity extends AppCompatActivity {
             Toasty.error(getApplicationContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
         }
 
-    }
-
-    public String formatMoney(int value, String dv) {
-        Locale locale = Locale.getDefault();
-        NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
-        return numberFormat.format(value) + dv;
     }
 
     public TextView createTextView() {

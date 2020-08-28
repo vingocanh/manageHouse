@@ -1,6 +1,7 @@
 package com.example.managehouse.Common;
 
 import com.example.managehouse.Model.Hoadon;
+import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.Model.User;
 import com.example.managehouse.Retrofit.API;
 import com.example.managehouse.Retrofit.RetrofitClient;
@@ -22,10 +23,10 @@ public class Common {
         return RetrofitClient.getInstance().create(API.class);
     }
 
-    public static String formatMoney(int value) {
+    public static String formatNumber(int value, boolean money) {
         Locale locale = Locale.getDefault();
         NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
-        return numberFormat.format(value) + " VNĐ";
+        return (money) ? numberFormat.format(value) + " VNĐ" : numberFormat.format(value);
     }
 
     public static int clearMoney(String value) {

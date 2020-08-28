@@ -236,6 +236,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingBottom="10dp"
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
@@ -244,14 +245,10 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/colorFormMasterElementTextTitle"
                 android:textSize="@dimen/sizeForm"/>
-            <LinearLayout
-                android:id="@+id/llThongKe"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
                 <LinearLayout
-                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content" >
@@ -284,7 +281,8 @@
                                         android:text="Tổng thu"/>
                                 </LinearLayout>
                                 <LinearLayout
-                                    android:layout_width="0dp"
+                                    android:id="@+id/llYear"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
                                     android:orientation="horizontal"
@@ -296,11 +294,12 @@
                                         android:layout_height="18dp"
                                         android:src="@drawable/ic_date_range_24dp" />
                                     <TextView
+                                        android:id="@+id/txtYear"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:textColor="#fff"
-                                        android:text="2020"
+                                        android:text="0"
                                         android:textSize="14sp"/>
                                 </LinearLayout>
                             </LinearLayout>
@@ -331,22 +330,23 @@
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
                 <LinearLayout
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
+                    android:id="@+id/llLoading"
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content" >
-
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="#99C0C0C0"
+                    android:orientation="vertical">
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:layout_gravity="center"
+                        android:id="@+id/lavLoading"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_fileName="round-loading.json" />
                 </LinearLayout>
-            </LinearLayout>
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_gravity="center"
-                android:id="@+id/lavLoading"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_fileName="round-loading.json" />
+            </FrameLayout>
+
         </LinearLayout>
 
     </LinearLayout>

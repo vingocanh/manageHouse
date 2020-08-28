@@ -110,7 +110,7 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((MyItemViewHolder) holder).cbItem.setChecked(khoanthus.get(position).isChecked());
             ((MyItemViewHolder) holder).txtItem.setText(khoanthus.get(position).getTen());
             if(giaKhoanThu[position] != 0) {
-                ((MyItemViewHolder) holder).edtPrice.setText(Common.formatMoney(giaKhoanThu[position]));
+                ((MyItemViewHolder) holder).edtPrice.setText(Common.formatNumber(giaKhoanThu[position],true));
                 ((MyItemViewHolder) holder).edtPrice.setTag(giaKhoanThu[position]);
             }
             if(tenDonViTinh != null && donViTinhKhoanThu[position] != 0) {
@@ -161,7 +161,7 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                             ((MyItemViewHolder) holder).edtPrice.setText(String.valueOf(Common.clearMoney(value)));
                         } else {
-                            ((MyItemViewHolder) holder).edtPrice.setText(Common.formatMoney(Integer.parseInt(((MyItemViewHolder) holder).edtPrice.getText().toString())));
+                            ((MyItemViewHolder) holder).edtPrice.setText(Common.formatNumber(Integer.parseInt(((MyItemViewHolder) holder).edtPrice.getText().toString()),true));
                             ((MyItemViewHolder) holder).edtPrice.setTag(Common.clearMoney(((MyItemViewHolder) holder).edtPrice.getText().toString()));
                         }
                     }

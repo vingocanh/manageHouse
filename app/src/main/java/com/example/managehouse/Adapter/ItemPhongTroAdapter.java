@@ -72,7 +72,7 @@ public class ItemPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Phongtro phongtro = phongtros.get(position);
             ((MyItemViewHolder) holder).txtName.setText(phongtro.getTen());
             ((MyItemViewHolder) holder).txtKhuTro.setText(phongtro.getKhutro().getTen());
-            ((MyItemViewHolder) holder).txtPrice.setText(Common.formatMoney(phongtro.getGia()));
+            ((MyItemViewHolder) holder).txtPrice.setText(Common.formatNumber(phongtro.getGia(),true));
             String trangThai = "Đang sử dụng";
             String color = "#27ae60";
             if(phongtro.getStatus() == 0) {

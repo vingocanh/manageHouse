@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout drawerLayout;
     private NavigationView nvMenu;
     private Fragment fragment = null;
+    private SharedPreferences sharedPreferences;
 
     /* premission */
     private List<String> permissions = new ArrayList<>();
@@ -56,45 +58,45 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
         mapping();
         createPermission();
-        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-        String expiresAt = sharedPreferences.getString("expires_at", null);
-        if (expiresAt != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            try {
-                Date expiresUser = formatter.parse(expiresAt);
-                Date currentDate = formatter.parse(formatter.format(new Date()));
-                if (currentDate.compareTo(expiresUser) < 0) {
-                    fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.add(R.id.flHome, new DashboardFragment());
-                    fragmentTransaction.commit();
-                    Common.currentUser = new User(
-                            Integer.parseInt(sharedPreferences.getString("id", "0")),
-                            sharedPreferences.getString("name", ""),
-                            sharedPreferences.getString("username", ""),
-                            sharedPreferences.getString("roles", ""),
-                            sharedPreferences.getString("address", ""),
-                            null,
-                            null,
-                            sharedPreferences.getString("created_at", ""),
-                            sharedPreferences.getString("updated_at", ""),
-                            sharedPreferences.getString("access_token", ""),
-                            sharedPreferences.getString("token_type", ""),
-                            sharedPreferences.getString("expires_at", "")
-                    );
-                    Common.token = sharedPreferences.getString("token_type", "") + " " + sharedPreferences.getString("access_token", "");
-                } else {
-                    sharedPreferences.edit().clear().commit();
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+        if(savedInstanceState == null) {
+            sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+            String expiresAt = sharedPreferences.getString("expires_at", null);
+            if (expiresAt != null) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                try {
+                    Date expiresUser = formatter.parse(expiresAt);
+                    Date currentDate = formatter.parse(formatter.format(new Date()));
+                    if (currentDate.compareTo(expiresUser) < 0) {
+                        replaceFragment(new DashboardFragment(), false);
+//
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragmentTransaction.add(R.id.flHome, new DashboardFragment());
+//                    fragmentTransaction.commit();
+                        Common.currentUser = new User(
+                                Integer.parseInt(sharedPreferences.getString("id", "0")),
+                                sharedPreferences.getString("name", ""),
+                                sharedPreferences.getString("username", ""),
+                                sharedPreferences.getString("roles", ""),
+                                sharedPreferences.getString("address", ""),
+                                null,
+                                null,
+                                sharedPreferences.getString("created_at", ""),
+                                sharedPreferences.getString("updated_at", ""),
+                                sharedPreferences.getString("access_token", ""),
+                                sharedPreferences.getString("token_type", ""),
+                                sharedPreferences.getString("expires_at", "")
+                        );
+                        Common.token = sharedPreferences.getString("token_type", "") + " " + sharedPreferences.getString("access_token", "");
+                        setValueHeader();
+                    } else {
+                        logout();
+                    }
 
-            } catch (ParseException e) {
-                e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
     }
 
     public void mapping() {
@@ -108,8 +110,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         nvMenu.setNavigationItemSelectedListener(this);
     }
 
+    public void setValueHeader() {
+        View headerView = nvMenu.getHeaderView(0);
+        TextView txtName = headerView.findViewById(R.id.txtName);
+        txtName.setText(Common.currentUser.getName());
+    }
+
     public void replaceFragment(Fragment fragment, boolean backStack) {
         this.fragment = fragment;
+        fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.replace(R.id.flHome, fragment);
@@ -137,6 +146,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    public void logout() {
+        sharedPreferences.edit().clear().commit();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -153,6 +169,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         String fragmentClass = "";
         if(fragment != null) fragmentClass = fragment.getClass().getSimpleName();
         switch (menuItem.getItemId()) {
+            case R.id.navTongQuan: {
+                if(!fragmentClass.equals("DashboardFragment")) {
+                    replaceFragment(new DashboardFragment(), false);
+                }
+                break;
+            }
             case R.id.navKhuTro: {
                 if(!fragmentClass.equals("KhuTroFragment")) {
                     replaceFragment(new KhuTroFragment(), true);
@@ -181,6 +203,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 if(!fragmentClass.equals("KhoanThuFragment")) {
                     replaceFragment(new KhoanThuFragment(), true);
                 }
+                break;
+            }
+            case R.id.navDangXuat : {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Bạn chắc chắn muốn đăng xuất?")
+                        .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                logout();
+                            }
+                        })
+                        .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
+
                 break;
             }
         }

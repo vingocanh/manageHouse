@@ -158,7 +158,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     edtTienPhong.setText(String.valueOf(Common.clearMoney(value)));
                 } else {
                     edtTienPhong.setTag(Common.clearMoney(edtTienPhong.getText().toString()));
-                    edtTienPhong.setText(Common.formatMoney(Integer.parseInt(edtTienPhong.getText().toString())));
+                    edtTienPhong.setText(Common.formatNumber(Integer.parseInt(edtTienPhong.getText().toString()),true));
                 }
             }
         });
@@ -429,9 +429,9 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             txtChonPhongTro.setText(hoadon.getPhongtro().getTen());
             tienPhong = hoadon.getPhongtro().getGia();
             edtTienPhong.setTag(tienPhong);
-            edtTienPhong.setText(Common.formatMoney(tienPhong));
+            edtTienPhong.setText(Common.formatNumber(tienPhong,true));
             txtTongTien.setTag(hoadon.getTongtien());
-            txtTongTien.setText(Common.formatMoney(hoadon.getTongtien()));
+            txtTongTien.setText(Common.formatNumber(hoadon.getTongtien(),true));
             ghiChu = hoadon.getGhichu();
             edtGhiChu.setText(ghiChu);
             status = hoadon.getStatus();
@@ -531,6 +531,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
                                 if(type == 1) {
                                     Intent intent = new Intent(getContext(), ShowBillActivity.class);
+                                    Log.d("cuong",message.getData());
                                     intent.putExtra("hoadon", message.getData());
                                     intent.putExtra("checkDonViNuoc", checkDonViNuoc);
                                     startActivity(intent);
@@ -569,7 +570,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                                     edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
                                     tienPhong = phongtroList.get(0).getGia();
                                     edtTienPhong.setTag(phongtroList.get(0).getGia());
-                                    edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
+                                    edtTienPhong.setText(Common.formatNumber(phongtroList.get(0).getGia(),true));
                                     totalMoney();
                                 }
                                 else {
@@ -675,7 +676,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 total += soNuoc * giaNuoc;
             }
             else total += giaNuoc;
-            txtTongTien.setText(Common.formatMoney(total));
+            txtTongTien.setText(Common.formatNumber(total,true));
             txtTongTien.setTag(total);
         }
 
@@ -870,7 +871,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                         }
                     }
                     if(checked) checkedItem++;
-                    items.add(new Item(checked, khutrokhoanthu.getKhoanthu_id(), stt, khutrokhoanthu.getKhoanthu().getTen() + " - " + Common.formatMoney(khutrokhoanthu.getGia())));
+                    items.add(new Item(checked, khutrokhoanthu.getKhoanthu_id(), stt, khutrokhoanthu.getKhoanthu().getTen() + " - " + Common.formatNumber(khutrokhoanthu.getGia(),true)));
                     stt++;
                 }
 
@@ -941,7 +942,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
                     tienPhong = phongtroList.get(0).getGia();
                     edtTienPhong.setTag(phongtroList.get(0).getGia());
-                    edtTienPhong.setText(Common.formatMoney(phongtroList.get(0).getGia()));
+                    edtTienPhong.setText(Common.formatNumber(phongtroList.get(0).getGia(),true));
                     tienPhong = phongtroList.get(0).getGia();
                     totalMoney();
                 }
@@ -963,7 +964,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 Phongtro phongtro = phongtroList.get(sttPhongTro);
                 tienPhong = phongtro.getGia();
                 edtTienPhong.setTag(phongtro.getGia());
-                edtTienPhong.setText(Common.formatMoney(phongtro.getGia()));
+                edtTienPhong.setText(Common.formatNumber(phongtro.getGia(),true));
                 tienPhong = phongtro.getGia();
                 soNuocCu =phongtro.getChotsonuoc();
                 soDienCu = phongtro.getChotsodien();

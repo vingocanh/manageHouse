@@ -1,58 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.DashboardFragment">
+    tools:context=".Fragment.ThongKe.ThongKeKhuTroFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@color/colorPrimary">
+            android:id="@+id/llKhuTro"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:orientation="horizontal">
+
             <ImageView
-                android:layout_marginLeft="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_home_run" />
+
+            <TextView
+                android:id="@+id/txtKhuTro"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_account"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/txtHoten"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="16sp"
-                    android:text="Họ tên"/>
-                <TextView
-                    android:id="@+id/txtDiachi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="14sp"
-                    android:text="Địa chỉ"/>
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:background="@drawable/border_ddd"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:padding="5dp"
+                android:text="Chọn khu trọ"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm" />
         </LinearLayout>
+
         <ScrollView
             android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
+                    android:id="@+id/llThongKe"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <LinearLayout
-                        android:padding="10dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
                         android:layout_height="wrap_content" >
@@ -89,7 +88,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="end"
-                                        android:orientation="horizontal">
+                                        android:orientation="horizontal"
+                                        android:layout_weight="1">
                                         <ImageView
                                             android:layout_gravity="center"
                                             android:layout_marginRight="5dp"
@@ -107,7 +107,6 @@
                                     </LinearLayout>
                                 </LinearLayout>
                                 <LinearLayout
-                                    android:id="@+id/llTongThu"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:orientation="vertical"
@@ -122,64 +121,7 @@
                                         android:padding="10dp"
                                         android:src="@drawable/ic_attach_money_32dp" />
                                     <TextView
-                                        android:id="@+id/txtTotalMoney"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:textAlignment="center"
-                                        android:text="0"
-                                        android:textColor="#fff"
-                                        android:textSize="16sp" />
-                                </LinearLayout>
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="0dp"
-                            android:layout_height="130dp"
-                            android:gravity="center"
-                            app:cardBackgroundColor="#e74c3c"
-                            android:layout_weight="1"
-                            android:layout_marginLeft="10dp">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
-                                <LinearLayout
-                                    android:padding="5dp"
-                                    android:layout_width="match_parent"
-                                    android:orientation="horizontal"
-                                    android:background="@drawable/line_dash_bg"
-                                    android:layout_height="wrap_content">
-                                    <LinearLayout
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:layout_gravity="center_vertical"
-                                        android:layout_weight="1">
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="#fff"
-                                            android:textSize="14sp"
-                                            android:text="Số khu trọ"/>
-                                    </LinearLayout>
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:id="@+id/llTkKhuTro"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:orientation="vertical"
-                                    android:gravity="center"
-                                    android:layout_weight="1">
-                                    <ImageView
-                                        android:layout_marginBottom="10dp"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center_horizontal"
-                                        android:background="@drawable/banner_item_dash_bg"
-                                        android:padding="10dp"
-                                        android:src="@drawable/ic_hotel" />
-                                    <TextView
-                                        android:id="@+id/txtTotalKhuTro"
+                                        android:id="@+id/txtTotalPrice"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:textAlignment="center"
@@ -191,11 +133,10 @@
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
                     <LinearLayout
-                        android:paddingRight="10dp"
-                        android:paddingLeft="10dp"
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
                         android:layout_height="wrap_content" >
+
                         <androidx.cardview.widget.CardView
                             android:layout_width="0dp"
                             android:layout_height="130dp"
@@ -227,7 +168,6 @@
                                     </LinearLayout>
                                 </LinearLayout>
                                 <LinearLayout
-                                    android:id="@+id/llTkPhongTro"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:orientation="vertical"
@@ -242,7 +182,7 @@
                                         android:padding="10dp"
                                         android:src="@drawable/ic_home_32dp" />
                                     <TextView
-                                        android:id="@+id/txtTotalPhongTro"
+                                        android:id="@+id/txtNumberRoom"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:textAlignment="center"
@@ -252,7 +192,6 @@
                                 </LinearLayout>
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-
                         <androidx.cardview.widget.CardView
                             android:layout_width="0dp"
                             android:layout_height="130dp"
@@ -299,7 +238,7 @@
                                         android:padding="10dp"
                                         android:src="@drawable/ic_person_outline_32dp" />
                                     <TextView
-                                        android:id="@+id/txtTotalNguoiTro"
+                                        android:id="@+id/txtNumberPeople"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:textAlignment="center"
@@ -315,9 +254,9 @@
                     android:id="@+id/llLoading"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
                     android:gravity="center"
-                    android:background="#99C0C0C0">
+                    android:background="#99C0C0C0"
+                    android:orientation="vertical">
                     <com.airbnb.lottie.LottieAnimationView
                         android:layout_gravity="center"
                         android:id="@+id/lavLoading"
@@ -330,30 +269,4 @@
             </FrameLayout>
         </ScrollView>
     </LinearLayout>
-    <FrameLayout
-        android:id="@+id/flCreateBill"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="-50dp"
-        android:layout_marginBottom="-50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_gravity="right"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_fileName="blue-zoom.json" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:layout_height="match_parent">
-            <ImageView
-                android:layout_gravity="right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_bill"/>
-        </LinearLayout>
-
-    </FrameLayout>
 </FrameLayout>

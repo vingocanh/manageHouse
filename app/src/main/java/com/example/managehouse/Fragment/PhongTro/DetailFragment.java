@@ -1,6 +1,8 @@
 package com.example.managehouse.Fragment.PhongTro;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -34,19 +36,21 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
-    private TextView txtTen, txtKhuTro, txtGia, txtSoDien, txtSoNuoc, txtTrangThai, txtGhiChu, txtTotalPrice;
+    private TextView txtTen, txtKhuTro, txtGia, txtSoDien, txtSoNuoc, txtTrangThai, txtGhiChu, txtTotalPrice, txtYear;
     private ImageView ivAvatar;
-    private LinearLayout llThongKe, llSoDien, llSoNuoc;
-    private LottieAnimationView lavLoading;
+    private LinearLayout llLoading, llSoDien, llSoNuoc, llYear;
     private RecyclerView rvNguoiTro;
 
     private API api;
@@ -55,6 +59,8 @@ public class DetailFragment extends Fragment {
     private Phongtro phongtro = null;
     private List<Nguoitro> nguoitroList = new ArrayList<>();
     private ItemNguoiTroPhongTroAdapter itemNguoiTroPhongTroAdapter;
+    private MaterialNumberPicker numberPicker;
+    private int year, maxYear;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -97,16 +103,33 @@ public class DetailFragment extends Fragment {
         txtTrangThai = view.findViewById(R.id.txtTrangThai);
         txtGhiChu = view.findViewById(R.id.txtGhiChu);
         txtTotalPrice = view.findViewById(R.id.txtTotalPrice);
+        txtYear = view.findViewById(R.id.txtYear);
         ivAvatar = view.findViewById(R.id.ivAvatar);
-        llThongKe = view.findViewById(R.id.llThongKe);
+        llLoading = view.findViewById(R.id.llLoading);
         llSoDien = view.findViewById(R.id.llSoDien);
         llSoNuoc = view.findViewById(R.id.llSoNuoc);
-        lavLoading = view.findViewById(R.id.lavLoading);
+        llYear = view.findViewById(R.id.llYear);
+        llYear.setOnClickListener(this);
         rvNguoiTro = view.findViewById(R.id.rvNguoiTro);
         rvNguoiTro.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         rvNguoiTro.setLayoutManager(gridLayoutManager);
     }
+
+    public void initNumberPicker() {
+        numberPicker = new MaterialNumberPicker.Builder(getContext())
+                .minValue(1997)
+                .maxValue(maxYear)
+                .defaultValue(year)
+                .backgroundColor(Color.WHITE)
+                .separatorColor(Color.TRANSPARENT)
+                .textColor(R.color.colorPrimary)
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
+    }
+
 
     public void setNguoiTro() {
         if(nguoitroList.size() <= 0) {
@@ -126,7 +149,7 @@ public class DetailFragment extends Fragment {
         }
         txtTen.setText(phongtro.getTen());
         txtKhuTro.setText(phongtro.getKhutro().getTen());
-        txtGia.setText(Common.formatMoney(phongtro.getGia()));
+        txtGia.setText(Common.formatNumber(phongtro.getGia(),true));
         txtGhiChu.setText(phongtro.getGhichu());
         txtSoDien.setText(String.valueOf(phongtro.getChotsodien()));
         txtSoNuoc.setText(String.valueOf(phongtro.getChotsonuoc()));
@@ -138,11 +161,16 @@ public class DetailFragment extends Fragment {
         }
         txtTrangThai.setText(trangThai);
         txtTrangThai.setTextColor(Color.parseColor(color));
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        year = maxYear = calendar.get(Calendar.YEAR);
+        txtYear.setText(String.valueOf(year));
     }
 
     public void thongKe() {
-        String url = "phongtro/"+phongtro.getId()+"/edit";
-        compositeDisposable.add(api.thongKeChiTiet(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        llLoading.setVisibility(View.VISIBLE);
+        compositeDisposable.add(api.thongKeChiTietPhongTro(phongtro.getId(),year).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -150,8 +178,7 @@ public class DetailFragment extends Fragment {
                             Gson gson = new Gson();
                             Thongkekhutro thongkekhutro = gson.fromJson(message.getData(),Thongkekhutro.class);
                             setValueThongKe(thongkekhutro);
-                            lavLoading.setVisibility(View.GONE);
-                            llThongKe.setVisibility(View.VISIBLE);
+                            llLoading.setVisibility(View.GONE);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -163,7 +190,7 @@ public class DetailFragment extends Fragment {
     }
 
     public void setValueThongKe(Thongkekhutro thongKe) {
-        txtTotalPrice.setText(Common.formatMoney(thongKe.getTotal_price()));
+        txtTotalPrice.setText(Common.formatNumber(thongKe.getTotal_price(),true));
     }
 
     public void showSoDienNuoc() {
@@ -190,5 +217,31 @@ public class DetailFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         homeActivity.ivAction.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.llYear : {
+                initNumberPicker();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Chọn năm")
+                        .setView(numberPicker)
+                        .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                year = numberPicker.getValue();
+                                txtYear.setText(String.valueOf(year));
+                                thongKe();
+                            }
+                        })
+                        .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).create().show();
+                break;
+            }
+        }
     }
 }

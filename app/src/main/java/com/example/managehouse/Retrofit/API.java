@@ -1,5 +1,6 @@
 package com.example.managehouse.Retrofit;
 
+import com.example.managehouse.Model.Dashboard;
 import com.example.managehouse.Model.Donvitinh;
 import com.example.managehouse.Model.Hoadon;
 import com.example.managehouse.Model.Khoanthu;
@@ -84,8 +85,9 @@ public interface API {
     @GET("khoanthu/{id}")
     Observable<List<Khoanthu>> getKhoanThuKhuTro(@Path("id") int id);
 
-    @GET
-    Observable<Message> thongKeChiTiet(@Url String url);
+    @GET("khutro/{id}/edit")
+    Observable<Message> thongKeChiTiet(@Path("id") int id,
+                                       @Query("year") int year);
 
     // phòng trọ
     @GET("phongtro?")
@@ -116,6 +118,10 @@ public interface API {
 
     @DELETE
     Observable<Message> deletePhongTro(@Url String url);
+
+    @GET("phongtro/{id}/edit")
+    Observable<Message> thongKeChiTietPhongTro(@Path("id") int id,
+                                       @Query("year") int year);
 
     // người trọ
     @GET("nguoitro?")
@@ -188,6 +194,7 @@ public interface API {
                                      @Field("status") int status,
                                      @Field("type") int type
     );
+
     @PUT("hoadon/{id}")
     Observable<Message> updateStatus(@Path("id") int id);
 
@@ -212,30 +219,41 @@ public interface API {
     // khoản thu
     @GET("khoanthu?")
     Observable<List<Khoanthu>> getKhoanthu(@Query("limit") int limit,
-                                       @Query("offset") int offset,
-                                       @Query("sort") int sort,
-                                       @Query("filter") int filter);
-
-    @GET("khoanthu/create?")
-    Observable<List<Khoanthu>> timKiemKhoanThu(@Query("search") String search,
-                                           @Query("limit") int limit,
                                            @Query("offset") int offset,
                                            @Query("sort") int sort,
                                            @Query("filter") int filter);
 
+    @GET("khoanthu/create?")
+    Observable<List<Khoanthu>> timKiemKhoanThu(@Query("search") String search,
+                                               @Query("limit") int limit,
+                                               @Query("offset") int offset,
+                                               @Query("sort") int sort,
+                                               @Query("filter") int filter);
+
     @POST("khoanthu")
     @Multipart
     Observable<Message> createKhoanThu(@Part("khoanthu_id") RequestBody id,
-                                     @Part("ten") RequestBody ten,
-                                     @Part("mota") RequestBody mota,
-                                     @Part("user_id") RequestBody userId,
-                                     @Part("status") RequestBody status,
-                                     @Part("type") RequestBody type,
-                                     @Part MultipartBody.Part avatar);
+                                       @Part("ten") RequestBody ten,
+                                       @Part("mota") RequestBody mota,
+                                       @Part("user_id") RequestBody userId,
+                                       @Part("status") RequestBody status,
+                                       @Part("type") RequestBody type,
+                                       @Part MultipartBody.Part avatar);
 
     @DELETE
     Observable<Message> deleteKhoanThu(@Url String url);
 
     @GET
     Observable<List<Donvitinh>> getDonViTinhChon(@Url String url);
+
+    // tổng quan
+    @GET("dashboard")
+    Observable<Dashboard> getDashboard(@Query("year") int year);
+
+    @GET("dashboard/create")
+    Observable<List<Hoadon>> thongKeChiTietDoanhThu(@Query("khutro_id") int khutro_id,
+                                                    @Query("month_first") int month_first,
+                                                    @Query("year_first") int year_first,
+                                                    @Query("month_last") int month_last,
+                                                    @Query("year_last") int year_last);
 }
