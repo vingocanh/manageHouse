@@ -3,11 +3,13 @@ package com.example.managehouse.Model;
 public class User {
 
     private int id;
-    private String name, username, roles, address, email, email_verified_at, created_at, updated_at, access_token, token_type, expires_at;
+    private String name, avatar, phone, username, roles, address, email, email_verified_at, created_at, updated_at, access_token, token_type, expires_at;
 
-    public User(int id, String name, String username, String roles, String address, String email, String email_verified_at, String created_at, String updated_at, String access_token, String token_type, String expires_at) {
+    public User(int id, String name, String avatar, String phone, String username, String roles, String address, String email, String email_verified_at, String created_at, String updated_at, String access_token, String token_type, String expires_at) {
         this.id = id;
         this.name = name;
+        this.avatar = avatar;
+        this.phone = phone;
         this.username = username;
         this.roles = roles;
         this.address = address;
@@ -34,6 +36,22 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getUsername() {

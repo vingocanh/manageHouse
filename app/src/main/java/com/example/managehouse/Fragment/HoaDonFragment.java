@@ -13,6 +13,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -102,6 +104,7 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
         getData("init", 0);
         getKhutro();
         swipe();
+        setAnimation();
         return view;
     }
 
@@ -122,6 +125,32 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
         ivFilter.setOnClickListener(this);
         ivFilterKhuTro = view.findViewById(R.id.ivFilterKhuTro);
         ivFilterKhuTro.setOnClickListener(this);
+    }
+
+    public void setAnimation() {
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_top_in);
+        animation.reset();
+        animation.setDuration(500);
+        edtTimKiem.clearAnimation();
+        edtTimKiem.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(500);
+        ivFilter.clearAnimation();
+        ivFilter.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(700);
+        ivSort.clearAnimation();
+        ivSort.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(900);
+        ivLayout.clearAnimation();
+        ivLayout.setAnimation(animation);
     }
 
     public void changeLayout() {
@@ -531,6 +560,12 @@ public class HoaDonFragment extends Fragment implements View.OnClickListener, Ch
                 break;
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Common.posMenu = 4;
     }
 
     @Override

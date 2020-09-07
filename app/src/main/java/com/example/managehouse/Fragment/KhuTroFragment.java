@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -99,6 +101,7 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
         rvData.setAdapter(itemKhuTroAdapter);
         getData("init", 0);
         swipe();
+        setAnimation();
         return view;
     }
 
@@ -367,6 +370,32 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
         }
     }
 
+    public void setAnimation() {
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_top_in);
+        animation.reset();
+        animation.setDuration(500);
+        edtTimKiem.clearAnimation();
+        edtTimKiem.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(500);
+        ivFilter.clearAnimation();
+        ivFilter.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(700);
+        ivSort.clearAnimation();
+        ivSort.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(900);
+        ivLayout.clearAnimation();
+        ivLayout.setAnimation(animation);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -385,6 +414,12 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
     public void onStop() {
         super.onStop();
         checkSpace = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Common.posMenu = 1;
     }
 
     @Override
@@ -433,6 +468,8 @@ public class KhuTroFragment extends Fragment implements View.OnClickListener, Ch
             }
         }
     }
+
+
 
     @Override
     public void onReceiveItem(List<Item> item) {

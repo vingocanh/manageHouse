@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Phongtro implements Serializable {
     private int id, khutro_id, status, gia, chotsodien, chotsonuoc, total, user_id;
-    private String ten, created_at, update_at, img, ghichu;
+    private String ten, created_at, update_at, img, ghichu, ngaythanhtoan, ngaythanhtoan2;
     private Khutro khutro;
     private List<Nguoitro> nguoitro;
 
@@ -13,7 +13,7 @@ public class Phongtro implements Serializable {
         this.id = id;
     }
 
-    public Phongtro(int id, int khutro_id, int status, int gia, int chotsodien, int chotsonuoc, int total, int user_id, String ten, String created_at, String update_at, String img, String ghichu, Khutro khutro, List<Nguoitro> nguoitro) {
+    public Phongtro(int id, int khutro_id, int status, int gia, int chotsodien, int chotsonuoc, int total, int user_id, String ten, String created_at, String update_at, String img, String ghichu, String ngaythanhtoan, String ngaythanhtoan2, Khutro khutro, List<Nguoitro> nguoitro) {
         this.id = id;
         this.khutro_id = khutro_id;
         this.status = status;
@@ -27,6 +27,8 @@ public class Phongtro implements Serializable {
         this.update_at = update_at;
         this.img = img;
         this.ghichu = ghichu;
+        this.ngaythanhtoan = ngaythanhtoan;
+        this.ngaythanhtoan2 = ngaythanhtoan2;
         this.khutro = khutro;
         this.nguoitro = nguoitro;
     }
@@ -133,6 +135,22 @@ public class Phongtro implements Serializable {
 
     public void setGhichu(String ghichu) {
         this.ghichu = ghichu;
+    }
+
+    public String getNgaythanhtoan() {
+        return ngaythanhtoan;
+    }
+
+    public void setNgaythanhtoan(String ngaythanhtoan) {
+        this.ngaythanhtoan = ngaythanhtoan;
+    }
+
+    public String getNgaythanhtoan2() {
+        return ngaythanhtoan2;
+    }
+
+    public void setNgaythanhtoan2(String ngaythanhtoan2) {
+        this.ngaythanhtoan2 = ngaythanhtoan2;
     }
 
     public Khutro getKhutro() {

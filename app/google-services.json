@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1020519865070",
+    "firebase_url": "https://manage-house-472a2.firebaseio.com",
+    "project_id": "manage-house-472a2",
+    "storage_bucket": "manage-house-472a2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020519865070:android:be3392968da9ec508931ff",
+        "android_client_info": {
+          "package_name": "com.example.managehouse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020519865070-au8ihasuqnoqudtvkvph2kgn5o4808n6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiMAK3s5yCPKXcSwaWFPCrkGBgbXeoGpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020519865070-au8ihasuqnoqudtvkvph2kgn5o4808n6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

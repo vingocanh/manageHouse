@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.managehouse.Activity.HomeActivity;
@@ -38,7 +41,8 @@ import io.reactivex.schedulers.Schedulers;
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
     private TextView txtHoTen, txtDiaChi, txtYear, txtTotalMoney, txtTotalKhuTro, txtTotalPhongTro, txtTotalNguoiTro;
-    private LinearLayout llLoading, llYear, llTongThu, llTkKhuTro, llTkPhongTro;
+    private LinearLayout llLoading, llYear, llTongThu, llTkKhuTro, llTkPhongTro, llUser;
+    private CardView cvDoanhThu, cvKhuTro, cvPhongTro, cvNguoiTro;
 
     private FrameLayout flCreateBill;
     private HomeActivity homeActivity;
@@ -69,6 +73,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         api = Common.getAPI();
         mapping(view);
         setValue();
+        setAnimation();
         thongKe();
         return view;
     }
@@ -92,6 +97,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         llTkKhuTro.setOnClickListener(this);
         llTkPhongTro = view.findViewById(R.id.llTkPhongTro);
         llTkPhongTro.setOnClickListener(this);
+        llUser = view.findViewById(R.id.llUser);
+        llUser.setOnClickListener(this);
+
+        cvDoanhThu = view.findViewById(R.id.cvDoanhThu);
+        cvKhuTro = view.findViewById(R.id.cvKhuTro);
+        cvNguoiTro = view.findViewById(R.id.cvNguoiTro);
+        cvPhongTro = view.findViewById(R.id.cvPhongTro);
     }
 
     public void initNumberPicker() {
@@ -140,6 +152,35 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 }));
     }
 
+    public void setAnimation() {
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(500);
+        cvDoanhThu.clearAnimation();
+        cvDoanhThu.setAnimation(animation);
+        cvPhongTro.clearAnimation();
+        cvPhongTro.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        animation.reset();
+        animation.setDuration(700);
+        cvKhuTro.clearAnimation();
+        cvKhuTro.setAnimation(animation);
+        cvNguoiTro.clearAnimation();
+        cvNguoiTro.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_bottom_in);
+        animation.reset();
+        animation.setDuration(500);
+        flCreateBill.clearAnimation();
+        flCreateBill.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_top_in);
+        animation.reset();
+        animation.setDuration(500);
+        llUser.setAnimation(animation);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -162,6 +203,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public void onResume() {
         super.onResume();
         homeActivity.ivAction.setImageResource(R.drawable.ic_notifications_32dp);
+        Common.posMenu = 0;
     }
 
     @Override
@@ -203,6 +245,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
             case R.id.llTkPhongTro : {
                 homeActivity.replaceFragment(new ThongKePhongTroFragment(),true);
+                break;
+            }
+            case R.id.llUser : {
+                homeActivity.replaceFragment(new UserFragment(),true);
                 break;
             }
         }

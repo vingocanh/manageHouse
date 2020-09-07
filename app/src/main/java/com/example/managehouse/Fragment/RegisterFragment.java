@@ -58,6 +58,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Common.token = "login";
     }
 
     @Override
@@ -83,7 +84,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     public void register(String name, String username, String password, String passwordConfirm) {
         final DialogLoading dialogLoading = new DialogLoading(getActivity(), "Đang đăng ký...");
         dialogLoading.showDialog();
-        compositeDisposable.add(api.register(name,username,password,passwordConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.register(name,username,Common.getDeviceToken(getContext()),password,passwordConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -99,6 +100,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        dialogLoading.hideDialog();
+                        Toasty.error(getContext(), "Gặp sự cố, thử lại sau.", 300, true).show();
                         throwable.printStackTrace();
                     }
                 }));

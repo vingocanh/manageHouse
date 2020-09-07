@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Fragment.ContactFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Mọi thắc mắc xin vui lòng liên hệ"
+        android:textAlignment="center"
+        android:textColor="@color/colorText"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/llCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="phone-call.json"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:id="@+id/txtPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0348.714.195"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="facebook-social-media-icon.json" />
+        <TextView
+            android:id="@+id/txtFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fb.com/cuong.cong.97"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textColorLink="@color/colorPrimary"
+            android:autoLink="web"/>
+    </LinearLayout>
+</LinearLayout>

@@ -87,6 +87,8 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     private String tenHoaDon = "", thangHoaDon = "", ghiChu = "";
     private int tienPhong = 0, soDienCu = 0, soNuocCu =0, soDienMoi = 0, soNuocMoi = 0, soDien = 0, soNuoc = 0;
     private Hoadon hoadon = null;
+    private int khutroId = 0, phongtroId = 0;
+    private String tenKhuTro = "", tenPhongTro = "";
 
     public CreateBillFragment() {
         // Required empty public constructor
@@ -101,10 +103,15 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Common.checkFormChange = false;
         if(getArguments() != null) {
             hoadon = (Hoadon) getArguments().getSerializable("hoadon");
+            khutroId = getArguments().getInt("khutro_id");
+            phongtroId = getArguments().getInt("phongtro_id");
         }
+        if(khutroId != 0 && phongtroId != 0) {
+            Common.checkFormChange = true;
+        }
+        else Common.checkFormChange = false;
     }
 
     @Override
@@ -466,6 +473,8 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         txtChonTrangThai.setTag(status);
         txtChonTrangThai.setText(text);
         txtChonTrangThai.setTextColor(Color.parseColor(color));
+        txtChonKhuTro.setTag(0);
+        txtChonPhongTro.setTag(0);
     }
 
     public void validator() {
@@ -557,54 +566,76 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     public void accept(List<Khutro> khutros) throws Exception {
                         khutroList = khutros;
                         if (khutroList.size() > 0) {
-                            Khutro khutro = null;
-                            if(hoadon == null) {
-                                khutro = khutroList.get(0);
-                                phongtroList = khutro.getPhongtro();
-                                if(phongtroList.size() > 0) {
-                                    txtChonPhongTro.setTag(phongtroList.get(0).getId());
-                                    txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
-                                    soDienCu = phongtroList.get(0).getChotsodien();
-                                    edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
-                                    soNuocCu = phongtroList.get(0).getChotsonuoc();
-                                    edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
-                                    tienPhong = phongtroList.get(0).getGia();
-                                    edtTienPhong.setTag(phongtroList.get(0).getGia());
-                                    edtTienPhong.setText(Common.formatNumber(phongtroList.get(0).getGia(),true));
-                                    totalMoney();
+                            if(khutroId != 0 && phongtroId != 0) {
+                                for (Khutro khutro: khutroList) {
+                                    if(khutro.getId() == khutroId) {
+                                        phongtroList = khutro.getPhongtro();
+                                        Item item = new Item(false,khutroId,sttKhuTro,khutro.getTen());
+                                        chosenKhuTro(item,true);
+                                        break;
+                                    }
+                                    sttKhuTro++;
                                 }
-                                else {
-                                    txtChonPhongTro.setTag(-1);
-                                    txtChonPhongTro.setText("Không có phòng trọ");
+                                for (Phongtro phongtro : phongtroList) {
+                                    if(phongtro.getId() == phongtroId) {
+                                        Item item = new Item(false,phongtroId,sttPhongTro,phongtro.getTen());
+                                        chosenPhongTro(item);
+                                        break;
+                                    }
+                                    sttPhongTro++;
                                 }
                             }
                             else {
-                                khutro = hoadon.getPhongtro().getKhutro();
-                                for (Khutro kt : khutroList) {
-                                    if(kt.getId() == khutro.getId()) {
-                                        phongtroList = kt.getPhongtro();
-                                        break;
+                                Khutro khutro = null;
+                                if(hoadon == null) {
+                                    khutro = khutroList.get(0);
+                                    phongtroList = khutro.getPhongtro();
+                                    if(phongtroList.size() > 0) {
+                                        txtChonPhongTro.setTag(phongtroList.get(0).getId());
+                                        txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                                        soDienCu = phongtroList.get(0).getChotsodien();
+                                        edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
+                                        soNuocCu = phongtroList.get(0).getChotsonuoc();
+                                        edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
+                                        tienPhong = phongtroList.get(0).getGia();
+                                        edtTienPhong.setTag(phongtroList.get(0).getGia());
+                                        edtTienPhong.setText(Common.formatNumber(phongtroList.get(0).getGia(),true));
+                                        totalMoney();
+                                    }
+                                    else {
+                                        txtChonPhongTro.setTag(-1);
+                                        txtChonPhongTro.setText("Không có phòng trọ");
                                     }
                                 }
-                            }
-                            txtChonKhuTro.setText(khutro.getTen());
-                            txtChonKhuTro.setTag(khutro.getId());
-                            checkInputWater(khutro);
-                            int i = 0;
-                            String khoanThu = "", idKhoanThu = "";
-                            for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
-                                if(i == khutro.getKhutrokhoanthu().size() - 1) {
-                                    khoanThu += khutrokhoanthu.getKhoanthu().getTen();
-                                    idKhoanThu += khutrokhoanthu.getKhoanthu_id();
-                                }
                                 else {
-                                    khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
-                                    idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ",";
+                                    khutro = hoadon.getPhongtro().getKhutro();
+                                    for (Khutro kt : khutroList) {
+                                        if(kt.getId() == khutro.getId()) {
+                                            phongtroList = kt.getPhongtro();
+                                            break;
+                                        }
+                                    }
                                 }
-                                i++;
+                                txtChonKhuTro.setText(khutro.getTen());
+                                txtChonKhuTro.setTag(khutro.getId());
+                                checkInputWater(khutro);
+                                int i = 0;
+                                String khoanThu = "", idKhoanThu = "";
+                                for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
+                                    if(i == khutro.getKhutrokhoanthu().size() - 1) {
+                                        khoanThu += khutrokhoanthu.getKhoanthu().getTen();
+                                        idKhoanThu += khutrokhoanthu.getKhoanthu_id();
+                                    }
+                                    else {
+                                        khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
+                                        idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ",";
+                                    }
+                                    i++;
+                                }
+                                txtCacKhoanThu.setText(khoanThu);
+                                txtCacKhoanThu.setTag(idKhoanThu);
                             }
-                            txtCacKhoanThu.setText(khoanThu);
-                            txtCacKhoanThu.setTag(idKhoanThu);
+
                         }
                         else {
                             txtChonKhuTro.setText("Không có khu trọ");
@@ -712,6 +743,72 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                 }
             }
         }
+    }
+
+    public void chosenKhuTro(Item item, boolean notifi) {
+        if(item.getId() != Integer.parseInt(txtChonKhuTro.getTag().toString())) {
+            Common.checkFormChange = true;
+            checkFormChange = true;
+        }
+        txtChonKhuTro.setText(item.getName());
+        txtChonKhuTro.setTag(item.getId());
+        sttKhuTro = item.getStt();
+        checkInputWater(khutroList.get(sttKhuTro));
+        int i = 0;
+        String khoanThu = "", idKhoanThu = "";
+        for (Khutrokhoanthu khutrokhoanthu : khutroList.get(sttKhuTro).getKhutrokhoanthu()) {
+            if(i == khutroList.get(sttKhuTro).getKhutrokhoanthu().size() - 1) {
+                khoanThu += khutrokhoanthu.getKhoanthu().getTen();
+                idKhoanThu += khutrokhoanthu.getKhoanthu_id();
+            }
+            else {
+                khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
+                idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ",";
+            }
+            i++;
+        }
+        txtCacKhoanThu.setText(khoanThu);
+        txtCacKhoanThu.setTag(idKhoanThu);
+        if(!notifi) {
+            phongtroList = khutroList.get(item.getStt()).getPhongtro();
+            if(phongtroList.size() > 0) {
+                txtChonPhongTro.setTag(phongtroList.get(0).getId());
+                txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                soDienCu = phongtroList.get(0).getChotsodien();
+                edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
+                soNuocCu = phongtroList.get(0).getChotsonuoc();
+                edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
+                tienPhong = phongtroList.get(0).getGia();
+                edtTienPhong.setTag(phongtroList.get(0).getGia());
+                edtTienPhong.setText(Common.formatNumber(phongtroList.get(0).getGia(),true));
+                tienPhong = phongtroList.get(0).getGia();
+            }
+            else {
+                txtChonPhongTro.setTag(-1);
+                txtChonPhongTro.setText("Không có phòng trọ");
+            }
+        }
+        totalMoney();
+    }
+
+    public void chosenPhongTro(Item item) {
+        if(item.getId() != Integer.parseInt(txtChonPhongTro.getTag().toString())) {
+            Common.checkFormChange = true;
+            checkFormChange = true;
+        }
+        txtChonPhongTro.setText(item.getName());
+        txtChonPhongTro.setTag(item.getId());
+        sttPhongTro = item.getStt();
+        Phongtro phongtro = phongtroList.get(sttPhongTro);
+        tienPhong = phongtro.getGia();
+        edtTienPhong.setTag(phongtro.getGia());
+        edtTienPhong.setText(Common.formatNumber(phongtro.getGia(),true));
+        tienPhong = phongtro.getGia();
+        soNuocCu =phongtro.getChotsonuoc();
+        soDienCu = phongtro.getChotsodien();
+        edtSoDienCu.setText(String.valueOf(phongtro.getChotsodien()));
+        edtSoNuocCu.setText(String.valueOf(phongtro.getChotsonuoc()));
+        totalMoney();
     }
 
     @Override
@@ -909,68 +1006,11 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     public void onReceiveItem(List<Item> item) {
         switch (typeChosenItem) {
             case 0: {
-                if(item.get(0).getId() != Integer.parseInt(txtChonKhuTro.getTag().toString())) {
-                    Common.checkFormChange = true;
-                    checkFormChange = true;
-                }
-                txtChonKhuTro.setText(item.get(0).getName());
-                txtChonKhuTro.setTag(item.get(0).getId());
-                sttKhuTro = item.get(0).getStt();
-                checkInputWater(khutroList.get(sttKhuTro));
-                int i = 0;
-                String khoanThu = "", idKhoanThu = "";
-                for (Khutrokhoanthu khutrokhoanthu : khutroList.get(sttKhuTro).getKhutrokhoanthu()) {
-                    if(i == khutroList.get(sttKhuTro).getKhutrokhoanthu().size() - 1) {
-                        khoanThu += khutrokhoanthu.getKhoanthu().getTen();
-                        idKhoanThu += khutrokhoanthu.getKhoanthu_id();
-                    }
-                    else {
-                        khoanThu += khutrokhoanthu.getKhoanthu().getTen() + ", ";
-                        idKhoanThu += khutrokhoanthu.getKhoanthu_id() + ",";
-                    }
-                    i++;
-                }
-                txtCacKhoanThu.setText(khoanThu);
-                txtCacKhoanThu.setTag(idKhoanThu);
-                phongtroList = khutroList.get(item.get(0).getStt()).getPhongtro();
-                if(phongtroList.size() > 0) {
-                    txtChonPhongTro.setTag(phongtroList.get(0).getId());
-                    txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
-                    soDienCu = phongtroList.get(0).getChotsodien();
-                    edtSoDienCu.setText(String.valueOf(phongtroList.get(0).getChotsodien()));
-                    soNuocCu = phongtroList.get(0).getChotsonuoc();
-                    edtSoNuocCu.setText(String.valueOf(phongtroList.get(0).getChotsonuoc()));
-                    tienPhong = phongtroList.get(0).getGia();
-                    edtTienPhong.setTag(phongtroList.get(0).getGia());
-                    edtTienPhong.setText(Common.formatNumber(phongtroList.get(0).getGia(),true));
-                    tienPhong = phongtroList.get(0).getGia();
-                    totalMoney();
-                }
-                else {
-                    txtChonPhongTro.setTag(-1);
-                    txtChonPhongTro.setText("Không có phòng trọ");
-                }
-                totalMoney();
+                chosenKhuTro(item.get(0),false);
                 break;
             }
             case 1: {
-                if(item.get(0).getId() != Integer.parseInt(txtChonPhongTro.getTag().toString())) {
-                    Common.checkFormChange = true;
-                    checkFormChange = true;
-                }
-                txtChonPhongTro.setText(item.get(0).getName());
-                txtChonPhongTro.setTag(item.get(0).getId());
-                sttPhongTro = item.get(0).getStt();
-                Phongtro phongtro = phongtroList.get(sttPhongTro);
-                tienPhong = phongtro.getGia();
-                edtTienPhong.setTag(phongtro.getGia());
-                edtTienPhong.setText(Common.formatNumber(phongtro.getGia(),true));
-                tienPhong = phongtro.getGia();
-                soNuocCu =phongtro.getChotsonuoc();
-                soDienCu = phongtro.getChotsodien();
-                edtSoDienCu.setText(String.valueOf(phongtro.getChotsodien()));
-                edtSoNuocCu.setText(String.valueOf(phongtro.getChotsonuoc()));
-                totalMoney();
+                chosenPhongTro(item.get(0));
                 break;
             }
             case 2: {

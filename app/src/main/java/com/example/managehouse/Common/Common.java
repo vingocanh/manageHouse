@@ -1,5 +1,11 @@
 package com.example.managehouse.Common;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.widget.FrameLayout;
+
+import androidx.fragment.app.Fragment;
+
 import com.example.managehouse.Model.Hoadon;
 import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.Model.User;
@@ -18,6 +24,8 @@ public class Common {
     public static String token = "";
     public static boolean checkFormChange = false;
     public static List<Hoadon> hoadonList = new ArrayList<>();
+    public static Fragment currentFragment = null;
+    public static int posMenu = 0;
 
     public static API getAPI(){
         return RetrofitClient.getInstance().create(API.class);
@@ -38,6 +46,15 @@ public class Common {
         }
         price = Integer.parseInt(cMoney);
         return price;
+    }
+
+    public static String getDeviceToken(Context context) {
+        String token = null;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("token", context.MODE_PRIVATE);
+        if(sharedPreferences != null) {
+            token = sharedPreferences.getString("device", null);
+        }
+        return token;
     }
 
 }

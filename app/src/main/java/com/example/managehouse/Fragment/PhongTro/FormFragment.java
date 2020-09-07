@@ -46,6 +46,7 @@ import com.example.managehouse.Service.DialogChosenItem;
 import com.example.managehouse.Service.DialogLoading;
 import com.example.managehouse.Service.DialogNotification;
 import com.squareup.picasso.Picasso;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,10 +64,10 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class FormFragment extends Fragment implements View.OnClickListener, ChosenItemCallback {
+public class FormFragment extends Fragment implements View.OnClickListener, ChosenItemCallback, DatePickerDialog.OnDateSetListener {
 
     private ImageView ivAvatar;
-    private EditText editTen, edtGia, edtGhiChu, edtSoDien, edtSoNuoc;
+    private EditText editTen, edtGia, edtGhiChu, edtSoDien, edtSoNuoc, edtNgayThuTien;
     private TextView txtTrangThai, txtChonKhuTro;
     private Button btnChonAnh, btnXoaAnh;
     private LinearLayout llSoDien, llSoNuoc;
@@ -77,7 +78,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private API api;
     private Phongtro phongtro;
-    private String tenPhongTro = "", ghiChu = "";
+    private String tenPhongTro = "", ghiChu = "", ngayThuTien;
     private int gia = 0;
     private int typeChosenItem = 0, sttKhuTro = 0;
     private List<Khutro> khutroList = new ArrayList<>();
@@ -127,6 +128,11 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         ivAvatar.setOnClickListener(this);
         editTen = view.findViewById(R.id.edtTen);
         edtGia = view.findViewById(R.id.edtGia);
+        edtNgayThuTien = view.findViewById(R.id.edtNgayThuTien);
+        edtNgayThuTien.setCursorVisible(false);
+        edtNgayThuTien.setFocusableInTouchMode(false);
+        edtNgayThuTien.setFocusable(false);
+        edtNgayThuTien.setOnClickListener(this);
         edtGhiChu = view.findViewById(R.id.edtGhiChu);
         txtTrangThai = view.findViewById(R.id.txtChonTrangThai);
         txtTrangThai.setOnClickListener(this);
@@ -160,6 +166,27 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     }
 
     public void textChange() {
+        edtNgayThuTien.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(!s.toString().equals(ngayThuTien)) {
+                        checkFormChange = true;
+                        Common.checkFormChange = true;
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         editTen.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -242,6 +269,13 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 return false;
             }
         }, R.string.form_null_value);
+        awesomeValidation.addValidation(getActivity(), R.id.edtNgayThuTien, new SimpleCustomValidation() {
+            @Override
+            public boolean compare(String s) {
+                if (s.length() > 0) return true;
+                return false;
+            }
+        }, R.string.form_null_value);
     }
 
     private void setValue() {
@@ -259,6 +293,9 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         gia = phongtro.getGia();
         edtGia.setTag(gia);
         edtGia.setText(Common.formatNumber(phongtro.getGia(),true));
+        ngayThuTien = phongtro.getNgaythanhtoan2();
+        edtNgayThuTien.setText(ngayThuTien);
+        edtNgayThuTien.setTag(phongtro.getNgaythanhtoan());
         String trangThai = "Sử dụng";
         if(phongtro.getStatus() == 0) trangThai = "Không sử dụng";
         txtTrangThai.setText(trangThai);
@@ -270,6 +307,28 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void setValueDefault() {
         txtTrangThai.setText("Sử dụng");
         txtTrangThai.setTag("1");
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        edtNgayThuTien.setTag(calendar.get(calendar.YEAR) + "/" + (calendar.get(calendar.MONTH)+1) + "/" + calendar.get(calendar.DAY_OF_MONTH));
+        ngayThuTien = calendar.get(calendar.DAY_OF_MONTH) + "/" + (calendar.get(calendar.MONTH)+1) + "/" + calendar.get(calendar.YEAR);
+        edtNgayThuTien.setText(ngayThuTien);
+    }
+
+    public void initDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        if(phongtro != null) {
+            Date date = new Date(phongtro.getNgaythanhtoan2());
+            calendar.setTime(date);
+        }
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.setOkText("Đồng ý");
+        datePickerDialog.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
     }
 
     public void selectImage() {
@@ -286,8 +345,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
     }
 
-    public void addData(RequestBody phongTroId, RequestBody ten, RequestBody khuTroId, RequestBody userId, RequestBody gia, RequestBody chotsodien, RequestBody chotsonuoc, RequestBody trangThai, RequestBody type, MultipartBody.Part file) {
-        compositeDisposable.add(api.createPhongTro(phongTroId,ten,khuTroId,userId,gia,chotsodien,chotsonuoc,trangThai,type,file).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    public void addData(RequestBody phongTroId, RequestBody ten, RequestBody khuTroId, RequestBody userId, RequestBody gia, RequestBody ngayThanhToan, RequestBody chotsodien, RequestBody chotsonuoc, RequestBody trangThai, RequestBody type, MultipartBody.Part file) {
+        compositeDisposable.add(api.createPhongTro(phongTroId,ten,khuTroId,userId,gia,ngayThanhToan,chotsodien,chotsonuoc,trangThai,type,file).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -461,6 +520,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 }
                 break;
             }
+            case R.id.edtNgayThuTien : {
+                initDatePicker();
+                break;
+            }
             case R.id.ivAction : {
                 if(awesomeValidation.validate()) {
                     MultipartBody.Part file = null;
@@ -471,6 +534,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     }
                     RequestBody ten = RequestBody.create(MediaType.parse("multipart/form-data"), editTen.getText().toString());
                     RequestBody gia = RequestBody.create(MediaType.parse("multipart/form-data"), edtGia.getTag().toString());
+                    RequestBody ngayThanhToan = RequestBody.create(MediaType.parse("multipart/form-data"), edtNgayThuTien.getTag().toString());
                     RequestBody chotSoDien = RequestBody.create(MediaType.parse("multipart/form-data"), edtSoDien.getText().toString());
                     RequestBody chotSoNuoc = RequestBody.create(MediaType.parse("multipart/form-data"), edtSoNuoc.getText().toString());
                     RequestBody khuTroId = RequestBody.create(MediaType.parse("multipart/form-data"), txtChonKhuTro.getTag().toString());
@@ -479,12 +543,12 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     if (phongtro == null) {
                         RequestBody phongTroId = RequestBody.create(MediaType.parse("multipart/form-data"), "-1");
                         RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-                        addData(phongTroId,ten,khuTroId,user_id,gia,chotSoDien,chotSoNuoc,trangThai,type,file);
+                        addData(phongTroId,ten,khuTroId,user_id,gia,ngayThanhToan,chotSoDien,chotSoNuoc,trangThai,type,file);
                     }
                     else {
                         RequestBody phongTroId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(phongtro.getId()));
                         RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "0");
-                        addData(phongTroId,ten,khuTroId,user_id,gia,chotSoDien,chotSoNuoc,trangThai,type,file);
+                        addData(phongTroId,ten,khuTroId,user_id,gia,ngayThanhToan,chotSoDien,chotSoNuoc,trangThai,type,file);
                     }
                 }
                 break;
@@ -525,5 +589,12 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
             txtTrangThai.setText(item.get(0).getName());
             txtTrangThai.setTag(item.get(0).getId());
         }
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+        edtNgayThuTien.setText(date);
+        edtNgayThuTien.setTag(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
     }
 }

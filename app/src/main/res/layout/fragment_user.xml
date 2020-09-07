@@ -1,14 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.UserFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:background="#fff"
+    android:tag="form"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/boder_bottom_ddd"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/border_full"
+                android:padding="10dp"
+                android:src="@drawable/ic_account_blue" />
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnChonAnh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="#3498db"
+                    android:text="Chọn ảnh"
+                    android:textColor="#ffffff"/>
+                <Button
+                    android:id="@+id/btnXoaAnh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="#e74c3c"
+                    android:text="Xóa ảnh"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#ffffff"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Họ tên"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtTen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Địa chỉ"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtDiaChi"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Email"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:inputType="none"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Điện thoại"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <EditText
+                android:id="@+id/edtPhone"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textAlignment="textEnd"
+                android:inputType="number"
+                android:textSize="@dimen/sizeForm"
+                android:background="@null"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical">
 
-</FrameLayout>
+            <Button
+                android:id="@+id/btnChangePass"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:background="#3498db"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Đổi mật khẩu"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

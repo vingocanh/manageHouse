@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">manageHouse</string>
+    <string name="app_name">Quản lý nhà trọ - Nero Motel</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -9,6 +9,7 @@
     <string name="name_validator">Họ tên không hợp lệ.</string>
     <string name="name_null_validator">Họ tên không được để trống.</string>
     <string name="form_null_value">Không được bỏ trống ô này.</string>
+    <string name="email_validator">Email không hợp lệ.</string>
     <string name="confirm_delete">Bạn có chắc chắn muốn xóa?</string>
     <string name="confirm_delete_button_ok">Đồng ý</string>
     <string name="confirm_delete_button_no">Hủy</string>

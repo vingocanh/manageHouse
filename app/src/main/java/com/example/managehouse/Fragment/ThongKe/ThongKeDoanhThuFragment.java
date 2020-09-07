@@ -315,6 +315,7 @@ public class ThongKeDoanhThuFragment extends Fragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
+        homeActivity.ivAction.setVisibility(View.VISIBLE);
         compositeDisposable.clear();
     }
 

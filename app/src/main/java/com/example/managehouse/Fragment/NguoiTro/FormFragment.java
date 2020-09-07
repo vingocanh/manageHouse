@@ -194,10 +194,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                     }
                 }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
-                }
             }
 
             @Override
@@ -220,10 +216,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
                     }
                 }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
-                }
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -243,10 +235,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
-                }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
                 }
             }
 
@@ -294,10 +282,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                     }
                 }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
-                }
             }
 
             @Override
@@ -319,11 +303,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                     }
                 }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
-
-                }
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -343,10 +322,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
-                }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
                 }
             }
             @Override
@@ -368,10 +343,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                     }
                 }
-                else {
-                    checkFormChange = false;
-                    Common.checkFormChange = false;
-                }
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -391,10 +362,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-                }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
                 }
             }
 
@@ -416,10 +383,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-                }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
                 }
             }
 
@@ -443,10 +406,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         checkFormChange = true;
                     }
                 }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
-                }
             }
 
             @Override
@@ -467,10 +426,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-                }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
                 }
             }
 
@@ -493,10 +448,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         checkFormChange = true;
                     }
                 }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
-                }
             }
 
             @Override
@@ -517,10 +468,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-                }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
                 }
             }
 
@@ -543,11 +490,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         checkFormChange = true;
                     }
                 }
-                else {
-                    Common.checkFormChange = false;
-
-                    checkFormChange = false;
-                }
             }
 
             @Override
@@ -568,10 +510,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-                }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
                 }
             }
 
@@ -594,10 +532,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         checkFormChange = true;
                     }
                 }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
-                }
             }
 
             @Override
@@ -618,10 +552,6 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-                }
-                else {
-                    Common.checkFormChange = false;
-                    checkFormChange = false;
                 }
             }
 

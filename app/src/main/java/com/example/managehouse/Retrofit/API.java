@@ -37,6 +37,7 @@ public interface API {
     @FormUrlEncoded
     Observable<Message> register(@Field("name") String name,
                                  @Field("username") String username,
+                                 @Field("notification_token") String notification_token,
                                  @Field("password") String password,
                                  @Field("password_confirmation") String password_confirmation
     );
@@ -45,8 +46,13 @@ public interface API {
     @FormUrlEncoded
     Observable<Message> login(@Field("username") String username,
                               @Field("password") String password,
+                              @Field("notification_token") String notification_token,
                               @Field("remember_me") int remember
     );
+
+    @GET("logout")
+    Observable<Message> logout(@Query("user_id") int user_id,
+                               @Query("device_token") String device_token);
 
     // khu trọ
     @GET
@@ -110,6 +116,7 @@ public interface API {
                                        @Part("khutro_id") RequestBody khutro_id,
                                        @Part("user_id") RequestBody user_id,
                                        @Part("gia") RequestBody gia,
+                                       @Part("ngaythanhtoan") RequestBody ngaythanhtoan,
                                        @Part("chotsodien") RequestBody chotsodien,
                                        @Part("chotsonuoc") RequestBody chotsonuoc,
                                        @Part("status") RequestBody trangThai,
@@ -121,7 +128,7 @@ public interface API {
 
     @GET("phongtro/{id}/edit")
     Observable<Message> thongKeChiTietPhongTro(@Path("id") int id,
-                                       @Query("year") int year);
+                                               @Query("year") int year);
 
     // người trọ
     @GET("nguoitro?")
@@ -256,4 +263,25 @@ public interface API {
                                                     @Query("year_first") int year_first,
                                                     @Query("month_last") int month_last,
                                                     @Query("year_last") int year_last);
+
+    //user
+    @POST("user")
+    @Multipart
+    Observable<Message> updateUser(@Part("name") RequestBody ten,
+                                   @Part("address") RequestBody address,
+                                   @Part("email") RequestBody email,
+                                   @Part("phone") RequestBody phone,
+                                   @Part MultipartBody.Part avatar,
+                                   @Part("type") RequestBody type);
+
+    @POST("user")
+    @FormUrlEncoded
+    Observable<Message> changePassword(@Field("password") String password,
+                                       @Field("new_password") String new_password,
+                                       @Field("type") int type);
+
+    // notification
+    @GET("notification/{checked}/edit")
+    Observable<Message> switchNotification(@Path("checked") int checked,
+                                           @Query("token") String token);
 }

@@ -73,6 +73,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Common.token = "login";
     }
 
     @Override
@@ -97,7 +98,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void login(final String username, String password, int remember) {
         final DialogLoading dialogLoading = new DialogLoading(getActivity(), "Đang đăng nhập...");
         dialogLoading.showDialog();
-        compositeDisposable.add(api.login(username,password,remember).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.login(username,password,Common.getDeviceToken(getContext()),remember).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
@@ -153,11 +154,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }, R.string.password_length_validator);
     }
 
+
+
     public void saveUserLogin(User user) throws NoSuchPaddingException, UnsupportedEncodingException, InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidParameterSpecException {
         sharedPreferences = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("id",String.valueOf(user.getId()));
         editor.putString("name",user.getName());
+        editor.putString("avatar",user.getAvatar());
+        editor.putString("phone",user.getPhone());
+        editor.putString("email",user.getEmail());
         editor.putString("username",user.getUsername());
         editor.putString("address",user.getAddress());
         editor.putString("roles",user.getRoles());
