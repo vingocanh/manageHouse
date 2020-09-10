@@ -791,6 +791,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                             } else {
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
                                 checkFormChange =  Common.checkFormChange = false;
+                                homeActivity.onBackPressed();
                             }
                         }
                     }

@@ -1,6 +1,8 @@
 package com.example.managehouse.Model;
 
-public class Thongkekhutro {
+import java.io.Serializable;
+
+public class Thongkekhutro implements Serializable {
 
     private int total_price, number_room, number_people;
 

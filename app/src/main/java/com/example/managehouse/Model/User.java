@@ -1,6 +1,8 @@
 package com.example.managehouse.Model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private int id;
     private String name, avatar, phone, username, roles, address, email, email_verified_at, created_at, updated_at, access_token, token_type, expires_at;

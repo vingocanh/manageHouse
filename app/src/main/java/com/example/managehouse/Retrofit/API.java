@@ -1,5 +1,6 @@
 package com.example.managehouse.Retrofit;
 
+import com.example.managehouse.Model.Config;
 import com.example.managehouse.Model.Dashboard;
 import com.example.managehouse.Model.Donvitinh;
 import com.example.managehouse.Model.Hoadon;
@@ -284,4 +285,21 @@ public interface API {
     @GET("notification/{checked}/edit")
     Observable<Message> switchNotification(@Path("checked") int checked,
                                            @Query("token") String token);
+
+    // update date notification
+    @POST("notification")
+    @FormUrlEncoded
+    Observable<Message> updateDateNotification(@Field("phongtro_id") int phongtro_id,
+                                               @Field("day") int day);
+
+    // get config
+    @GET("config")
+    Observable<List<Config>> getConfig();
+
+    // uodate config
+    @POST("config")
+    @FormUrlEncoded
+    Observable<Message> updateConfig(@Field("name") String name,
+                                     @Field("value") int value,
+                                     @Field("text") String text);
 }

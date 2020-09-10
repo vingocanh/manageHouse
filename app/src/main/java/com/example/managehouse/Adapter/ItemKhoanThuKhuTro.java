@@ -27,7 +27,7 @@ import com.example.managehouse.Service.DialogChosenItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ChosenItemCallback {
+public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private Activity activity;
     private List<Khoanthu> khoanthus;
@@ -37,6 +37,7 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String[] tenDonViTinh = null;
     private int posChecked = 0;
     private TextView txtDonViTinh;
+    private int pos = 0;
 
     public ItemKhoanThuKhuTro(Activity activity, List<Khoanthu> khoanthus) {
         this.activity = activity;
@@ -105,109 +106,16 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder,int position) {
         if (holder instanceof MyItemViewHolder) {
             ((MyItemViewHolder) holder).cbItem.setChecked(khoanthus.get(position).isChecked());
             ((MyItemViewHolder) holder).txtItem.setText(khoanthus.get(position).getTen());
             if(giaKhoanThu[position] != 0) {
-                ((MyItemViewHolder) holder).edtPrice.setText(Common.formatNumber(giaKhoanThu[position],true));
-                ((MyItemViewHolder) holder).edtPrice.setTag(giaKhoanThu[position]);
-            }
-            if(tenDonViTinh != null && donViTinhKhoanThu[position] != 0) {
-                ((MyItemViewHolder) holder).txtDonViTinh.setText("Đơn vị: " + tenDonViTinh[position]);
+                ((MyItemViewHolder) holder).edtPrice.setText(String.valueOf(giaKhoanThu[position]));
                 ((MyItemViewHolder) holder).txtDonViTinh.setTag(donViTinhKhoanThu[position]);
+                ((MyItemViewHolder) holder).txtDonViTinh.setText("Đơn vị: " + tenDonViTinh[position]);
             }
-            if(khoanthus.get(position).isChecked()) {
-                ((MyItemViewHolder) holder).llNhap.setVisibility(View.VISIBLE);
-            }
-            ((MyItemViewHolder) holder).txtItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(khoanthus.get(position).isChecked()) {
-                        khoanthus.get(position).setChecked(false);
-                        idKhoanThu[position] = 0;
-                        ((MyItemViewHolder) holder).llNhap.setVisibility(View.GONE);
-                    }
-                    else {
-                        khoanthus.get(position).setChecked(true);
-                        idKhoanThu[position] = khoanthus.get(position).getId();
-                        ((MyItemViewHolder) holder).llNhap.setVisibility(View.VISIBLE);
-                    }
-                    callReceiveKhoanThuKhuTro();
-                }
-            });
-            ((MyItemViewHolder) holder).cbItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(khoanthus.get(position).isChecked()) {
-                        khoanthus.get(position).setChecked(false);
-                        idKhoanThu[position] = 0;
-                        ((MyItemViewHolder) holder).llNhap.setVisibility(View.GONE);
-                    }
-                    else {
-                        khoanthus.get(position).setChecked(true);
-                        idKhoanThu[position] = khoanthus.get(position).getId();
-                        ((MyItemViewHolder) holder).llNhap.setVisibility(View.VISIBLE);
-                    }
-                    callReceiveKhoanThuKhuTro();
-                }
-            });
-            ((MyItemViewHolder) holder).edtPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    String value = ((MyItemViewHolder) holder).edtPrice.getText().toString();
-                    if(!value.equals("")) {
-                        if (hasFocus) {
 
-                            ((MyItemViewHolder) holder).edtPrice.setText(String.valueOf(Common.clearMoney(value)));
-                        } else {
-                            ((MyItemViewHolder) holder).edtPrice.setText(Common.formatNumber(Integer.parseInt(((MyItemViewHolder) holder).edtPrice.getText().toString()),true));
-                            ((MyItemViewHolder) holder).edtPrice.setTag(Common.clearMoney(((MyItemViewHolder) holder).edtPrice.getText().toString()));
-                        }
-                    }
-                }
-            });
-            ((MyItemViewHolder) holder).txtDonViTinh.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    posChecked = position;
-                    txtDonViTinh = ((MyItemViewHolder) holder).txtDonViTinh;
-                    List<Item> items = new ArrayList<>();
-                    int id = 0, stt = 0;
-                    if(((MyItemViewHolder) holder).txtDonViTinh.getTag() != null) id = Integer.parseInt(((MyItemViewHolder) holder).txtDonViTinh.getTag().toString());
-                    for (Donvitinh donvitinh : donvitinhs) {
-                        if (donvitinh.getId() == id) items.add(new Item(true, donvitinh.getId(), stt, donvitinh.getName()));
-                        else {
-                            items.add(new Item(false, donvitinh.getId(), stt, donvitinh.getName()));
-                        }
-                        stt++;
-                    }
-                    DialogChosenItem dialogChosenItem = new DialogChosenItem(activity, items, "Chọn đơn vị tính", "single",0, true);
-                    dialogChosenItem.setChosenItemCallback(ItemKhoanThuKhuTro.this);
-                    dialogChosenItem.showDialog();
-                }
-            });
-            ((MyItemViewHolder) holder).edtPrice.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (!s.toString().equals("")) {
-                        if(s.toString().indexOf(".") == -1)  giaKhoanThu[position] = Integer.parseInt(s.toString());
-                    }
-                    else {
-                        giaKhoanThu[position] = 0;
-                    }
-                }
-            });
         } else {
             if (holder instanceof MyLoadingViewHolder) {
 
@@ -226,14 +134,8 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
         return 1;
     }
 
-    @Override
-    public void onReceiveItem(List<Item> item) {
-        txtDonViTinh.setText("Đơn vị: " + item.get(0).getName());
-        txtDonViTinh.setTag(item.get(0).getId());
-        donViTinhKhoanThu[posChecked] = item.get(0).getId();
-    }
 
-    public class MyItemViewHolder extends RecyclerView.ViewHolder{
+    public class MyItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ChosenItemCallback{
 
         private CheckBox cbItem;
         private TextView txtItem, txtDonViTinh;
@@ -244,9 +146,73 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             llNhap = itemView.findViewById(R.id.llNhap);
             cbItem = itemView.findViewById(R.id.cbItem);
+            cbItem.setOnClickListener(this);
             txtItem = itemView.findViewById(R.id.txtItem);
+            txtItem.setOnClickListener(this);
             txtDonViTinh = itemView.findViewById(R.id.txtDonViTinh);
+            txtDonViTinh.setOnClickListener(this);
             edtPrice = itemView.findViewById(R.id.edtPrice);
+            edtPrice.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    giaKhoanThu[getAdapterPosition()] = Integer.parseInt(charSequence.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.txtItem :
+                case R.id.cbItem : {
+                    if(khoanthus.get(getAdapterPosition()).isChecked()) {
+                        khoanthus.get(getAdapterPosition()).setChecked(false);
+                        idKhoanThu[getAdapterPosition()] = 0;
+
+                    }
+                    else {
+                        khoanthus.get(getAdapterPosition()).setChecked(true);
+                        idKhoanThu[getAdapterPosition()] = khoanthus.get(getAdapterPosition()).getId();
+                    }
+
+                    break;
+                }
+                case R.id.txtDonViTinh : {
+                    posChecked = getAdapterPosition();
+                    List<Item> items = new ArrayList<>();
+                    int id = 0, stt = 0;
+                    if(txtDonViTinh.getTag() != null) id = Integer.parseInt(txtDonViTinh.getTag().toString());
+                    for (Donvitinh donvitinh : donvitinhs) {
+                        if (donvitinh.getId() == id) items.add(new Item(true, donvitinh.getId(), stt, donvitinh.getName()));
+                        else {
+                            items.add(new Item(false, donvitinh.getId(), stt, donvitinh.getName()));
+                        }
+                        stt++;
+                    }
+                    DialogChosenItem dialogChosenItem = new DialogChosenItem(activity, items, "Chọn đơn vị tính", "single",0, false);
+                    dialogChosenItem.setChosenItemCallback(this);
+                    dialogChosenItem.showDialog();
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onReceiveItem(List<Item> item) {
+            txtDonViTinh.setText("Đơn vị: " + item.get(0).getName());
+            txtDonViTinh.setTag(item.get(0).getId());
+            donViTinhKhoanThu[posChecked] = item.get(0).getId();
         }
     }
 

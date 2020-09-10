@@ -147,7 +147,6 @@
         <LinearLayout
             android:id="@+id/llSoDien"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="45dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

@@ -1,16 +1,15 @@
 package com.example.managehouse.Model;
 
-import java.io.Serializable;
+public class Config {
 
-public class Donvitinh implements Serializable {
+    private int id, value;
+    private String name, text, created_at, updated_at;
 
-    private int id, status;
-    private String name, created_at, updated_at;
-
-    public Donvitinh(int id, int status, String name, String created_at, String updated_at) {
+    public Config(int id, int value, String name, String text, String created_at, String updated_at) {
         this.id = id;
-        this.status = status;
+        this.value = value;
         this.name = name;
+        this.text = text;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -23,12 +22,12 @@ public class Donvitinh implements Serializable {
         this.id = id;
     }
 
-    public int getStatus() {
-        return status;
+    public int getValue() {
+        return value;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public String getName() {
@@ -37,6 +36,14 @@ public class Donvitinh implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getCreated_at() {

@@ -79,7 +79,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private API api;
     private Phongtro phongtro;
     private String tenPhongTro = "", ghiChu = "", ngayThuTien;
-    private int gia = 0;
+    private int gia = 0, soDien = 0;
     private int typeChosenItem = 0, sttKhuTro = 0;
     private List<Khutro> khutroList = new ArrayList<>();
     private boolean checkFormChange = false;
@@ -208,6 +208,27 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             }
         });
+        edtSoDien.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals("")) {
+                    if(Integer.parseInt(s.toString()) != soDien) {
+                        Common.checkFormChange = true;
+                        checkFormChange = true;
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         edtGia.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -296,6 +317,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         ngayThuTien = phongtro.getNgaythanhtoan2();
         edtNgayThuTien.setText(ngayThuTien);
         edtNgayThuTien.setTag(phongtro.getNgaythanhtoan());
+        soDien = phongtro.getChotsodien();
+        edtSoDien.setText(String.valueOf(soDien));
         String trangThai = "Sử dụng";
         if(phongtro.getStatus() == 0) trangThai = "Không sử dụng";
         txtTrangThai.setText(trangThai);
@@ -359,6 +382,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
                                 Common.checkFormChange = false;
                                 checkFormChange = false;
+                                homeActivity.onBackPressed();
                             }
                         }
                     }

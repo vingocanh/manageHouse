@@ -70,7 +70,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
 
     private EditText edtSoDienCu, edtSoDienMoi, edtTen, edtThang, edtTienPhong, edtSoDien, edtGhiChu, edtSoNuocCu, edtSoNuocMoi, edtSoNuoc;
     private TextView txtChonKhuTro, txtChonPhongTro, txtCacKhoanThu, txtTongTien, txtChonTrangThai;
-    private LinearLayout llNhapSoNuoc, llSoNuoc;
+    private LinearLayout llNhapSoNuoc, llSoNuoc, llNhapSoDien, llSoDien;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private API api;
@@ -82,7 +82,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
     private DialogChosenItem dialogChosen = null;
     private int typeChosenItem = -1;
     private int sttKhuTro = 0, sttPhongTro = 0, userId = 10;
-    private boolean checkDonViNuoc = false; // false - đơn vị theo tháng | true - đơn vị theo khối
+    private boolean checkDonViNuoc = false, checkDien = false; // false - đơn vị theo tháng | true - đơn vị theo khối
     private boolean checkLoadForm = true, checkFormChange = false;
     private String tenHoaDon = "", thangHoaDon = "", ghiChu = "";
     private int tienPhong = 0, soDienCu = 0, soNuocCu =0, soDienMoi = 0, soNuocMoi = 0, soDien = 0, soNuoc = 0;
@@ -105,8 +105,8 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             hoadon = (Hoadon) getArguments().getSerializable("hoadon");
-            khutroId = getArguments().getInt("khutro_id");
-            phongtroId = getArguments().getInt("phongtro_id");
+            khutroId = getArguments().getInt("khutro_id",0);
+            phongtroId = getArguments().getInt("phongtro_id",0);
         }
         if(khutroId != 0 && phongtroId != 0) {
             Common.checkFormChange = true;
@@ -153,7 +153,9 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         txtChonPhongTro.setOnClickListener(this);
         txtCacKhoanThu.setOnClickListener(this);
         llNhapSoNuoc = view.findViewById(R.id.llNhapSoNuoc);
+        llNhapSoDien = view.findViewById(R.id.llNhapSoDien);
         llSoNuoc = view.findViewById(R.id.llSoNuoc);
+        llSoDien = view.findViewById(R.id.llSoDien);
         edtSoNuocCu = view.findViewById(R.id.edtSoNuocCu);
         edtSoNuocMoi = view.findViewById(R.id.edtSoNuocMoi);
         edtSoNuoc = view.findViewById(R.id.edtSoNuoc);
@@ -540,7 +542,6 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
                                 if(type == 1) {
                                     Intent intent = new Intent(getContext(), ShowBillActivity.class);
-                                    Log.d("cuong",message.getData());
                                     intent.putExtra("hoadon", message.getData());
                                     intent.putExtra("checkDonViNuoc", checkDonViNuoc);
                                     startActivity(intent);
@@ -618,7 +619,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                                 }
                                 txtChonKhuTro.setText(khutro.getTen());
                                 txtChonKhuTro.setTag(khutro.getId());
-                                checkInputWater(khutro);
+                                checkKhoanThu(khutro);
                                 int i = 0;
                                 String khoanThu = "", idKhoanThu = "";
                                 for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
@@ -728,7 +729,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         monthYearPickerDialogFragment.show(getFragmentManager(), null);
     }
 
-    public void checkInputWater(Khutro khutro) {
+    public void checkKhoanThu(Khutro khutro) {
         for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
             if (khutrokhoanthu.getKhoanthu().getTen().equals("Nước")) {
                 if(khutrokhoanthu.getDonvitinh_id() != 3) {
@@ -742,8 +743,20 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                     checkDonViNuoc = true;
                 }
             }
+            if(khutrokhoanthu.getKhoanthu().getTen().equals("Điện")) {
+                checkDien = false;
+            }
+        }
+        if(checkDien) {
+            llNhapSoDien.setVisibility(View.GONE);
+            llSoDien.setVisibility(View.GONE);
+        }
+        else {
+            llNhapSoDien.setVisibility(View.VISIBLE);
+            llSoDien.setVisibility(View.VISIBLE);
         }
     }
+
 
     public void chosenKhuTro(Item item, boolean notifi) {
         if(item.getId() != Integer.parseInt(txtChonKhuTro.getTag().toString())) {
@@ -753,7 +766,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
         txtChonKhuTro.setText(item.getName());
         txtChonKhuTro.setTag(item.getId());
         sttKhuTro = item.getStt();
-        checkInputWater(khutroList.get(sttKhuTro));
+        checkKhoanThu(khutroList.get(sttKhuTro));
         int i = 0;
         String khoanThu = "", idKhoanThu = "";
         for (Khutrokhoanthu khutrokhoanthu : khutroList.get(sttKhuTro).getKhutrokhoanthu()) {

@@ -27,5 +27,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/line_form_element_bg"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Ngày nhận thông báo hàng tháng"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm"/>
+            <TextView
+                android:id="@+id/txtThuTien"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/colorFormMasterElementTextValue"
+                android:textSize="@dimen/sizeForm" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -1,6 +1,7 @@
 package com.example.managehouse.Activity;
 
 import android.app.AlertDialog;
+import android.app.RemoteInput;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -86,25 +87,28 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         createPermission();
         backFragment();
         onNewIntent(getIntent());
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
             String expiresAt = sharedPreferences.getString("expires_at", null);
             if (expiresAt != null) {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     Date expiresUser = formatter.parse(expiresAt);
                     Date currentDate = formatter.parse(formatter.format(new Date()));
                     if (currentDate.compareTo(expiresUser) < 0) {
-                        if(this.type == -1) replaceFragment(new DashboardFragment(), false);
+                        if (this.type == -1) replaceFragment(new DashboardFragment(), false);
                         else {
                             switch (this.type) {
-                                case 0 : {
+                                case 0: {
                                     Common.posMenu = 4;
                                     CreateBillFragment createBillFragment = new CreateBillFragment();
                                     createBillFragment.setArguments(dataFragment);
                                     replaceFragment(createBillFragment, false);
                                     break;
-
+                                }
+                                case 1: {
+                                    replaceFragment(new DashboardFragment(), false);
+                                    break;
                                 }
                             }
                         }
@@ -129,13 +133,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         logout();
                     }
-
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
         }
         nvMenu.getMenu().getItem(Common.posMenu).setChecked(true);
+        receiveResultNotification();
     }
 
     public void mapping() {
@@ -168,7 +172,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         }
         fragmentTransaction.commit();
-        if(fragment.getClass().getSimpleName().equals("DashboardFragment")) {
+        if (fragment.getClass().getSimpleName().equals("DashboardFragment")) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
@@ -191,7 +195,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void logout() {
-        compositeDisposable.add(api.logout(Common.currentUser.getId(),Common.getDeviceToken(getApplicationContext())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.logout(Common.currentUser.getId(), Common.getDeviceToken(getApplicationContext())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
@@ -215,10 +219,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if(Common.posMenu >= 0) {
+                if (Common.posMenu >= 0) {
                     nvMenu.getMenu().getItem(Common.posMenu).setChecked(true);
-                }
-                else {
+                } else {
                     for (int i = 0; i < nvMenu.getMenu().size(); i++) {
                         nvMenu.getMenu().getItem(i).setChecked(false);
                     }
@@ -227,17 +230,50 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    public void receiveResultNotification() {
+        if (getMessageText(getIntent()) != null) {
+            int day = Integer.parseInt(getMessageText(getIntent()).toString());
+            int phongtro_id = dataFragment.getInt("phongtro_id", -1);
+            Log.d("cuong", phongtro_id + "");
+            compositeDisposable.add(api.updateDateNotification(phongtro_id, day).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Message>() {
+                        @Override
+                        public void accept(Message message) throws Exception {
+                            if(message.getStatus() == 201) {
+                                Toasty.success(getApplicationContext(),message.getBody()[0], 500, true).show();
+                            }
+                            else {
+                                Toasty.error(getApplicationContext(),message.getBody()[0], 300, true).show();
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            throwable.printStackTrace();
+                        }
+                    }));
+        }
+    }
+
+    public CharSequence getMessageText(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        return (remoteInput != null) ? remoteInput.getCharSequence("12121997") : null;
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Bundle bundle = intent.getExtras();
-        if(bundle != null) {
+        if (bundle != null) {
             this.type = bundle.getInt("type");
             switch (type) {
-                case 0 : {
-
-                    dataFragment.putInt("khutro_id",bundle.getInt("khutro_id"));
-                    dataFragment.putInt("phongtro_id",bundle.getInt("phongtro_id"));
+                case 0: {
+                    dataFragment.putInt("khutro_id", bundle.getInt("khutro_id"));
+                    dataFragment.putInt("phongtro_id", bundle.getInt("phongtro_id"));
+                    break;
+                }
+                case 1: {
+                    dataFragment.putInt("phongtro_id", bundle.getInt("phongtro_id", -1));
                     break;
                 }
             }
@@ -253,8 +289,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.llDrawerHeader: {
-                UserFragment userFragment =  new UserFragment();
-                replaceFragment(userFragment,true);
+                UserFragment userFragment = new UserFragment();
+                replaceFragment(userFragment, true);
                 drawerLayout.closeDrawer(GravityCompat.START);
                 for (int i = 0; i < nvMenu.getMenu().size(); i++) {
                     nvMenu.getMenu().getItem(i).setChecked(false);
@@ -268,45 +304,45 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.flHome);
         String fragmentClass = "";
-        if(fragment != null) fragmentClass = fragment.getClass().getSimpleName();
+        if (fragment != null) fragmentClass = fragment.getClass().getSimpleName();
         switch (menuItem.getItemId()) {
             case R.id.navTongQuan: {
-                if(!fragmentClass.equals("DashboardFragment")) {
+                if (!fragmentClass.equals("DashboardFragment")) {
                     replaceFragment(new DashboardFragment(), false);
                 }
                 break;
             }
             case R.id.navKhuTro: {
-                if(!fragmentClass.equals("KhuTroFragment")) {
+                if (!fragmentClass.equals("KhuTroFragment")) {
                     replaceFragment(new KhuTroFragment(), true);
                 }
                 break;
             }
-            case R.id.navPhongTro : {
-                if(!fragmentClass.equals("PhongTroFragment")) {
+            case R.id.navPhongTro: {
+                if (!fragmentClass.equals("PhongTroFragment")) {
                     replaceFragment(new PhongTroFragment(), true);
                 }
                 break;
             }
-            case R.id.navNguoiTro : {
-                if(!fragmentClass.equals("NguoiTroFragment")) {
+            case R.id.navNguoiTro: {
+                if (!fragmentClass.equals("NguoiTroFragment")) {
                     replaceFragment(new NguoiTroFragment(), true);
                 }
                 break;
             }
-            case R.id.navHoaDon : {
-                if(!fragmentClass.equals("HoaDonFragment")) {
+            case R.id.navHoaDon: {
+                if (!fragmentClass.equals("HoaDonFragment")) {
                     replaceFragment(new HoaDonFragment(), true);
                 }
                 break;
             }
-            case R.id.navKhoanThu : {
-                if(!fragmentClass.equals("KhoanThuFragment")) {
+            case R.id.navKhoanThu: {
+                if (!fragmentClass.equals("KhoanThuFragment")) {
                     replaceFragment(new KhoanThuFragment(), true);
                 }
                 break;
             }
-            case R.id.navDangXuat : {
+            case R.id.navDangXuat: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Bạn chắc chắn muốn đăng xuất?")
                         .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
@@ -324,14 +360,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             }
-            case R.id.navCaiDat : {
-                if(!fragmentClass.equals("SettingFragment")) {
+            case R.id.navCaiDat: {
+                if (!fragmentClass.equals("SettingFragment")) {
                     replaceFragment(new SettingFragment(), true);
                 }
                 break;
             }
-            case R.id.navLienHe : {
-                if(!fragmentClass.equals("ContactFragment")) {
+            case R.id.navLienHe: {
+                if (!fragmentClass.equals("ContactFragment")) {
                     replaceFragment(new ContactFragment(), true);
                 }
                 break;
@@ -343,10 +379,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             if (fragment != null) {
                 if (fragment.getView() != null) {
                     if (fragment.getView().getTag() != null) {

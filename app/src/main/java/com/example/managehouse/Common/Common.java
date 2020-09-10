@@ -27,7 +27,7 @@ public class Common {
     public static Fragment currentFragment = null;
     public static int posMenu = 0;
 
-    public static API getAPI(){
+    public static API getAPI() {
         return RetrofitClient.getInstance().create(API.class);
     }
 
@@ -39,10 +39,16 @@ public class Common {
 
     public static int clearMoney(String value) {
         int price = 0;
-        if(value.indexOf("VNĐ") == -1) return price;
+        if (value.indexOf("VNĐ") == -1) return price;
         String cMoney = value.substring(0, value.indexOf("VNĐ") - 1);
-        while (cMoney.indexOf(".") > -1) {
-            cMoney = cMoney.replace(".", "");
+        if (cMoney.indexOf(",") > -1) {
+            while (cMoney.indexOf(",") > -1) {
+                cMoney = cMoney.replace(",", "");
+            }
+        } else {
+            while (cMoney.indexOf(".") > -1) {
+                cMoney = cMoney.replace(".", "");
+            }
         }
         price = Integer.parseInt(cMoney);
         return price;
@@ -51,7 +57,7 @@ public class Common {
     public static String getDeviceToken(Context context) {
         String token = null;
         SharedPreferences sharedPreferences = context.getSharedPreferences("token", context.MODE_PRIVATE);
-        if(sharedPreferences != null) {
+        if (sharedPreferences != null) {
             token = sharedPreferences.getString("device", null);
         }
         return token;

@@ -72,68 +72,74 @@
                 android:textSize="@dimen/sizeForm"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/llNhapSoDien"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@color/colorFormMasterHeaderBackground"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/sizeForm"
-                android:textColor="@color/colorFormMasterHeaderText"
-                android:text="Nhập số điện"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/line_form_element_bg"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Số điện cũ"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
-            <EditText
-                android:id="@+id/edtSoDienCu"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:textAlignment="textEnd"
-                android:textSize="@dimen/sizeForm"
-                android:inputType="number"
-                android:background="@null"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Số điện mới"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
-            <EditText
-                android:id="@+id/edtSoDienMoi"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:inputType="number"
-                android:textAlignment="textEnd"
-                android:textSize="@dimen/sizeForm"
-                android:background="@null"/>
+                android:layout_height="45dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@color/colorFormMasterHeaderBackground"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sizeForm"
+                    android:textColor="@color/colorFormMasterHeaderText"
+                    android:text="Nhập số điện"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@drawable/line_form_element_bg"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Số điện cũ"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorFormMasterElementTextTitle"
+                    android:textSize="@dimen/sizeForm"/>
+                <EditText
+                    android:id="@+id/edtSoDienCu"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:textAlignment="textEnd"
+                    android:textSize="@dimen/sizeForm"
+                    android:inputType="number"
+                    android:background="@null"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Số điện mới"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorFormMasterElementTextTitle"
+                    android:textSize="@dimen/sizeForm"/>
+                <EditText
+                    android:id="@+id/edtSoDienMoi"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:inputType="number"
+                    android:textAlignment="textEnd"
+                    android:textSize="@dimen/sizeForm"
+                    android:background="@null"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/llNhapSoNuoc"
@@ -294,6 +300,7 @@
                 android:background="@null"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/llSoDien"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:paddingLeft="10dp"

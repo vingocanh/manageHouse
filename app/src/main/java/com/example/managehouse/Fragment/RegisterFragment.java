@@ -109,7 +109,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     public void validator() {
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation.addValidation(getActivity(),R.id.edtName, "^[A-Za-z ]+$",R.string.name_validator);
         awesomeValidation.addValidation(getActivity(), R.id.edtName, new SimpleCustomValidation() {
             @Override
             public boolean compare(String s) {

@@ -46,7 +46,7 @@ public class ItemChosenAdapter extends RecyclerView.Adapter<ItemChosenAdapter.My
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_chosen, parent,false);
+        View view  = LayoutInflater.from(context).inflate(R.layout.item_chosen, parent,false);
         return new MyViewHolder(view);
     }
 
@@ -103,6 +103,7 @@ public class ItemChosenAdapter extends RecyclerView.Adapter<ItemChosenAdapter.My
         }
         callChosenItemCallback(itemChecked);
     }
+
 
     @Override
     public int getItemCount() {

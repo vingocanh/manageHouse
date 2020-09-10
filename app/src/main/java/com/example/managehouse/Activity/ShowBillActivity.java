@@ -125,7 +125,6 @@ public class ShowBillActivity extends AppCompatActivity {
         TextView tvSl = createTextView();
         TextView tvDonGia = createTextView();
         TextView tvThanhTien = createTextView();
-        Log.d("cuong", hoadon.getKhoanthu().size()+"");
         for (Khutrokhoanthu khutrokhoanthu : hoadon.getKhoanthu()) {
             TableRow row = createRow();
             tvTen = createTextView();
@@ -139,26 +138,35 @@ public class ShowBillActivity extends AppCompatActivity {
             int thanhTien = 0;
             tvTen.setText(khutrokhoanthu.getKhoanthu().getTen());
             row.addView(tvTen);
-            if (khutrokhoanthu.getKhoanthu().getTen().equals("Điện")) {
-                int soDien = hoadon.getSodienmoi() - hoadon.getSodiencu();
-                if (soDien < 0) soDien = 0;
-                tvSl.setText(String.valueOf(soDien));
-                thanhTien = soDien * khutrokhoanthu.getGia();
-            } else {
-                if (khutrokhoanthu.getKhoanthu().getTen().equals("Nước")) {
-                    if (checkDonViNuoc) {
-                        int soNuoc = hoadon.getSonuocmoi() - hoadon.getSonuoccu();
-                        if (soNuoc < 0) soNuoc = 0;
-                        tvSl.setText(String.valueOf(soNuoc));
-                        thanhTien = soNuoc * khutrokhoanthu.getGia();
+            if(khutrokhoanthu.getDonvitinh().getName().equals("Người")) {
+                int soNguoi = hoadon.getPhongtro().getNguoitro().size();
+                thanhTien = khutrokhoanthu.getGia() * soNguoi;
+                tvSl.setText(soNguoi + " người");
+            }
+            else {
+                if (khutrokhoanthu.getKhoanthu().getTen().equals("Điện")) {
+                    int soDien = hoadon.getSodienmoi() - hoadon.getSodiencu();
+                    if (soDien < 0) soDien = 0;
+                    tvSl.setText(soDien + " số");
+                    thanhTien = soDien * khutrokhoanthu.getGia();
+                } else {
+                    if (khutrokhoanthu.getKhoanthu().getTen().equals("Nước")) {
+                        if (checkDonViNuoc) {
+                            int soNuoc = hoadon.getSonuocmoi() - hoadon.getSonuoccu();
+                            if (soNuoc < 0) soNuoc = 0;
+                            tvSl.setText(String.valueOf(soNuoc));
+                            thanhTien = soNuoc * khutrokhoanthu.getGia();
+                        } else {
+                            tvSl.setText("-");
+                            thanhTien = khutrokhoanthu.getGia();
+                        }
                     } else {
                         tvSl.setText("-");
                         thanhTien = khutrokhoanthu.getGia();
                     }
-                } else {
-                    tvSl.setText("-");
                 }
             }
+
             row.addView(tvSl);
             tvThanhTien.setText(Common.formatNumber(thanhTien,false));
             tvDonGia.setText(Common.formatNumber(khutrokhoanthu.getGia(),false));

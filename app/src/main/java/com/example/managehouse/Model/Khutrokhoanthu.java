@@ -1,8 +1,9 @@
 package com.example.managehouse.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Khutrokhoanthu {
+public class Khutrokhoanthu implements Serializable {
     private int id, khutro_id, khoanthu_id, gia, status, donvitinh_id;
     private String created_at, updated_at;
     private Khoanthu khoanthu;
