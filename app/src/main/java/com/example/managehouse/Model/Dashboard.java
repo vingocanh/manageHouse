@@ -1,12 +1,13 @@
 package com.example.managehouse.Model;
 
 public class Dashboard {
-    private int total_money, total_khutro, total_phongtro, total_nguoitro;
+    private int total_money, total_khutro, total_phongtro_thue, total_phongtro_trong, total_nguoitro;
 
-    public Dashboard(int total_money, int total_khutro, int total_phongtro, int total_nguoitro) {
+    public Dashboard(int total_money, int total_khutro, int total_phongtro_thue, int total_phongtro_trong, int total_nguoitro) {
         this.total_money = total_money;
         this.total_khutro = total_khutro;
-        this.total_phongtro = total_phongtro;
+        this.total_phongtro_thue = total_phongtro_thue;
+        this.total_phongtro_trong = total_phongtro_trong;
         this.total_nguoitro = total_nguoitro;
     }
 
@@ -26,12 +27,20 @@ public class Dashboard {
         this.total_khutro = total_khutro;
     }
 
-    public int getTotal_phongtro() {
-        return total_phongtro;
+    public int getTotal_phongtro_thue() {
+        return total_phongtro_thue;
     }
 
-    public void setTotal_phongtro(int total_phongtro) {
-        this.total_phongtro = total_phongtro;
+    public void setTotal_phongtro_thue(int total_phongtro_thue) {
+        this.total_phongtro_thue = total_phongtro_thue;
+    }
+
+    public int getTotal_phongtro_trong() {
+        return total_phongtro_trong;
+    }
+
+    public void setTotal_phongtro_trong(int total_phongtro_trong) {
+        this.total_phongtro_trong = total_phongtro_trong;
     }
 
     public int getTotal_nguoitro() {

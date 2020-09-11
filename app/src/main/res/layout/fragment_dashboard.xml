@@ -12,35 +12,69 @@
         <LinearLayout
             android:id="@+id/llUser"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@color/colorPrimary">
-            <ImageView
-                android:layout_marginLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_account"/>
+            android:background="#fff"
+            android:layout_height="150dp"
+            android:orientation="vertical">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/txtHoten"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="top"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/colorPrimary">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivAvatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/ic_account"
+                        app:civ_border_color="#FFF"
+                        app:civ_border_width="1dp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/txtHoten"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#fff"
+                            android:textSize="@dimen/elementTextTitleSize"
+                            android:text="Họ tên"/>
+                        <TextView
+                            android:id="@+id/txtDiachi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#fff"
+                            android:textSize="@dimen/sizePrimary"
+                            android:text="Địa chỉ"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="16sp"
-                    android:text="Họ tên"/>
-                <TextView
-                    android:id="@+id/txtDiachi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="14sp"
-                    android:text="Địa chỉ"/>
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/ivChangePassword"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_password_change" />
+                </LinearLayout>
             </LinearLayout>
+            <View
+                android:id="@+id/vWave"
+                android:layout_width="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_waves"/>
         </LinearLayout>
         <ScrollView
             android:layout_width="match_parent"
@@ -61,10 +95,10 @@
                             android:id="@+id/cvDoanhThu"
                             android:layout_width="0dp"
                             android:layout_height="130dp"
-                            app:cardBackgroundColor="#3498db"
                             android:layout_weight="1">
                             <LinearLayout
                                 android:layout_width="match_parent"
+                                android:background="@drawable/bg_gradient_tongthu"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
                                 <LinearLayout
@@ -158,12 +192,12 @@
                             android:layout_width="0dp"
                             android:layout_height="130dp"
                             android:gravity="center"
-                            app:cardBackgroundColor="#e74c3c"
                             android:layout_weight="1"
                             android:layout_marginLeft="10dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_khutro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"
@@ -223,11 +257,11 @@
                             android:layout_width="0dp"
                             android:layout_height="130dp"
                             android:gravity="center"
-                            app:cardBackgroundColor="#9b59b6"
                             android:layout_weight="1">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_phongtro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"
@@ -257,21 +291,55 @@
                                     android:gravity="center"
                                     android:layout_weight="1">
                                     <ImageView
-                                        android:layout_marginBottom="10dp"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginBottom="5dp"
                                         android:layout_gravity="center_horizontal"
                                         android:background="@drawable/banner_item_dash_bg"
                                         android:padding="10dp"
                                         android:src="@drawable/ic_home_32dp" />
-                                    <TextView
-                                        android:id="@+id/txtTotalPhongTro"
-                                        android:layout_width="wrap_content"
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:text="0"
-                                        android:textAlignment="center"
-                                        android:textColor="#fff"
-                                        android:textSize="16sp" />
+                                        android:gravity="center"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Đã thuê: "
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                        <TextView
+                                            android:id="@+id/txtPhongTroDaThue"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="0"
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Trống: "
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                        <TextView
+                                            android:id="@+id/txtPhongTroTrong"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="0"
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
@@ -282,11 +350,11 @@
                             android:layout_height="130dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
-                            android:gravity="center"
-                            app:cardBackgroundColor="#e67e22">
+                            android:gravity="center">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_nguoitro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"

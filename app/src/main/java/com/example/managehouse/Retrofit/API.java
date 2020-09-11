@@ -290,6 +290,7 @@ public interface API {
     @POST("notification")
     @FormUrlEncoded
     Observable<Message> updateDateNotification(@Field("phongtro_id") int phongtro_id,
+                                               @Field("user_id") int user_id,
                                                @Field("day") int day);
 
     // get config
@@ -301,5 +302,6 @@ public interface API {
     @FormUrlEncoded
     Observable<Message> updateConfig(@Field("name") String name,
                                      @Field("value") int value,
+                                     @Field("user_id") int user_id,
                                      @Field("text") String text);
 }

@@ -63,6 +63,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_tongthu"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"
@@ -146,6 +147,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_phongtro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"
@@ -174,21 +176,55 @@
                                     android:gravity="center"
                                     android:layout_weight="1">
                                     <ImageView
-                                        android:layout_marginBottom="10dp"
+                                        android:layout_marginBottom="5dp"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_horizontal"
                                         android:background="@drawable/banner_item_dash_bg"
                                         android:padding="10dp"
                                         android:src="@drawable/ic_home_32dp" />
-                                    <TextView
-                                        android:id="@+id/txtNumberRoom"
+                                    <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:textAlignment="center"
-                                        android:text="0"
-                                        android:textColor="#fff"
-                                        android:textSize="16sp" />
+                                        android:gravity="center"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Đã thuê: "
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                        <TextView
+                                            android:id="@+id/txtPhongTroDaThue"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="0"
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Trống: "
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                        <TextView
+                                            android:id="@+id/txtPhongTroTrong"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="0"
+                                            android:textAlignment="center"
+                                            android:textColor="#fff"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
@@ -202,6 +238,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_nguoitro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"

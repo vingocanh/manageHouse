@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,11 +29,13 @@ import com.example.managehouse.Fragment.ThongKe.ThongKePhongTroFragment;
 import com.example.managehouse.Model.Dashboard;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
+import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -40,9 +44,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
-    private TextView txtHoTen, txtDiaChi, txtYear, txtTotalMoney, txtTotalKhuTro, txtTotalPhongTro, txtTotalNguoiTro;
+    private TextView txtHoTen, txtDiaChi, txtYear, txtTotalMoney, txtTotalKhuTro, txtTotalNguoiTro, txtPhongTroDaThue, txtPhongTroTrong;
     private LinearLayout llLoading, llYear, llTongThu, llTkKhuTro, llTkPhongTro, llUser;
     private CardView cvDoanhThu, cvKhuTro, cvPhongTro, cvNguoiTro;
+    private CircleImageView ivAvatar;
+    private ImageView ivChangePassword;
 
     private FrameLayout flCreateBill;
     private HomeActivity homeActivity;
@@ -86,7 +92,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         txtYear = view.findViewById(R.id.txtYear);
         txtTotalMoney = view.findViewById(R.id.txtTotalMoney);
         txtTotalKhuTro = view.findViewById(R.id.txtTotalKhuTro);
-        txtTotalPhongTro = view.findViewById(R.id.txtTotalPhongTro);
+        txtPhongTroDaThue = view.findViewById(R.id.txtPhongTroDaThue);
+        txtPhongTroTrong = view.findViewById(R.id.txtPhongTroTrong);
         txtTotalNguoiTro = view.findViewById(R.id.txtTotalNguoiTro);
         llLoading = view.findViewById(R.id.llLoading);
         llYear = view.findViewById(R.id.llYear);
@@ -104,6 +111,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         cvKhuTro = view.findViewById(R.id.cvKhuTro);
         cvNguoiTro = view.findViewById(R.id.cvNguoiTro);
         cvPhongTro = view.findViewById(R.id.cvPhongTro);
+        ivAvatar = view.findViewById(R.id.ivAvatar);
+        ivChangePassword = view.findViewById(R.id.ivChangePassword);
+        ivChangePassword.setOnClickListener(this);
     }
 
     public void initNumberPicker() {
@@ -124,6 +134,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("user",Context.MODE_PRIVATE);
         txtHoTen.setText(sharedPreferences.getString("name","Không xác định"));
         txtDiaChi.setText(sharedPreferences.getString("address","Không xác định"));
+        String avatar = sharedPreferences.getString("avatar","");
+        if( !avatar.equals("")) {
+            Picasso.get().load(avatar).placeholder(R.drawable.ic_account).error(R.drawable.ic_account).into(ivAvatar);
+        }
+        else {
+            ivAvatar.setImageResource(R.drawable.ic_account);
+        }
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -138,7 +155,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                     public void accept(Dashboard dashboard) throws Exception {
                         txtTotalMoney.setText(Common.formatNumber(dashboard.getTotal_money(),true));
                         txtTotalKhuTro.setText(Common.formatNumber(dashboard.getTotal_khutro(),false));
-                        txtTotalPhongTro.setText(Common.formatNumber(dashboard.getTotal_phongtro(),false));
+                        txtPhongTroDaThue.setText(Common.formatNumber(dashboard.getTotal_phongtro_thue(),false));
+                        txtPhongTroTrong.setText(Common.formatNumber(dashboard.getTotal_phongtro_trong(),false));
                         txtTotalNguoiTro.setText(Common.formatNumber(dashboard.getTotal_nguoitro(),false));
                         llLoading.setVisibility(View.GONE);
                     }
@@ -153,19 +171,19 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     }
 
     public void setAnimation() {
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
-        animation.reset();
-        animation.setDuration(500);
-        cvDoanhThu.clearAnimation();
-        cvDoanhThu.setAnimation(animation);
-        cvPhongTro.clearAnimation();
-        cvPhongTro.setAnimation(animation);
-
-        animation = AnimationUtils.loadAnimation(getContext(), R.anim.textview_animation_right_in);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_top_in);
         animation.reset();
         animation.setDuration(700);
+        cvDoanhThu.clearAnimation();
+        cvDoanhThu.setAnimation(animation);
         cvKhuTro.clearAnimation();
         cvKhuTro.setAnimation(animation);
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_top_in);
+        animation.reset();
+        animation.setDuration(500);
+        cvPhongTro.clearAnimation();
+        cvPhongTro.setAnimation(animation);
         cvNguoiTro.clearAnimation();
         cvNguoiTro.setAnimation(animation);
 
@@ -173,11 +191,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         animation.reset();
         animation.setDuration(500);
         flCreateBill.clearAnimation();
+        flCreateBill.clearAnimation();
         flCreateBill.setAnimation(animation);
 
         animation = AnimationUtils.loadAnimation(getContext(), R.anim.item_animation_top_in);
         animation.reset();
         animation.setDuration(500);
+        llUser.clearAnimation();
         llUser.setAnimation(animation);
     }
 
@@ -249,6 +269,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
             case R.id.llUser : {
                 homeActivity.replaceFragment(new UserFragment(),true);
+                break;
+            }
+            case R.id.ivChangePassword : {
+                homeActivity.replaceFragment(new ChangePasswordFragment(), true);
                 break;
             }
         }

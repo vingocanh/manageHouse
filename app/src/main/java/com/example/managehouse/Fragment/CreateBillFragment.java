@@ -664,6 +664,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             int giaDien = 0;
             int giaNuoc = 0;
             int tienKhoanThu = 0;
+            int soNguoi = phongtroList.get(sttPhongTro).getNguoitro().size();
             int total = 0;
             Object idList = txtCacKhoanThu.getTag();
             String[] idChosen = null;
@@ -672,30 +673,18 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
             }
             Khutro khutro = khutroList.get(sttKhuTro);
             for (Khutrokhoanthu khutrokhoanthu : khutro.getKhutrokhoanthu()) {
-                if (khutrokhoanthu.getKhoanthu_id() == 5) {
-                    if(idChosen == null) giaDien = khutrokhoanthu.getGia();
-                    else {
-                        if(!Arrays.asList(idChosen).contains("5")) {
-                            giaDien = 0;
+                if(idChosen != null) {
+                    if (Arrays.asList(idChosen).contains(String.valueOf(khutrokhoanthu.getKhoanthu_id()))) {
+                        if(khutrokhoanthu.getDonvitinh().getName().equals("Người")) {
+                            tienKhoanThu += khutrokhoanthu.getGia() * soNguoi;
                         }
-                        else giaDien = khutrokhoanthu.getGia();
-                    }
-                }
-                else {
-                    if(khutrokhoanthu.getKhoanthu_id() == 1) {
-                        if(idChosen == null) giaNuoc = khutrokhoanthu.getGia();
                         else {
-                            if(!Arrays.asList(idChosen).contains("1")) {
-                                giaNuoc = 0;
-                            }
-                            else giaNuoc = khutrokhoanthu.getGia();
-                        }
-
-                    }
-                    else {
-                        if(idChosen != null) {
-                            if (Arrays.asList(idChosen).contains(String.valueOf(khutrokhoanthu.getKhoanthu_id()))) {
-                                tienKhoanThu += khutrokhoanthu.getGia();
+                            if(khutrokhoanthu.getKhoanthu().getTen().equals("Nước")) giaNuoc = khutrokhoanthu.getGia();
+                            else {
+                                if(khutrokhoanthu.getKhoanthu().getTen().equals("Điện")) giaDien = khutrokhoanthu.getGia();
+                                else {
+                                    tienKhoanThu += khutrokhoanthu.getGia();
+                                }
                             }
                         }
                     }
@@ -981,7 +970,7 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
                         }
                     }
                     if(checked) checkedItem++;
-                    items.add(new Item(checked, khutrokhoanthu.getKhoanthu_id(), stt, khutrokhoanthu.getKhoanthu().getTen() + " - " + Common.formatNumber(khutrokhoanthu.getGia(),true)));
+                    items.add(new Item(checked, khutrokhoanthu.getKhoanthu_id(), stt, khutrokhoanthu.getKhoanthu().getTen() + " - " + Common.formatNumber(khutrokhoanthu.getGia(),true) + " (1 "+khutrokhoanthu.getDonvitinh().getName()+")"));
                     stt++;
                 }
 

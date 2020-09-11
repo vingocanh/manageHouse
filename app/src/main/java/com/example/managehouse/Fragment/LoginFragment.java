@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,12 +57,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private TextView txtRegister;
     private EditText edtUsername, edtPassword;
+    private ImageView ivHidePassword;
 
     private MainActivity mainActivity;
     private AwesomeValidation awesomeValidation;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private API api;
     private SharedPreferences sharedPreferences;
+    private boolean hidePassword = true;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -83,6 +88,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mapping(view);
         //init api
         api = Common.getAPI();
+        setValue();
         return view;
     }
 
@@ -90,9 +96,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         edtPassword = view.findViewById(R.id.edtPassword);
         edtUsername = view.findViewById(R.id.edtUsername);
         txtRegister = view.findViewById(R.id.txtRegister);
+        ivHidePassword = view.findViewById(R.id.ivHidePassword);
+        ivHidePassword.setOnClickListener(this);
         txtRegister.setOnClickListener(this);
         Button btnLogin = view.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
+    }
+
+    public void setValue() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("account",Context.MODE_PRIVATE);
+        if(sharedPreferences != null) {
+            edtUsername.setText(sharedPreferences.getString("username",  ""));
+            edtPassword.setText(sharedPreferences.getString("password",  ""));
+            sharedPreferences.edit().clear().commit();
+        }
     }
 
     public void login(final String username, String password, int remember) {
@@ -154,14 +171,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }, R.string.password_length_validator);
     }
 
-
-
     public void saveUserLogin(User user) throws NoSuchPaddingException, UnsupportedEncodingException, InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidParameterSpecException {
         sharedPreferences = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("id",String.valueOf(user.getId()));
         editor.putString("name",user.getName());
-        editor.putString("avatar",user.getAvatar());
+        editor.putString("avatar",(user.getAvatar() == null) ? "" : user.getAvatar());
         editor.putString("phone",user.getPhone());
         editor.putString("email",user.getEmail());
         editor.putString("username",user.getUsername());
@@ -207,6 +222,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             case R.id.txtRegister: {
                 mainActivity.lavLogin.playAnimation();
                 mainActivity.replaceFragment(new RegisterFragment(), false);
+                break;
+            }
+            case R.id.ivHidePassword : {
+                if(hidePassword) {
+                    ivHidePassword.setImageResource(R.drawable.ic_eye_hide);
+                    edtPassword.setTransformationMethod(null);
+                }
+                else {
+                    ivHidePassword.setImageResource(R.drawable.ic_eye);
+                    edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+                hidePassword = !hidePassword;
                 break;
             }
         }

@@ -160,7 +160,7 @@ public class ItemKhoanThuKhuTro extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    giaKhoanThu[getAdapterPosition()] = Integer.parseInt(charSequence.toString());
+                    if(!charSequence.toString().equals("")) giaKhoanThu[getAdapterPosition()] = Integer.parseInt(charSequence.toString());
                 }
 
                 @Override

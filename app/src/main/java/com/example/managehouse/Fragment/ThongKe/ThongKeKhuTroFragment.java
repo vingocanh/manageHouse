@@ -43,7 +43,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ThongKeKhuTroFragment extends Fragment implements View.OnClickListener, ChosenItemCallback {
 
-    private TextView txtKhuTro,txtTotalPrice, txtNumberRoom, txtNumberPeople, txtYear;
+    private TextView txtKhuTro,txtTotalPrice, txtPhongTroDaThue, txtPhongTroTrong, txtNumberPeople, txtYear;
     private LinearLayout llLoading, llKhuTro, llYear;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -88,7 +88,8 @@ public class ThongKeKhuTroFragment extends Fragment implements View.OnClickListe
         llKhuTro = view.findViewById(R.id.llKhuTro);
         llKhuTro.setOnClickListener(this);
         txtTotalPrice = view.findViewById(R.id.txtTotalPrice);
-        txtNumberRoom = view.findViewById(R.id.txtNumberRoom);
+        txtPhongTroDaThue = view.findViewById(R.id.txtPhongTroDaThue);
+        txtPhongTroTrong = view.findViewById(R.id.txtPhongTroTrong);
         txtNumberPeople = view.findViewById(R.id.txtNumberPeople);
         txtYear = view.findViewById(R.id.txtYear);
     }
@@ -135,9 +136,8 @@ public class ThongKeKhuTroFragment extends Fragment implements View.OnClickListe
                         }
                         else {
                             setValueTxtKhutro("Không có khu trọ", -1);
-
                         }
-
+                        llLoading.setVisibility(View.GONE);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -175,7 +175,8 @@ public class ThongKeKhuTroFragment extends Fragment implements View.OnClickListe
 
     public void setValueThongKe(Thongkekhutro thongKe) {
         txtTotalPrice.setText(Common.formatNumber(thongKe.getTotal_price(),true));
-        txtNumberRoom.setText(String.valueOf(thongKe.getNumber_room()));
+        txtPhongTroDaThue.setText(String.valueOf(thongKe.getNumber_room_full()));
+        txtPhongTroTrong.setText(String.valueOf(thongKe.getNumber_room_empty()));
         txtNumberPeople.setText(String.valueOf(thongKe.getNumber_people()));
     }
 

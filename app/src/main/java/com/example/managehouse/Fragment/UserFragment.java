@@ -72,7 +72,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     private ImageView ivAvatar;
     private EditText edtTen, edtDiaChi, edtEmail, edtPhone;
-    private Button btnChonAnh, btnXoaAnh, btnChangePass;
+    private Button btnChonAnh, btnXoaAnh;
 
     private HomeActivity homeActivity;
     private AwesomeValidation awesomeValidation;
@@ -130,8 +130,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         btnChonAnh.setOnClickListener(this);
         btnXoaAnh = view.findViewById(R.id.btnXoaAnh);
         btnXoaAnh.setOnClickListener(this);
-        btnChangePass = view.findViewById(R.id.btnChangePass);
-        btnChangePass.setOnClickListener(this);
         btnXoaAnh.setVisibility(View.GONE);
     }
 
@@ -377,10 +375,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 ivAvatar.setImageResource(R.drawable.ic_account_blue);
                 btnXoaAnh.setVisibility(View.GONE);
                 uriAvatar = null;
-                break;
-            }
-            case R.id.btnChangePass : {
-                homeActivity.replaceFragment(new ChangePasswordFragment(), true);
                 break;
             }
             case R.id.ivAction: {

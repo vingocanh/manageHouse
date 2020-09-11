@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 public class Thongkekhutro implements Serializable {
 
-    private int total_price, number_room, number_people;
+    private int total_price, number_room_full, number_room_empty, number_people;
 
-    public Thongkekhutro(int total_price, int number_room, int number_people) {
+    public Thongkekhutro(int total_price, int number_room_full, int number_room_empty, int number_people) {
         this.total_price = total_price;
-        this.number_room = number_room;
+        this.number_room_full = number_room_full;
+        this.number_room_empty = number_room_empty;
         this.number_people = number_people;
     }
 
@@ -20,12 +21,20 @@ public class Thongkekhutro implements Serializable {
         this.total_price = total_price;
     }
 
-    public int getNumber_room() {
-        return number_room;
+    public int getNumber_room_full() {
+        return number_room_full;
     }
 
-    public void setNumber_room(int number_room) {
-        this.number_room = number_room;
+    public void setNumber_room_full(int number_room_full) {
+        this.number_room_full = number_room_full;
+    }
+
+    public int getNumber_room_empty() {
+        return number_room_empty;
+    }
+
+    public void setNumber_room_empty(int number_room_empty) {
+        this.number_room_empty = number_room_empty;
     }
 
     public int getNumber_people() {

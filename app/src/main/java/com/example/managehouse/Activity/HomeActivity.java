@@ -46,6 +46,7 @@ import com.example.managehouse.Retrofit.RetrofitClient;
 import com.example.managehouse.Service.DialogNotification;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -158,7 +160,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void setValueHeader() {
         View headerView = nvMenu.getHeaderView(0);
         TextView txtName = headerView.findViewById(R.id.txtName);
+        CircleImageView ivAvatar = headerView.findViewById(R.id.ivAvatar);
         txtName.setText(Common.currentUser.getName());
+        String avatar = sharedPreferences.getString("avatar", "");
+        if( !avatar.equals("")) {
+            Picasso.get().load(avatar).placeholder(R.drawable.ic_account).error(R.drawable.ic_account).into(ivAvatar);
+        }
+        else {
+            ivAvatar.setImageResource(R.drawable.ic_account);
+        }
     }
 
     public void replaceFragment(Fragment fragment, boolean backStack) {
@@ -235,7 +245,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             int day = Integer.parseInt(getMessageText(getIntent()).toString());
             int phongtro_id = dataFragment.getInt("phongtro_id", -1);
             Log.d("cuong", phongtro_id + "");
-            compositeDisposable.add(api.updateDateNotification(phongtro_id, day).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            compositeDisposable.add(api.updateDateNotification(phongtro_id, Common.currentUser.getId(), day).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Message>() {
                         @Override
                         public void accept(Message message) throws Exception {

@@ -37,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DetailFragment extends Fragment implements View.OnClickListener {
 
-    private TextView txtTen, txtDiaChi, txtNam, txtTrangThai, txtTotalPrice, txtNumberRoom, txtNumberPeople, txtYear;
+    private TextView txtTen, txtDiaChi, txtNam, txtTrangThai, txtTotalPrice, txtPhongTroDaThue, txtPhongTroTrong, txtNumberPeople, txtYear;
     private ImageView ivAvatar;
     private LinearLayout llLoading, llYear;
 
@@ -84,7 +84,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         txtTrangThai = view.findViewById(R.id.txtTrangThai);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         txtTotalPrice = view.findViewById(R.id.txtTotalPrice);
-        txtNumberRoom = view.findViewById(R.id.txtNumberRoom);
+        txtPhongTroDaThue = view.findViewById(R.id.txtPhongTroDaThue);
+        txtPhongTroTrong = view.findViewById(R.id.txtPhongTroTrong);
         txtNumberPeople = view.findViewById(R.id.txtNumberPeople);
         llLoading = view.findViewById(R.id.llLoading);
         homeActivity.ivAction.setVisibility(View.GONE);
@@ -141,7 +142,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     public void setValueThongKe(Thongkekhutro thongKe) {
         txtTotalPrice.setText(Common.formatNumber(thongKe.getTotal_price(),true));
-        txtNumberRoom.setText(String.valueOf(thongKe.getNumber_room()));
+        txtPhongTroDaThue.setText(String.valueOf(thongKe.getNumber_room_full()));
+        txtPhongTroTrong.setText(String.valueOf(thongKe.getNumber_room_empty()));
         txtNumberPeople.setText(String.valueOf(thongKe.getNumber_people()));
     }
 

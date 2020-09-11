@@ -94,7 +94,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         });
         txtThuTien = view.findViewById(R.id.txtThuTien);
         txtThuTien.setOnClickListener(this);
+        txtThuTien.setTextColor(Color.parseColor("#27ae60"));
     }
+
     public void init() {
         scThongBao.setChecked(sharedPreferences.getBoolean("notification", true));
         txtThuTien.setTag(0);
@@ -128,9 +130,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                         configList = configs;
                         for (Config config : configList) {
                             if(config.getName().equals("thu-tien")) {
-                                txtThuTien.setTag(config.getValue());
-                                txtThuTien.setText(config.getText());
-                                dayDefault = Integer.parseInt(config.getText());
+                                if(config.getUser_id() == Common.currentUser.getId()) {
+                                    txtThuTien.setTag(config.getValue());
+                                    txtThuTien.setText(config.getText());
+                                    dayDefault = Integer.parseInt(config.getText());
+                                }
+
                             }
                         }
                     }
@@ -144,7 +149,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     }
 
     public void updateConfig(String name, int value, String text) {
-        compositeDisposable.add(api.updateConfig(name,value,text).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        compositeDisposable.add(api.updateConfig(name,value,Common.currentUser.getId(),text).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {

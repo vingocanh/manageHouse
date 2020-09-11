@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#fff"/>
+        </shape>
+    </item>s
+    <item android:drawable="@drawable/ic_waves"/>
+</layer-list>

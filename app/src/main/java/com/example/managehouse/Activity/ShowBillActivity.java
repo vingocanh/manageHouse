@@ -69,7 +69,6 @@ public class ShowBillActivity extends AppCompatActivity {
         flShareBill = findViewById(R.id.flShareBill);
     }
 
-
     public void setInfoBill() {
         //get bill
         Intent intent = getIntent();
@@ -82,7 +81,7 @@ public class ShowBillActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         txtNhaTro.setText(sharedPreferences.getString("name", "Không xác định"));
         txtDiaChi.setText(sharedPreferences.getString("address", "Không xác định"));
-        txtDt.setText(sharedPreferences.getString("username", "Không xác định"));
+        txtDt.setText(sharedPreferences.getString("phone", "Không xác định"));
 
         // set info bill
         txtTenHoaDon.setText(hoadon.getTen());
@@ -102,14 +101,14 @@ public class ShowBillActivity extends AppCompatActivity {
         }
     }
 
-    public void setTable() {
+    public void setTable()  {
         TableRow tableRow = createRow();
         TextView txtTienPhong = createTextView();
         txtTienPhong.setBackgroundResource(R.drawable.border_left_top_table);
         txtTienPhong.setText("Tiền phòng");
         TextView txtSoLuong = createTextView();
         txtSoLuong.setBackgroundResource(R.drawable.border_left_top_right_table);
-        txtSoLuong.setText("-");
+        txtSoLuong.setText("1 phòng");
         TextView txtDonGia = createTextView();
         txtDonGia.setBackgroundResource(R.drawable.border_top_right_table);
         txtDonGia.setText(Common.formatNumber(hoadon.getPhongtro().getGia(),false));
@@ -154,10 +153,10 @@ public class ShowBillActivity extends AppCompatActivity {
                         if (checkDonViNuoc) {
                             int soNuoc = hoadon.getSonuocmoi() - hoadon.getSonuoccu();
                             if (soNuoc < 0) soNuoc = 0;
-                            tvSl.setText(String.valueOf(soNuoc));
+                            tvSl.setText(soNuoc + " số");
                             thanhTien = soNuoc * khutrokhoanthu.getGia();
                         } else {
-                            tvSl.setText("-");
+                            tvSl.setText("1 tháng");
                             thanhTien = khutrokhoanthu.getGia();
                         }
                     } else {

@@ -145,7 +145,9 @@ public class ThongKePhongTroFragment extends Fragment implements View.OnClickLis
                         else {
                             setValueTxtKhutro("Không có khu trọ", -1);
                             setValueTxtPhongtro("Không có phòng trọ", -1);
+                            llLoading.setVisibility(View.GONE);
                         }
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -183,7 +185,7 @@ public class ThongKePhongTroFragment extends Fragment implements View.OnClickLis
         }
         else {
             setValueTxtPhongtro("Không có phòng trọ", -1);
-            Thongkekhutro thongkekhutro = new Thongkekhutro(0,0,0);
+            Thongkekhutro thongkekhutro = new Thongkekhutro(0,0,0,0);
             setValueThongKe(thongkekhutro);
             llLoading.setVisibility(View.GONE);
         }

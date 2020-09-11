@@ -143,23 +143,5 @@
                 android:textSize="@dimen/sizeForm"
                 android:background="@null"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/btnChangePass"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginRight="10dp"
-                android:background="#3498db"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="Đổi mật khẩu"
-                android:textColor="#ffffff" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

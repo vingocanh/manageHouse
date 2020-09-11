@@ -86,4 +86,7 @@ dependencies {
 
     // intro
     implementation 'com.github.rubengees:introduction:2.0.0'
+
+    //CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

@@ -1,6 +1,7 @@
 package com.example.managehouse.Fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -94,6 +95,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                         }
                         else {
                             Toasty.success(getContext(), "Đăng ký tài khoản thành công.", 300, true).show();
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("account", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("username", edtUsername.getText().toString());
+                            editor.putString("password", edtPassword.getText().toString());
+                            editor.commit();
                             mainActivity.replaceFragment(new LoginFragment(), false);
                         }
                     }

@@ -53,15 +53,12 @@ public class MainActivity extends AppCompatActivity {
         lavLogin = findViewById(R.id.lavLogin);
     }
 
-
-
     public void initSlide() {
         sharedPreferences = getSharedPreferences("slide", MODE_PRIVATE);
         if(sharedPreferences.getBoolean("on", false) == false) {
             new IntroductionBuilder(this).withSlides(generateSlides()).introduceMyself();
         }
     }
-
 
     public void replaceFragment(Fragment fragment, boolean backStack) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
