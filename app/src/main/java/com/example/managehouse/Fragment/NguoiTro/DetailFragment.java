@@ -20,7 +20,9 @@ import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.R;
 import com.squareup.picasso.Picasso;
 
-public class DetailFragment extends Fragment {
+import java.io.Serializable;
+
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private TextView txtHoTen, txtPhongTro, txtNgaySinh, txtSoCMND, txtQueQuan, txtNgheNghiep, txtTrinhDo, txtNoiamViec, txtTinhTrang, txtGhiChu;
     private TextView txtTenCha, txtNamSinhCha, txtNgheNghiepCha, txtCongTacCha, txtChoOCha, txtTenMe, txtNamSinhMe, txtNgheNghiepMe, txtCongTacMe, txtChoOMe;
@@ -53,6 +55,8 @@ public class DetailFragment extends Fragment {
     }
 
     public void mapping(View view) {
+        homeActivity.ivAction.setImageResource(R.drawable.ic_edit);
+        homeActivity.ivAction.setOnClickListener(this);
         txtHoTen = view.findViewById(R.id.txtHoTen);
         txtPhongTro = view.findViewById(R.id.txtPhongTro);
         txtNgaySinh = view.findViewById(R.id.txtNgaySinh);
@@ -74,7 +78,6 @@ public class DetailFragment extends Fragment {
         txtCongTacMe = view.findViewById(R.id.txtCongTacMe);
         txtChoOMe = view.findViewById(R.id.txtChoOMe);
         ivAvatar = view.findViewById(R.id.ivAvatar);
-        homeActivity.ivAction.setVisibility(View.GONE);
     }
 
     public void setValue() {
@@ -90,7 +93,7 @@ public class DetailFragment extends Fragment {
         txtSoCMND.setText(nguoitro.getSocmnd());
         txtQueQuan.setText(nguoitro.getQuequan());
         txtNgheNghiep.setText(nguoitro.getNghenghiep());
-        txtTrinhDo.setText(nguoitro.getTrinhdo().getTen());
+            txtTrinhDo.setText(nguoitro.getTrinhdo().getTen());
         txtNoiamViec.setText(nguoitro.getNoilamviec());
         txtGhiChu.setText(nguoitro.getGhichu());
         String trangThai = "Đang trọ";
@@ -125,6 +128,19 @@ public class DetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        homeActivity.ivAction.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ivAction : {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("nguoitro", (Serializable) nguoitro);
+                FormFragment formFragment = new FormFragment();
+                formFragment.setArguments(bundle);
+                homeActivity.replaceFragment(formFragment, true);
+                break;
+            }
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.example.managehouse.Adapter;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,30 +13,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.L;
 import com.example.managehouse.Activity.HomeActivity;
 import com.example.managehouse.Fragment.NguoiTro.DetailFragment;
+import com.example.managehouse.Fragment.NguoiTro.FormFragment;
 import com.example.managehouse.Model.Nguoitro;
+import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Activity activity;
     private List<Nguoitro> nguoitros;
+    private Phongtro phongtro;
 
-    public ItemNguoiTroPhongTroAdapter(Activity activity, List<Nguoitro> nguoitros) {
+    public ItemNguoiTroPhongTroAdapter(Activity activity, List<Nguoitro> nguoitros, Phongtro phongtro) {
         this.activity = activity;
         this.nguoitros = nguoitros;
+        this.phongtro = phongtro;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == 0) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.item_not, parent,false);
+            View view = LayoutInflater.from(activity).inflate(R.layout.item_add, parent,false);
             return new MyNotItemViewHolder(view);
         }
         else {
@@ -59,16 +67,17 @@ public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerVi
             ((MyItemViewHolder) holder).setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int pos, boolean isLongClick) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("nguoitro", (Serializable) nguoitros.get(pos));
-                    DetailFragment detailFragment = new DetailFragment();
-                    detailFragment.setArguments(bundle);
-                    ((HomeActivity) activity).replaceFragment(detailFragment, true);
+                    if(nguoitros.get(pos) != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("nguoitro", (Serializable) nguoitros.get(pos));
+                        DetailFragment detailFragment = new DetailFragment();
+                        detailFragment.setArguments(bundle);
+                        ((HomeActivity) activity).replaceFragment(detailFragment, true);
+                    }
                 }
             });
         }
         else {
-            ((MyNotItemViewHolder) holder).txtTenNguoi.setText("Không có người trọ");
         }
     }
 
@@ -111,12 +120,25 @@ public class ItemNguoiTroPhongTroAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public class MyNotItemViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView txtTenNguoi;
-
         public MyNotItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtTenNguoi = itemView.findViewById(R.id.txtTenNguoi);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    int[] data = new int[2];
+                    String[] name = new String[2];
+                    data[0] = phongtro.getKhutro_id();
+                    data[1] = phongtro.getId();
+                    name[0] = phongtro.getKhutro().getTen();
+                    name[1] = phongtro.getTen();
+                    bundle.putIntArray("data",data);
+                    bundle.putStringArray("name",name);
+                    FormFragment formFragment =new FormFragment();
+                    formFragment.setArguments(bundle);
+                    ((HomeActivity) activity).replaceFragment(formFragment, true);
+                }
+            });
         }
     }
 }

@@ -133,6 +133,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/border_bottom_form"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:gravity="center_vertical"
+                android:text="Người trọ"
+                android:textColor="@color/colorFormMasterElementTextTitle"
+                android:textSize="@dimen/sizeForm" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPhongTro"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:id="@+id/llLoadingPhongTro"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="#99C0C0C0"
+                    android:orientation="vertical">
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:layout_gravity="center"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_fileName="round-loading.json" />
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:orientation="vertical">
@@ -165,6 +206,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_tongthu"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"
@@ -250,6 +292,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_phongtro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"
@@ -340,6 +383,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/bg_gradient_nguoitro"
                                 android:orientation="vertical">
                                 <LinearLayout
                                     android:padding="5dp"

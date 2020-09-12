@@ -27,12 +27,13 @@ import com.example.managehouse.Retrofit.API;
 import com.example.managehouse.Service.SpacesItemDecoration;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private TextView txtTen, txtMoTa, txtTrangThai;
     private ImageView ivAvatar;
@@ -77,13 +78,15 @@ public class DetailFragment extends Fragment {
     }
 
     public void mapping(View view) {
+        homeActivity.ivAction.setImageResource(R.drawable.ic_edit);
+        homeActivity.ivAction.setOnClickListener(this);
         txtTen = view.findViewById(R.id.txtTen);
         txtMoTa = view.findViewById(R.id.txtMoTa);
         txtTrangThai = view.findViewById(R.id.txtTrangThai);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         lavLoading = view.findViewById(R.id.lavLoading);
         rvKhuTro = view.findViewById(R.id.rvKhuTro);
-        homeActivity.ivAction.setVisibility(View.GONE);
+
         rvKhuTro.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         rvKhuTro.setLayoutManager(gridLayoutManager);
@@ -128,6 +131,19 @@ public class DetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        homeActivity.ivAction.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ivAction : {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("khoanthu", (Serializable) khoanthu);
+                FormFragment formFragment = new FormFragment();
+                formFragment.setArguments(bundle);
+                homeActivity.replaceFragment(formFragment, true);
+                break;
+            }
+        }
     }
 }

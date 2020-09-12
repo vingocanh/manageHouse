@@ -97,6 +97,10 @@ public interface API {
                                        @Query("year") int year);
 
     // phòng trọ
+    @GET("phongtro/{id}")
+    Observable<List<Phongtro>> getPhongtroChosen(@Path("id") int id,
+                                                 @Query("khutro_id") int khutro_id);
+
     @GET("phongtro?")
     Observable<List<Phongtro>> getPhongtro(@Query("limit") int limit,
                                            @Query("offset") int offset,
@@ -304,4 +308,12 @@ public interface API {
                                      @Field("value") int value,
                                      @Field("user_id") int user_id,
                                      @Field("text") String text);
+
+    // get người trọ phòng trọ
+    @GET("phongtro/nguoitro/{id}")
+    Observable<List<Nguoitro>> getNguoiTroPhongTro(@Path("id") int id);
+
+    // get khu trọ phòng trọ
+    @GET("khutro/phongtro/{id}")
+    Observable<List<Phongtro>> getKhuTroPhongTro(@Path("id") int id);
 }

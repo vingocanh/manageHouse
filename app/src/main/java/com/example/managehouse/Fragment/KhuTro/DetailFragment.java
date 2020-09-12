@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +15,30 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.managehouse.Activity.HomeActivity;
+import com.example.managehouse.Adapter.ItemKhuTroPhongTroAdapter;
+import com.example.managehouse.Adapter.ItemNguoiTroPhongTroAdapter;
 import com.example.managehouse.Common.Common;
 import com.example.managehouse.Model.Khutro;
 import com.example.managehouse.Model.Message;
+import com.example.managehouse.Model.Nguoitro;
+import com.example.managehouse.Model.Phongtro;
 import com.example.managehouse.Model.Thongkekhutro;
 import com.example.managehouse.R;
 import com.example.managehouse.Retrofit.API;
+import com.example.managehouse.Service.SpacesItemDecoration;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,7 +50,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private TextView txtTen, txtDiaChi, txtNam, txtTrangThai, txtTotalPrice, txtPhongTroDaThue, txtPhongTroTrong, txtNumberPeople, txtYear;
     private ImageView ivAvatar;
-    private LinearLayout llLoading, llYear;
+    private LinearLayout llLoading, llYear, llLoadingPhongTro;
+    private RecyclerView rvPhongTro;
 
     private API api;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -47,6 +59,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private Khutro khutro = null;
     private MaterialNumberPicker numberPicker;
     private int year, maxYear;
+    private ItemKhuTroPhongTroAdapter itemKhuTroPhongTroAdapter;
+    private List<Phongtro> phongtroList = new ArrayList<>();
 
     public DetailFragment() {
         // Required empty public constructor
@@ -73,11 +87,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         api = Common.getAPI();
         mapping(view);
         setValue();
+        getNguoiTro();
         thongKe();
         return view;
     }
 
     public void mapping(View view) {
+        homeActivity.ivAction.setImageResource(R.drawable.ic_edit);
+        homeActivity.ivAction.setOnClickListener(this);
         txtTen = view.findViewById(R.id.txtTen);
         txtDiaChi = view.findViewById(R.id.txtDiaChi);
         txtNam = view.findViewById(R.id.txtNam);
@@ -88,10 +105,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         txtPhongTroTrong = view.findViewById(R.id.txtPhongTroTrong);
         txtNumberPeople = view.findViewById(R.id.txtNumberPeople);
         llLoading = view.findViewById(R.id.llLoading);
-        homeActivity.ivAction.setVisibility(View.GONE);
+        llLoadingPhongTro = view.findViewById(R.id.llLoadingPhongTro);
         llYear= view.findViewById(R.id.llYear);
         llYear.setOnClickListener(this);
         txtYear= view.findViewById(R.id.txtYear);
+        rvPhongTro = view.findViewById(R.id.rvPhongTro);
+        rvPhongTro.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        rvPhongTro.setLayoutManager(gridLayoutManager);
     }
 
     public void setValue() {
@@ -140,6 +161,30 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 }));
     }
 
+    public void getNguoiTro() {
+        phongtroList.add(null);
+        itemKhuTroPhongTroAdapter = new ItemKhuTroPhongTroAdapter(getActivity(),phongtroList, khutro);
+        rvPhongTro.addItemDecoration(new SpacesItemDecoration(10));
+        rvPhongTro.setAdapter(itemKhuTroPhongTroAdapter);
+        compositeDisposable.add(api.getKhuTroPhongTro(khutro.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Phongtro>>() {
+                    @Override
+                    public void accept(List<Phongtro> phongtros) throws Exception {
+                        phongtroList.clear();
+                        phongtroList.add(null);
+                        phongtroList.addAll(phongtros);
+                        itemKhuTroPhongTroAdapter.notifyDataSetChanged();
+                        llLoadingPhongTro.setVisibility(View.GONE);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        llLoadingPhongTro.setVisibility(View.GONE);
+                        throwable.printStackTrace();
+                    }
+                }));
+    }
+
     public void setValueThongKe(Thongkekhutro thongKe) {
         txtTotalPrice.setText(Common.formatNumber(thongKe.getTotal_price(),true));
         txtPhongTroDaThue.setText(String.valueOf(thongKe.getNumber_room_full()));
@@ -172,7 +217,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        homeActivity.ivAction.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -196,6 +240,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).create().show();
+                break;
+            }
+            case R.id.ivAction : {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("khutro", (Serializable) khutro);
+                FormFragment formFragment = new FormFragment();
+                formFragment.setArguments(bundle);
+                homeActivity.replaceFragment(formFragment, true);
                 break;
             }
         }

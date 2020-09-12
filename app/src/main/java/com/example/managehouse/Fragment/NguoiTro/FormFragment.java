@@ -76,12 +76,14 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private API api;
     private Nguoitro nguoitro;
     private String ho = "", ten = "", ngaySinh = "", soCmnd = "", queQuan = "", ngheNhiep = "", noiLamViec = "", ghiChu = "",
-    tenCha = "", namSinhCha = "", ngheNghiepCha = "", noiCongTacCha = "", choOCha = "", tenMe = "", namSinhMe = "", ngheNghiepMe = "", noiCongTacMe = "", choOMe = "";
+            tenCha = "", namSinhCha = "", ngheNghiepCha = "", noiCongTacCha = "", choOCha = "", tenMe = "", namSinhMe = "", ngheNghiepMe = "", noiCongTacMe = "", choOMe = "";
     private int typeChosenItem = 0, sttPhongTro = 0, sttKhuTro = 0, sttTrinhDo = 0;
     private List<Phongtro> phongtroList = new ArrayList<>();
     private List<Khutro> khutroList = new ArrayList<>();
     private List<Trinhdo> trinhdoList = new ArrayList<>();
     private boolean checkFormChange = false;
+    private int[] data = null; // data gửi từ trong detail phòng trọ
+    private String[] name = null; // tên khu trọ và phòng trọ gửi từ detail phòng trọ sang
 
     public FormFragment() {
         // Required empty public constructor
@@ -96,8 +98,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Common.checkFormChange = false;
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             nguoitro = (Nguoitro) getArguments().getSerializable("nguoitro");
+            data = getArguments().getIntArray("data");
+            name = getArguments().getStringArray("name");
         }
     }
 
@@ -107,10 +111,19 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         View view = inflater.inflate(R.layout.fragment_form_nguoi_tro, container, false);
         api = Common.getAPI();
         mapping(view);
-        getKhuTro();
+        getTrinhDo();
         textChange();
-        if(nguoitro == null) setValueDefault();
-        else setValue();
+        if(data != null) {
+            setData();
+            setValueDefault();
+        }
+        else {
+            txtChonPhongTro.setOnClickListener(this);
+            txtChonKhuTro.setOnClickListener(this);
+            getKhuTro();
+            if (nguoitro == null) setValueDefault();
+            else setValue();
+        }
         return view;
     }
 
@@ -139,18 +152,15 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         txtTrangThai = view.findViewById(R.id.txtChonTrangThai);
         txtTrangThai.setOnClickListener(this);
         txtChonPhongTro = view.findViewById(R.id.txtChonPhongTro);
-        txtChonPhongTro.setOnClickListener(this);
         txtChonTrinhDo = view.findViewById(R.id.txtChonTrinhDo);
         txtChonTrinhDo.setOnClickListener(this);
         txtChonKhuTro = view.findViewById(R.id.txtChonKhuTro);
-        txtChonKhuTro.setOnClickListener(this);
         homeActivity.ivAction.setImageResource(R.drawable.ic_save_32dp);
         btnChonAnh = view.findViewById(R.id.btnChonAnh);
         btnChonAnh.setOnClickListener(this);
         btnXoaAnh = view.findViewById(R.id.btnXoaAnh);
         btnXoaAnh.setOnClickListener(this);
         btnXoaAnh.setVisibility(View.GONE);
-
         edtTenCha = view.findViewById(R.id.edtTenCha);
         edtNamSinhCha = view.findViewById(R.id.edtNamSinhCha);
         edtNgheNghiepCha = view.findViewById(R.id.edtNgheNghiepCha);
@@ -165,7 +175,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
     public void initDatePicker() {
         Calendar calendar = Calendar.getInstance();
-        if(nguoitro != null) {
+        if (nguoitro != null) {
             Date date = new Date(nguoitro.getNgaysinh2());
             calendar.setTime(date);
         }
@@ -188,8 +198,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ghiChu)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ghiChu)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
@@ -209,14 +219,15 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ho)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ho)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
 
                     }
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -230,8 +241,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ten)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ten)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
@@ -251,13 +262,12 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ngaySinh)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ngaySinh)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
-                }
-                else {
+                } else {
                     checkFormChange = false;
                     Common.checkFormChange = false;
                 }
@@ -276,8 +286,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(soCmnd)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(soCmnd)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
@@ -297,13 +307,14 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(queQuan)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(queQuan)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -317,13 +328,14 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ngheNhiep)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ngheNhiep)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -337,13 +349,14 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(noiLamViec)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(noiLamViec)) {
                         checkFormChange = true;
                         Common.checkFormChange = true;
                     }
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -357,8 +370,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(tenCha)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(tenCha)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -378,8 +391,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(namSinhCha)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(namSinhCha)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -399,8 +412,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ngheNghiepCha)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ngheNghiepCha)) {
                         Common.checkFormChange = true;
 
                         checkFormChange = true;
@@ -421,8 +434,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(noiCongTacCha)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(noiCongTacCha)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -442,8 +455,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(choOCha)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(choOCha)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -463,8 +476,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(tenMe)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(tenMe)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -484,8 +497,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(namSinhMe)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(namSinhMe)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -505,8 +518,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(ngheNghiepMe)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(ngheNghiepMe)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -526,8 +539,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(noiCongTacMe)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(noiCongTacMe)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -547,8 +560,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
-                    if(!s.toString().equals(choOMe)) {
+                if (!s.toString().equals("")) {
+                    if (!s.toString().equals(choOMe)) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
@@ -616,7 +629,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     }
 
     public void getKhuTro() {
-        final DialogLoading dialogLoading = new DialogLoading(getActivity(),"Đang lấy dữ liệu khu trọ, đợi chút...");
+        final DialogLoading dialogLoading = new DialogLoading(getActivity(), "Đang lấy dữ liệu khu trọ, đợi chút...");
         dialogLoading.showDialog();
         String url = "khutro/1";
         compositeDisposable.add(api.getKhutroChosen(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -624,39 +637,20 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     @Override
                     public void accept(List<Khutro> khutros) throws Exception {
                         khutroList = khutros;
-                        if (khutroList.size() > 0 && nguoitro == null) {
-                            txtChonKhuTro.setTag(khutroList.get(0).getId());
-                            txtChonKhuTro.setText(khutroList.get(0).getTen());
-                            phongtroList = khutroList.get(0).getPhongtro();
-                            if(phongtroList.size() > 0) {
-                                txtChonPhongTro.setTag(phongtroList.get(0).getId());
-                                txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
+                        if (khutroList.size() > 0) {
+                            if (nguoitro == null) {
+                                txtChonKhuTro.setTag(khutroList.get(0).getId());
+                                txtChonKhuTro.setText(khutroList.get(0).getTen());
+                                getPhongTro(dialogLoading, khutroList.get(0).getId());
+                            } else {
+                                getPhongTro(dialogLoading, nguoitro.getKhutro_id());
                             }
-                            else {
-                                txtChonPhongTro.setTag(-1);
-                                txtChonPhongTro.setText("Không có phòng trọ");
-                            }
+                        } else {
+                            txtChonKhuTro.setText("Không có khu trọ");
+                            txtChonKhuTro.setTag(-1);
+                            txtChonPhongTro.setTag(-1);
+                            txtChonPhongTro.setText("Không có phòng trọ");
                         }
-                        else {
-                            if(khutroList.size() == 0) {
-                                txtChonKhuTro.setText("Không có khu trọ");
-                                txtChonKhuTro.setTag(-1);
-                                txtChonPhongTro.setTag(-1);
-                                txtChonPhongTro.setText("Không có phòng trọ");
-                            }
-                            else {
-                                phongtroList = nguoitro.getKhutro().getPhongtro();
-                                if(phongtroList.size() > 0) {
-                                    txtChonPhongTro.setTag(phongtroList.get(0).getId());
-                                    txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
-                                }
-                                else {
-                                    txtChonPhongTro.setTag(-1);
-                                    txtChonPhongTro.setText("Không có phòng trọ");
-                                }
-                            }
-                        }
-                        getTrinhDo(dialogLoading);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -666,36 +660,56 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 }));
     }
 
-    public void getTrinhDo(final DialogLoading dialogLoading) {
+    public void getPhongTro(DialogLoading dialogLoading, int khutro_id) {
+        compositeDisposable.add(api.getPhongtroChosen(1, khutro_id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Phongtro>>() {
+                    @Override
+                    public void accept(List<Phongtro> phongtros) throws Exception {
+                        phongtroList = phongtros;
+                        if (phongtroList.size() > 0) {
+                            if (nguoitro == null) {
+                                txtChonPhongTro.setTag(phongtroList.get(0).getId());
+                                txtChonPhongTro.setText(phongtroList.get(0).getTen());
+                            }
+                        }
+                        dialogLoading.hideDialog();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        dialogLoading.hideDialog();
+                        throwable.printStackTrace();
+                    }
+                }));
+    }
+
+    public void getTrinhDo() {
         String url = "trinhdo/1";
         compositeDisposable.add(api.getTrinhdoChosen(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Trinhdo>>() {
                     @Override
                     public void accept(List<Trinhdo> trinhdos) throws Exception {
                         trinhdoList = trinhdos;
-                        if(trinhdoList.size() > 0) {
-                            if(nguoitro == null) {
+                        if (trinhdoList.size() > 0) {
+                            if (nguoitro == null) {
                                 txtChonTrinhDo.setTag(trinhdoList.get(0).getId());
                                 txtChonTrinhDo.setText(trinhdoList.get(0).getTen());
                             }
                         }
-                        dialogLoading.hideDialog();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        dialogLoading.hideDialog();
                         throwable.printStackTrace();
                     }
                 }));
     }
 
     private void setValue() {
-        if(nguoitro.getAvatar() != null) {
+        if (nguoitro.getAvatar() != null) {
             Picasso.get().load(nguoitro.getAvatar()).placeholder(R.drawable.ic_person_outline_32dp).error(R.drawable.ic_person_outline_32dp).into(ivAvatar);
             btnXoaAnh.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             ivAvatar.setImageResource(R.drawable.ic_person_outline_32dp);
         }
         ho = nguoitro.getHo();
@@ -716,7 +730,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         ghiChu = nguoitro.getGhichu();
         edtGhiChu.setText(ghiChu);
         String trangThai = "Đang trọ";
-        if(nguoitro.getStatus() == 0) trangThai = "Đã thôi trọ";
+        if (nguoitro.getStatus() == 0) trangThai = "Đã thôi trọ";
         txtTrangThai.setText(trangThai);
         txtTrangThai.setTag(nguoitro.getStatus());
         txtChonPhongTro.setTag(nguoitro.getPhongtro_id());
@@ -751,14 +765,21 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         edtChoOMe.setText(choOMe);
     }
 
+    public void setData() { // set khu trọ và phòng trọ mặc định khi bấm thêm từ detail phòng trọ
+        txtChonKhuTro.setTag(data[0]);
+        txtChonKhuTro.setText(name[0]);
+        txtChonPhongTro.setTag(data[1]);
+        txtChonPhongTro.setText(name[1]);
+    }
+
     public void setValueDefault() {
         txtTrangThai.setText("Đang trọ");
         txtTrangThai.setTag("1");
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        edtNgaySinh.setTag(calendar.get(calendar.YEAR) + "/" + (calendar.get(calendar.MONTH)+1) + "/" + calendar.get(calendar.DAY_OF_MONTH));
-        ngaySinh = calendar.get(calendar.DAY_OF_MONTH) + "/" + (calendar.get(calendar.MONTH)+1) + "/" + calendar.get(calendar.YEAR);
+        edtNgaySinh.setTag(calendar.get(calendar.YEAR) + "/" + (calendar.get(calendar.MONTH) + 1) + "/" + calendar.get(calendar.DAY_OF_MONTH));
+        ngaySinh = calendar.get(calendar.DAY_OF_MONTH) + "/" + (calendar.get(calendar.MONTH) + 1) + "/" + calendar.get(calendar.YEAR);
         edtNgaySinh.setText(ngaySinh);
     }
 
@@ -769,17 +790,17 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     }
 
     public String getRealPathFromURI(Uri uri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getActivity().getContentResolver().query(uri,proj,null,null,null);
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().getContentResolver().query(uri, proj, null, null, null);
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
 
     }
 
     public void addData(RequestBody nguoitro_id, RequestBody ho, RequestBody ten, MultipartBody.Part file, RequestBody ngaysinh, RequestBody socmnd, RequestBody quequan, RequestBody trinhdo_id, RequestBody nghenghiep, RequestBody noilamviec, RequestBody phongtro_id, RequestBody khutro_id, RequestBody user_id, RequestBody ghichu, RequestBody status, RequestBody type,
-                        RequestBody bo_hoten,RequestBody bo_nghenghiep,RequestBody bo_namsinh,RequestBody bo_noicongtac,RequestBody bo_choohiennay,RequestBody me_hoten,RequestBody me_nghenghiep,RequestBody me_noicongtac,RequestBody me_choohiennay,RequestBody me_namsinh) {
-        compositeDisposable.add(api.createNguoiTro(nguoitro_id,ho,ten,file,ngaysinh,socmnd,quequan,nghenghiep,noilamviec,user_id,ghichu,status,type,phongtro_id,khutro_id,trinhdo_id,
-                bo_hoten,bo_namsinh,bo_nghenghiep,bo_noicongtac,bo_choohiennay,me_hoten,me_nghenghiep,me_noicongtac,me_choohiennay,me_namsinh).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        RequestBody bo_hoten, RequestBody bo_nghenghiep, RequestBody bo_namsinh, RequestBody bo_noicongtac, RequestBody bo_choohiennay, RequestBody me_hoten, RequestBody me_nghenghiep, RequestBody me_noicongtac, RequestBody me_choohiennay, RequestBody me_namsinh) {
+        compositeDisposable.add(api.createNguoiTro(nguoitro_id, ho, ten, file, ngaysinh, socmnd, quequan, nghenghiep, noilamviec, user_id, ghichu, status, type, phongtro_id, khutro_id, trinhdo_id,
+                bo_hoten, bo_namsinh, bo_nghenghiep, bo_noicongtac, bo_choohiennay, me_hoten, me_nghenghiep, me_noicongtac, me_choohiennay, me_namsinh).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Message>() {
                     @Override
                     public void accept(Message message) throws Exception {
@@ -790,7 +811,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                                 Toasty.error(getContext(), message.getBody()[0], 300, true).show();
                             } else {
                                 Toasty.success(getContext(), message.getBody()[0], 300, true).show();
-                                checkFormChange =  Common.checkFormChange = false;
+                                checkFormChange = Common.checkFormChange = false;
                                 homeActivity.onBackPressed();
                             }
                         }
@@ -822,7 +843,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uriAvatar);
                 ivAvatar.setImageBitmap(bitmap);
                 btnXoaAnh.setVisibility(View.VISIBLE);
-                checkFormChange =true;
+                checkFormChange = true;
                 Common.checkFormChange = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -834,71 +855,69 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.edtNgaySinh : {
+            case R.id.edtNgaySinh: {
                 initDatePicker();
                 break;
             }
             case R.id.ivAvatar:
-            case R.id.btnChonAnh : {
+            case R.id.btnChonAnh: {
                 selectImage();
                 break;
             }
-            case R.id.btnXoaAnh : {
+            case R.id.btnXoaAnh: {
                 ivAvatar.setImageResource(R.drawable.ic_person_outline_32dp);
                 btnXoaAnh.setVisibility(View.GONE);
                 uriAvatar = null;
-                if(nguoitro != null) {
-                    if(nguoitro.getAvatar() != null) {
-                        checkFormChange= true;
+                if (nguoitro != null) {
+                    if (nguoitro.getAvatar() != null) {
+                        checkFormChange = true;
                         Common.checkFormChange = true;
                     }
-                }
-                else {
+                } else {
                     checkFormChange = false;
                     Common.checkFormChange = false;
                 }
                 break;
             }
-            case R.id.txtChonTrangThai : {
+            case R.id.txtChonTrangThai: {
                 typeChosenItem = 3;
                 List<Item> items = new ArrayList<>();
                 int trangThai = Integer.parseInt(txtTrangThai.getTag().toString());
-                if(trangThai == 1) {
+                if (trangThai == 1) {
                     items.add(new Item(true, 1, 0, "Đang trọ"));
                     items.add(new Item(false, 0, 1, "Đã thôi trọ"));
-                }
-                else {
+                } else {
                     items.add(new Item(false, 1, 0, "Đang trọ"));
                     items.add(new Item(true, 0, 1, "Đã thôi trọ"));
                 }
-                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(),items,"Chọn tình trạng","single",0, false);
+                DialogChosenItem dialogChosenItem = new DialogChosenItem(getActivity(), items, "Chọn tình trạng", "single", 0, false);
                 dialogChosenItem.setChosenItemCallback(this);
                 dialogChosenItem.showDialog();
                 break;
             }
             case R.id.txtChonPhongTro: {
-                if(phongtroList.size() > 0) {
+                if (phongtroList.size() > 0) {
                     typeChosenItem = 1;
                     int id = Integer.parseInt(txtChonPhongTro.getTag().toString());
                     List<Item> items = new ArrayList<>();
                     int stt = 0;
                     for (Phongtro phongtro : phongtroList) {
-                        if (phongtro.getId() == id) items.add(new Item(true, phongtro.getId(), stt, phongtro.getTen()));
+                        if (phongtro.getId() == id)
+                            items.add(new Item(true, phongtro.getId(), stt, phongtro.getTen()));
                         else items.add(new Item(false, phongtro.getId(), stt, phongtro.getTen()));
                         stt++;
                     }
-                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttPhongTro, true);
+                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single", sttPhongTro, true);
                     dialogChosen.setChosenItemCallback(this);
                     dialogChosen.showDialog();
-                }
-                else {
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Không có khu trọ nào, hãy thêm khu trọ mới.")
                             .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     com.example.managehouse.Fragment.KhuTro.FormFragment formFragment = new com.example.managehouse.Fragment.KhuTro.FormFragment();
-                                    homeActivity.replaceFragment(formFragment,true);
+                                    homeActivity.replaceFragment(formFragment, true);
                                 }
                             })
                             .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
@@ -911,28 +930,28 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 break;
             }
             case R.id.txtChonKhuTro: {
-                if(khutroList.size() > 0) {
+                if (khutroList.size() > 0) {
                     typeChosenItem = 0;
                     int id = Integer.parseInt(txtChonKhuTro.getTag().toString());
                     List<Item> items = new ArrayList<>();
                     int stt = 0;
                     for (Khutro khutro : khutroList) {
-                        if (khutro.getId() == id) items.add(new Item(true, khutro.getId(), stt, khutro.getTen()));
+                        if (khutro.getId() == id)
+                            items.add(new Item(true, khutro.getId(), stt, khutro.getTen()));
                         else items.add(new Item(false, khutro.getId(), stt, khutro.getTen()));
                         stt++;
                     }
-                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single",sttKhuTro, true);
+                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn khu trọ", "single", sttKhuTro, true);
                     dialogChosen.setChosenItemCallback(this);
                     dialogChosen.showDialog();
-                }
-                else {
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Không có khu trọ nào, hãy thêm khu trọ mới.")
                             .setPositiveButton(R.string.confirm_delete_button_ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     com.example.managehouse.Fragment.KhuTro.FormFragment formFragment = new com.example.managehouse.Fragment.KhuTro.FormFragment();
-                                    homeActivity.replaceFragment(formFragment,true);
+                                    homeActivity.replaceFragment(formFragment, true);
                                 }
                             })
                             .setNegativeButton(R.string.confirm_delete_button_no, new DialogInterface.OnClickListener() {
@@ -944,27 +963,28 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 }
                 break;
             }
-            case R.id.txtChonTrinhDo : {
-                if(trinhdoList.size() > 0) {
+            case R.id.txtChonTrinhDo: {
+                if (trinhdoList.size() > 0) {
                     typeChosenItem = 2;
                     int id = Integer.parseInt(txtChonTrinhDo.getTag().toString());
                     List<Item> items = new ArrayList<>();
                     int stt = 0;
                     for (Trinhdo trinhdo : trinhdoList) {
-                        if (trinhdo.getId() == id) items.add(new Item(true, trinhdo.getId(), stt, trinhdo.getTen()));
+                        if (trinhdo.getId() == id)
+                            items.add(new Item(true, trinhdo.getId(), stt, trinhdo.getTen()));
                         else items.add(new Item(false, trinhdo.getId(), stt, trinhdo.getTen()));
                         stt++;
                     }
-                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn trình độ", "single",sttTrinhDo, false);
+                    DialogChosenItem dialogChosen = new DialogChosenItem(getActivity(), items, "Chọn trình độ", "single", sttTrinhDo, false);
                     dialogChosen.setChosenItemCallback(this);
                     dialogChosen.showDialog();
                 }
                 break;
             }
-            case R.id.ivAction : {
-                if(awesomeValidation.validate()) {
+            case R.id.ivAction: {
+                if (awesomeValidation.validate()) {
                     MultipartBody.Part file = null;
-                    if(uriAvatar != null) {
+                    if (uriAvatar != null) {
                         File avatar = new File(getRealPathFromURI(uriAvatar));
                         RequestBody requestBody = RequestBody.create(MediaType.parse(getActivity().getContentResolver().getType(uriAvatar)), avatar);
                         file = MultipartBody.Part.createFormData("avatar", avatar.getName(), requestBody);
@@ -995,14 +1015,13 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                     if (nguoitro == null) {
                         RequestBody nguoiTroId = RequestBody.create(MediaType.parse("multipart/form-data"), "-1");
                         RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "1");
-                        addData(nguoiTroId,ho,ten,file,ngaysinh,socmnd,quequan,trinhdo,nghenghiep,noilamviec,phongtro_id,khutro_id,user_id,ghichu,status,type,
-                                bo_hoten,bo_namsinh,bo_nghenghiep,bo_noicongtac,bo_choohiennay,me_hoten,me_nghenghiep,me_noicongtac,me_choohiennay,me_namsinh);
-                    }
-                    else {
+                        addData(nguoiTroId, ho, ten, file, ngaysinh, socmnd, quequan, trinhdo, nghenghiep, noilamviec, phongtro_id, khutro_id, user_id, ghichu, status, type,
+                                bo_hoten, bo_namsinh, bo_nghenghiep, bo_noicongtac, bo_choohiennay, me_hoten, me_nghenghiep, me_noicongtac, me_choohiennay, me_namsinh);
+                    } else {
                         RequestBody phongTroId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(nguoitro.getId()));
                         RequestBody type = RequestBody.create(MediaType.parse("multipart/form-data"), "0");
-                        addData(phongTroId,ho,ten,file,ngaysinh,socmnd,quequan,trinhdo,nghenghiep,noilamviec,phongtro_id,khutro_id,user_id,ghichu,status,type,
-                                bo_hoten,bo_nghenghiep,bo_namsinh,bo_noicongtac,bo_choohiennay,me_hoten,me_nghenghiep,me_noicongtac,me_choohiennay,me_namsinh);
+                        addData(phongTroId, ho, ten, file, ngaysinh, socmnd, quequan, trinhdo, nghenghiep, noilamviec, phongtro_id, khutro_id, user_id, ghichu, status, type,
+                                bo_hoten, bo_nghenghiep, bo_namsinh, bo_noicongtac, bo_choohiennay, me_hoten, me_nghenghiep, me_noicongtac, me_choohiennay, me_namsinh);
                     }
                 }
                 break;
@@ -1027,7 +1046,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void onReceiveItem(List<Item> item) {
         switch (typeChosenItem) {
             case 0: {
-                if(Integer.parseInt(txtChonKhuTro.getTag().toString()) != item.get(0).getId()) {
+                if (Integer.parseInt(txtChonKhuTro.getTag().toString()) != item.get(0).getId()) {
                     checkFormChange = true;
                     Common.checkFormChange = true;
                 }
@@ -1035,18 +1054,17 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 txtChonKhuTro.setTag(item.get(0).getId());
                 sttKhuTro = item.get(0).getStt();
                 phongtroList = khutroList.get(item.get(0).getStt()).getPhongtro();
-                if(phongtroList.size() > 0) {
+                if (phongtroList.size() > 0) {
                     txtChonPhongTro.setTag(phongtroList.get(0).getId());
                     txtChonPhongTro.setText(String.valueOf(phongtroList.get(0).getTen()));
-                }
-                else {
+                } else {
                     txtChonPhongTro.setTag(-1);
                     txtChonPhongTro.setText("Không có phòng trọ");
                 }
                 break;
             }
             case 1: {
-                if(Integer.parseInt(txtChonPhongTro.getTag().toString()) != item.get(0).getId()) {
+                if (Integer.parseInt(txtChonPhongTro.getTag().toString()) != item.get(0).getId()) {
                     Common.checkFormChange = true;
                     checkFormChange = true;
                 }
@@ -1056,7 +1074,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 break;
             }
             case 2: {
-                if(Integer.parseInt(txtChonTrinhDo.getTag().toString()) != item.get(0).getId()) {
+                if (Integer.parseInt(txtChonTrinhDo.getTag().toString()) != item.get(0).getId()) {
                     Common.checkFormChange = true;
                     checkFormChange = true;
                 }
@@ -1066,7 +1084,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
                 break;
             }
             case 3: {
-                if(Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) {
+                if (Integer.parseInt(txtTrangThai.getTag().toString()) != item.get(0).getId()) {
                     Common.checkFormChange = true;
                     checkFormChange = true;
                 }

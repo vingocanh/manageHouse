@@ -340,15 +340,13 @@ public class CreateBillFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().equals("")) {
+                if (!s.toString().equals("") && edtTienPhong.getTag() != null) {
                     if(tienPhong != Integer.parseInt(edtTienPhong.getTag().toString())) {
                         Common.checkFormChange = true;
                         checkFormChange = true;
                     }
-
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 

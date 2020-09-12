@@ -68,7 +68,7 @@ import okhttp3.RequestBody;
 
 public class FormFragment extends Fragment implements View.OnClickListener, ChosenItemCallback, ChosenKhoanThuKhuTroCallback {
 
-    private ImageView ivAvatar;
+    private ImageView ivAvatar, ivAdd;
     private EditText editTen, edtDiaChi, edtNamXayDung;
     private TextView txtTrangThai;
     private Button btnChonAnh, btnXoaAnh;
@@ -146,7 +146,9 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     public void mapping(View view) {
         homeActivity.ivAction.setOnClickListener(this);
         ivAvatar = view.findViewById(R.id.ivAvatar);
+        ivAdd = view.findViewById(R.id.ivAdd);
         ivAvatar.setOnClickListener(this);
+        ivAdd.setOnClickListener(this);
         editTen = view.findViewById(R.id.edtTen);
         edtDiaChi = view.findViewById(R.id.edtDiaChi);
         edtNamXayDung = view.findViewById(R.id.edtNamXayDung);
@@ -445,6 +447,10 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ivAdd : {
+                homeActivity.replaceFragment(new com.example.managehouse.Fragment.KhoanThu.FormFragment(), true);
+                break;
+            }
             case R.id.ivAvatar:
             case R.id.btnChonAnh : {
                 selectImage();

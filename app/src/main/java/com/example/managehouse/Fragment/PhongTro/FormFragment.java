@@ -83,6 +83,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
     private int typeChosenItem = 0, sttKhuTro = 0;
     private List<Khutro> khutroList = new ArrayList<>();
     private boolean checkFormChange = false;
+    private int[] data = null; // data gửi từ trong detail khu trọ
+    private String[] name = null; // tên khu trọ gửi từ detail khu trọ
 
     public FormFragment() {
         // Required empty public constructor
@@ -100,6 +102,8 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         Common.checkFormChange = false;
         if(getArguments() != null) {
             phongtro = (Phongtro) getArguments().getSerializable("phongtro");
+            data = getArguments().getIntArray("data");
+            name = getArguments().getStringArray("name");
         }
     }
 
@@ -109,17 +113,29 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_form_phong_tro, container, false);
         api = Common.getAPI();
-        mapping(view);
-        getKhutro();
-        textChange();
-        if(phongtro == null) setValueDefault();
-        else setValue();
+        mapping(view);textChange();
+        if(data != null) {
+            setData();
+            setValueDefault();
+        }
+        else {
+            txtChonKhuTro.setOnClickListener(this);
+            getKhutro();
+            if(phongtro == null) setValueDefault();
+            else setValue();
+        }
+
         return view;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         validator();
+    }
+
+    public void setData() { // set khu trọ mặc định khi bấm thêm từ detail phòng trọ
+        txtChonKhuTro.setTag(data[0]);
+        txtChonKhuTro.setText(name[0]);
     }
 
     public void mapping(View view) {
@@ -137,7 +153,7 @@ public class FormFragment extends Fragment implements View.OnClickListener, Chos
         txtTrangThai = view.findViewById(R.id.txtChonTrangThai);
         txtTrangThai.setOnClickListener(this);
         txtChonKhuTro = view.findViewById(R.id.txtChonKhuTro);
-        txtChonKhuTro.setOnClickListener(this);
+
         homeActivity.ivAction.setImageResource(R.drawable.ic_save_32dp);
         btnChonAnh = view.findViewById(R.id.btnChonAnh);
         btnChonAnh.setOnClickListener(this);

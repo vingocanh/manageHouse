@@ -226,6 +226,10 @@ public class KhoanThuFragment extends Fragment implements View.OnClickListener, 
                                 else isLoading = false;
                             }
                         }
+                        Log.d("cuong", filter + "");
+                        if(filter == 2) {
+                            mySwipeHelper.itemSwipe = false;
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -352,7 +356,6 @@ public class KhoanThuFragment extends Fragment implements View.OnClickListener, 
                         new ButtonThaoTacClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                Log.d("cuong", "ok");
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("khoanthu", (Serializable) khoanthuList.get(pos));
                                 FormFragment formFragment = new FormFragment();

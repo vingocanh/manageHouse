@@ -35,6 +35,7 @@ import com.example.managehouse.Service.SpacesItemDecoration;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private TextView txtTen, txtKhuTro, txtGia, txtSoDien, txtSoNuoc, txtTrangThai, txtGhiChu, txtTotalPrice, txtYear;
     private ImageView ivAvatar;
-    private LinearLayout llLoading, llSoDien, llSoNuoc, llYear;
+    private LinearLayout llLoading, llSoDien, llSoNuoc, llYear, llLoadingNguoiTro;
     private RecyclerView rvNguoiTro;
 
     private API api;
@@ -76,7 +77,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             phongtro = (Phongtro) getArguments().getSerializable("phongtro");
-            nguoitroList = phongtro.getNguoitro();
         }
     }
 
@@ -89,12 +89,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         mapping(view);
         setValue();
         showSoDienNuoc();
-        setNguoiTro();
+        getNguoiTro();
         thongKe();
         return view;
     }
 
     public void mapping(View view) {
+        homeActivity.ivAction.setImageResource(R.drawable.ic_edit);
+        homeActivity.ivAction.setOnClickListener(this);
         txtTen = view.findViewById(R.id.txtTen);
         txtKhuTro = view.findViewById(R.id.txtKhuTro);
         txtGia = view.findViewById(R.id.txtGia);
@@ -106,6 +108,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         txtYear = view.findViewById(R.id.txtYear);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         llLoading = view.findViewById(R.id.llLoading);
+        llLoadingNguoiTro = view.findViewById(R.id.llLoadingNguoiTro);
         llSoDien = view.findViewById(R.id.llSoDien);
         llSoNuoc = view.findViewById(R.id.llSoNuoc);
         llYear = view.findViewById(R.id.llYear);
@@ -128,16 +131,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 .enableFocusability(false)
                 .wrapSelectorWheel(true)
                 .build();
-    }
-
-
-    public void setNguoiTro() {
-        if(nguoitroList.size() <= 0) {
-            nguoitroList.add(null);
-        }
-        itemNguoiTroPhongTroAdapter = new ItemNguoiTroPhongTroAdapter(getActivity(),nguoitroList);
-        rvNguoiTro.addItemDecoration(new SpacesItemDecoration(10));
-        rvNguoiTro.setAdapter(itemNguoiTroPhongTroAdapter);
     }
 
     public void setValue() {
@@ -189,6 +182,29 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 }));
     }
 
+    public void getNguoiTro() {
+        itemNguoiTroPhongTroAdapter = new ItemNguoiTroPhongTroAdapter(getActivity(),nguoitroList, phongtro);
+        rvNguoiTro.addItemDecoration(new SpacesItemDecoration(10));
+        rvNguoiTro.setAdapter(itemNguoiTroPhongTroAdapter);
+        compositeDisposable.add(api.getNguoiTroPhongTro(phongtro.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Nguoitro>>() {
+                    @Override
+                    public void accept(List<Nguoitro> nguoitros) throws Exception {
+                        nguoitroList.clear();
+                        nguoitroList.add(null);
+                        nguoitroList.addAll(nguoitros);
+                        itemNguoiTroPhongTroAdapter.notifyDataSetChanged();
+                        llLoadingNguoiTro.setVisibility(View.GONE);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        llLoadingNguoiTro.setVisibility(View.GONE);
+                        throwable.printStackTrace();
+                    }
+                }));
+    }
+
     public void setValueThongKe(Thongkekhutro thongKe) {
         txtTotalPrice.setText(Common.formatNumber(thongKe.getTotal_price(),true));
     }
@@ -216,7 +232,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        homeActivity.ivAction.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -240,6 +255,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).create().show();
+                break;
+            }
+            case R.id.ivAction : {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("phongtro", (Serializable) phongtro);
+                FormFragment formFragment = new FormFragment();
+                formFragment.setArguments(bundle);
+                homeActivity.replaceFragment(formFragment, true);
                 break;
             }
         }

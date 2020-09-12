@@ -149,13 +149,26 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:orientation="vertical">
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:text="Chọn khoản thu"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorFormMasterElementTextTitle"
-                android:textSize="@dimen/sizeForm"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="Chọn khoản thu"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorFormMasterElementTextTitle"
+                    android:textSize="@dimen/sizeForm"/>
+                <ImageView
+                    android:id="@id/ivAdd"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+
+                    android:src="@drawable/ic_plus" />
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvKhoanThu"
                 android:padding="10dp"
